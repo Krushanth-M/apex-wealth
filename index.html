@@ -4,14 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apex Wealth — Premium Personal Finance Toolkit</title>
-    <!-- Outfit Google Font -->
+    <!-- Google Fonts Outfit -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Tabler Icons -->
-    <link rel="stylesheet" href="https://unpkg.com/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <!-- Chart.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        darkbg: '#0b1329',
+                        darkcard: 'rgba(23, 37, 68, 0.7)',
+                        primaryAccent: '#6366f1',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- React & ReactDOM CDNs -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <!-- Babel Standalone CDN -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
     <style>
         /* CSS Variables for Premium UI & Dark Mode */
         :root {
@@ -43,9 +65,9 @@
             --card-shadow-hover: 0 12px 40px rgba(99, 102, 241, 0.08);
         }
 
-        body.dark {
-            --bg-color: #090d16;
-            --card-bg: rgba(17, 24, 39, 0.7);
+        .dark {
+            --bg-color: #0b1329;
+            --card-bg: rgba(23, 37, 68, 0.7);
             --card-border: rgba(255, 255, 255, 0.05);
             --border-color: #1f2937;
             --text-color: #f3f4f6;
@@ -72,151 +94,35 @@
             --card-shadow-hover: 0 12px 40px rgba(129, 140, 248, 0.15);
         }
 
-        /* Base Resets */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Outfit', sans-serif;
-            transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            padding-bottom: 90px;
-            overflow-x: hidden;
-        }
-
-        /* Floating Premium Header */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.25rem 2rem;
-            background: var(--card-bg);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--card-border);
-            box-shadow: var(--glass-shadow);
-        }
-
-        header h1 {
-            font-size: 1.6rem;
-            font-weight: 800;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-        }
-
-        .theme-toggle {
-            background: var(--input-bg);
-            border: 1px solid var(--card-border);
-            color: var(--text-color);
-            padding: 0.6rem;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 42px;
-            height: 42px;
-        }
-
-        .theme-toggle:hover {
-            transform: rotate(15deg) scale(1.05);
-            border-color: var(--primary);
-        }
-
-        /* Sticky Navigation Bar */
-        nav.tabs-container {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: var(--card-bg);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--card-border);
-            overflow-x: auto;
-            white-space: nowrap;
-            display: flex;
-            scrollbar-width: none;
-            box-shadow: var(--glass-shadow);
-        }
-
-        nav.tabs-container::-webkit-scrollbar {
-            display: none;
-        }
-
-        .tab-btn {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            padding: 1.2rem 1.75rem;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            position: relative;
-        }
-
-        .tab-btn::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 0;
-            height: 3px;
-            background: var(--primary-gradient);
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-            border-radius: 3px;
-        }
-
-        .tab-btn:hover {
-            color: var(--text-color);
-        }
-
-        .tab-btn.active {
-            color: var(--primary);
-        }
-
-        .tab-btn.active::after {
-            width: 70%;
-        }
-
-        /* Container & Animations */
-        .container {
-            max-width: 1200px;
-            margin: 2.5rem auto;
-            padding: 0 1.25rem;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
+        /* CSS Animations for transitions */
+        .slide-up {
             animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-
         @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(15px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Pulse glow for floating AI button */
+        .pulse-glow {
+            animation: pulseGlow 2.5s infinite;
+        }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.6); }
+            70% { box-shadow: 0 0 0 15px rgba(99, 102, 241, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
         }
 
-        /* Glassmorphic Premium Cards */
+        /* Custom ranges */
+        input[type="range"]::-webkit-slider-thumb {
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+            transition: all 0.15s ease;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Custom Component Styling */
         .card {
             background: var(--card-bg);
             backdrop-filter: blur(16px);
@@ -225,13 +131,12 @@
             padding: 1.75rem;
             margin-bottom: 1.75rem;
             box-shadow: var(--glass-shadow);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
         .card:hover {
             transform: translateY(-4px);
             box-shadow: var(--card-shadow-hover);
         }
-
         .card h2 {
             font-size: 1.35rem;
             font-weight: 700;
@@ -247,23 +152,92 @@
             grid-template-columns: 1fr 1fr;
             gap: 1.75rem;
         }
-
         .grid-3 {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 1.75rem;
         }
-
         .grid-1-2 {
             display: grid;
             grid-template-columns: 1fr 2fr;
             gap: 1.75rem;
         }
-
         @media (max-width: 768px) {
             .grid-2, .grid-3, .grid-1-2 {
                 grid-template-columns: 1fr;
             }
+        }
+
+        /* Nav & Tabs */
+        nav.tabs-container {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--card-border);
+            overflow-x: auto;
+            white-space: nowrap;
+            display: flex;
+            scrollbar-width: none;
+            box-shadow: var(--glass-shadow);
+        }
+        nav.tabs-container::-webkit-scrollbar {
+            display: none;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            padding: 1.2rem 1.75rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: var(--primary-gradient);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 3px;
+        }
+        .tab-btn:hover {
+            color: var(--text-color);
+        }
+        .tab-btn.active {
+            color: var(--primary);
+        }
+        .tab-btn.active::after {
+            width: 70%;
+        }
+
+        .theme-toggle {
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-color);
+            padding: 0.6rem;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            transition: all 0.3s ease;
+        }
+        .theme-toggle:hover {
+            transform: rotate(15deg) scale(1.05);
+            border-color: var(--primary);
         }
 
         /* Metric Cards */
@@ -273,7 +247,6 @@
             gap: 1.25rem;
             margin-bottom: 1.75rem;
         }
-
         .metric-card {
             background: var(--card-bg);
             backdrop-filter: blur(16px);
@@ -284,8 +257,8 @@
             box-shadow: var(--glass-shadow);
             position: relative;
             overflow: hidden;
+            transition: all 0.3s ease;
         }
-
         .metric-card::before {
             content: '';
             position: absolute;
@@ -295,7 +268,6 @@
             height: 100%;
             background: var(--primary-gradient);
         }
-
         .metric-label {
             font-size: 0.85rem;
             color: var(--text-secondary);
@@ -304,7 +276,6 @@
             letter-spacing: 0.75px;
             margin-bottom: 0.4rem;
         }
-
         .metric-value {
             font-size: 1.8rem;
             font-weight: 800;
@@ -323,25 +294,17 @@
             align-items: center;
             gap: 1rem;
             box-shadow: var(--glass-shadow);
-            animation: slideUp 0.3s ease;
         }
-
-        .alert i {
-            font-size: 1.35rem;
-        }
-
         .alert.red {
             background-color: var(--red-bg);
             border-color: var(--red-border);
             color: var(--red-text);
         }
-
         .alert.amber {
             background-color: var(--amber-bg);
             border-color: var(--amber-border);
             color: var(--amber-text);
         }
-
         .alert.green {
             background-color: var(--green-bg);
             border-color: var(--green-border);
@@ -352,7 +315,6 @@
         .input-group {
             margin-bottom: 1.5rem;
         }
-
         .input-group label {
             display: block;
             font-size: 0.9rem;
@@ -360,25 +322,6 @@
             margin-bottom: 0.5rem;
             color: var(--text-color);
         }
-
-        .input-with-icon {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .input-icon {
-            position: absolute;
-            left: 0.85rem;
-            color: var(--text-secondary);
-            pointer-events: none;
-            font-size: 1.1rem;
-        }
-
-        .input-with-icon input {
-            padding-left: 2.25rem !important;
-        }
-
         input[type="number"], select, input[type="text"] {
             width: 100%;
             padding: 0.75rem 1rem;
@@ -388,8 +331,8 @@
             color: var(--text-color);
             background-color: var(--input-bg);
             outline: none;
+            transition: all 0.3s ease;
         }
-
         input[type="number"]:focus, select:focus, input[type="text"]:focus {
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.15);
@@ -401,7 +344,6 @@
             align-items: center;
             gap: 1.25rem;
         }
-
         .slider-row input[type="range"] {
             flex: 1;
             height: 6px;
@@ -410,7 +352,6 @@
             outline: none;
             -webkit-appearance: none;
         }
-
         .slider-row input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             width: 20px;
@@ -421,12 +362,10 @@
             box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.2);
             transition: all 0.15s ease;
         }
-
         .slider-row input[type="range"]::-webkit-slider-thumb:hover {
             transform: scale(1.15);
             box-shadow: 0 0 0 6px rgba(var(--primary-rgb), 0.3);
         }
-
         .slider-row input[type="number"] {
             width: 110px;
         }
@@ -443,7 +382,6 @@
             border-radius: 8px;
             border: 1px solid var(--card-border);
         }
-
         @media (max-width: 480px) {
             .row-item {
                 grid-template-columns: 1fr;
@@ -467,36 +405,31 @@
             align-items: center;
             gap: 0.5rem;
             box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.2);
+            transition: all 0.3s ease;
         }
-
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(var(--primary-rgb), 0.3);
         }
-
         .btn-outline {
             background: var(--input-bg);
             border: 1px solid var(--border-color);
             color: var(--text-color);
             box-shadow: none;
         }
-
         .btn-outline:hover {
             background: var(--border-color);
             transform: translateY(-2px);
             box-shadow: var(--glass-shadow);
         }
-
         .btn-danger {
             background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
             color: #ffffff;
             box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
         }
-
         .btn-danger:hover {
             box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
         }
-
         .btn-sm {
             padding: 0.4rem 0.8rem;
             font-size: 0.8rem;
@@ -510,7 +443,6 @@
             flex-direction: column;
             gap: 0.6rem;
         }
-
         .legend-item {
             display: flex;
             justify-content: space-between;
@@ -527,7 +459,6 @@
         .progress-bar-section {
             margin-bottom: 1.25rem;
         }
-
         .progress-bar-header {
             display: flex;
             justify-content: space-between;
@@ -535,7 +466,6 @@
             font-weight: 600;
             margin-bottom: 0.4rem;
         }
-
         .progress-bar-container {
             background-color: var(--slider-runway);
             height: 12px;
@@ -543,13 +473,11 @@
             overflow: hidden;
             position: relative;
         }
-
         .progress-bar-fill {
             height: 100%;
             background: var(--primary-gradient);
             border-radius: 6px;
         }
-
         .progress-bar-target {
             position: absolute;
             top: 0;
@@ -567,25 +495,12 @@
             margin-bottom: 1rem;
             background: var(--input-bg);
             box-shadow: var(--glass-shadow);
+            transition: all 0.3s ease;
         }
-
         .goal-item:hover {
             transform: translateY(-2px);
             border-color: var(--primary);
         }
-
-        .goal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.6rem;
-        }
-
-        .goal-title {
-            font-weight: 700;
-            font-size: 1.05rem;
-        }
-
         .goal-details {
             font-size: 0.85rem;
             color: var(--text-secondary);
@@ -604,27 +519,22 @@
             border-radius: 10px;
             border: 1px solid var(--border-color);
         }
-
         table.growth-table th, table.growth-table td {
             padding: 0.75rem 1rem;
             text-align: right;
         }
-
         table.growth-table th {
             background-color: var(--slider-runway);
             color: var(--text-color);
             font-weight: 700;
         }
-
         table.growth-table tr {
             background-color: var(--card-bg);
             border-bottom: 1px solid var(--border-color);
         }
-
         table.growth-table tr:hover {
             background-color: rgba(var(--primary-rgb), 0.03);
         }
-
         table.growth-table th:first-child, table.growth-table td:first-child {
             text-align: left;
             font-weight: 700;
@@ -637,32 +547,27 @@
             gap: 1.25rem;
             margin-top: 1.25rem;
         }
-
         @media (max-width: 480px) {
             .strategy-container {
                 grid-template-columns: 1fr;
             }
         }
-
         .strategy-card {
             border: 1px solid var(--card-border);
             border-radius: 10px;
             padding: 1.25rem;
             background: var(--input-bg);
         }
-
         .strategy-card:hover {
             border-color: var(--primary);
             transform: translateY(-2px);
         }
-
         .strategy-card h3 {
             font-size: 1.05rem;
             font-weight: 700;
             margin-bottom: 0.6rem;
             color: var(--primary);
         }
-
         .strategy-card p {
             font-size: 0.85rem;
             color: var(--text-secondary);
@@ -674,7 +579,6 @@
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
             gap: 1.25rem;
         }
-
         .lesson-card {
             background: var(--card-bg);
             backdrop-filter: blur(16px);
@@ -685,14 +589,13 @@
             flex-direction: column;
             justify-content: space-between;
             box-shadow: var(--glass-shadow);
+            transition: all 0.3s ease;
         }
-
         .lesson-card:hover {
             transform: translateY(-5px);
             box-shadow: var(--card-shadow-hover);
             border-color: var(--primary);
         }
-
         .lesson-icon-box {
             width: 46px;
             height: 46px;
@@ -705,14 +608,12 @@
             font-size: 1.35rem;
             margin-bottom: 1rem;
         }
-
         .lesson-title {
             font-weight: 700;
             font-size: 1.1rem;
             margin-bottom: 0.6rem;
             color: var(--text-color);
         }
-
         .lesson-desc {
             font-size: 0.85rem;
             color: var(--text-secondary);
@@ -730,7 +631,6 @@
             border: 1px solid var(--border-color);
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
         }
-
         .ratio-assets {
             background-color: var(--green);
             color: white;
@@ -740,7 +640,6 @@
             font-size: 0.75rem;
             font-weight: 700;
         }
-
         .ratio-liabilities {
             background-color: var(--red);
             color: white;
@@ -781,21 +680,8 @@
             display: flex;
             align-items: center;
             gap: 0.6rem;
-            animation: pulseGlow 2.5s infinite;
+            transition: all 0.3s ease;
         }
-
-        @keyframes pulseGlow {
-            0% {
-                box-shadow: 0 0 0 0 rgba(var(--primary-rgb), 0.6);
-            }
-            70% {
-                box-shadow: 0 0 0 15px rgba(var(--primary-rgb), 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(var(--primary-rgb), 0);
-            }
-        }
-
         .floating-ai-btn:hover {
             transform: scale(1.05) translateY(-2px);
         }
@@ -813,12 +699,10 @@
             pointer-events: none;
             transition: opacity 0.3s ease;
         }
-
         .drawer-overlay.open {
             opacity: 1;
             pointer-events: auto;
         }
-
         .drawer {
             position: fixed;
             top: 0;
@@ -837,11 +721,9 @@
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             box-shadow: var(--glass-shadow);
         }
-
         .drawer.open {
             transform: translateX(-460px);
         }
-
         .drawer-header {
             display: flex;
             justify-content: space-between;
@@ -850,7 +732,6 @@
             padding-bottom: 1rem;
             margin-bottom: 1.25rem;
         }
-
         .drawer-header h3 {
             font-size: 1.2rem;
             font-weight: 700;
@@ -859,7 +740,6 @@
             gap: 0.5rem;
             color: var(--primary);
         }
-
         .drawer-close {
             background: none;
             border: none;
@@ -867,17 +747,14 @@
             font-size: 1.4rem;
             cursor: pointer;
         }
-
         .drawer-close:hover {
             color: var(--text-color);
         }
-
         .drawer-body {
             flex: 1;
             overflow-y: auto;
             margin-bottom: 1.75rem;
         }
-
         .prompt-preview-box {
             background: var(--input-bg);
             border: 1px solid var(--card-border);
@@ -890,13 +767,11 @@
             color: var(--text-color);
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
         }
-
         .drawer-footer {
             display: flex;
             flex-direction: column;
             gap: 0.6rem;
         }
-
         .copy-toast {
             position: fixed;
             bottom: 85px;
@@ -913,1718 +788,1213 @@
             z-index: 1002;
             box-shadow: var(--glass-shadow);
         }
-
         .copy-toast.show {
             opacity: 1;
         }
     </style>
 </head>
-<body>
-
-    <!-- Header -->
-    <header>
-        <h1><i class="ti ti-wallet"></i> Apex Wealth</h1>
-        <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
-            <i class="ti ti-sun" id="themeIcon"></i>
-        </button>
-    </header>
-
-    <!-- Sticky Tab Navigation Bar -->
-    <nav class="tabs-container">
-        <button class="tab-btn active" onclick="switchTab('budget')"><i class="ti ti-calculator"></i> Budget Planner</button>
-        <button class="tab-btn" onclick="switchTab('savings')"><i class="ti ti-pig"></i> Savings Goals</button>
-        <button class="tab-btn" onclick="switchTab('loan')"><i class="ti ti-percentage"></i> EMI Calculator</button>
-        <button class="tab-btn" onclick="switchTab('investment')"><i class="ti ti-chart-line"></i> Growth Simulator</button>
-        <button class="tab-btn" onclick="switchTab('debt')"><i class="ti ti-trending-down"></i> Debt Payoff</button>
-        <button class="tab-btn" onclick="switchTab('lessons')"><i class="ti ti-book"></i> Lessons</button>
-        <button class="tab-btn" onclick="switchTab('networth')"><i class="ti ti-building-bank"></i> Net Worth</button>
-    </nav>
-
-    <!-- Main Container -->
-    <div class="container">
-
-        <!-- TAB 1 — BUDGET PLANNER -->
-        <section id="budget" class="tab-content active">
-            <div class="grid-1-2">
-                <!-- Inputs Side -->
-                <div class="card">
-                    <h2><i class="ti ti-settings"></i> Enter Monthly Income</h2>
-                    <div class="input-group">
-                        <label for="takeHomeSalary">Monthly Take-Home Salary (₹)</label>
-                        <div class="input-with-icon">
-                            <i class="ti ti-currency-rupee input-icon"></i>
-                            <input type="number" id="takeHomeSalary" value="25000" oninput="calculateBudget()">
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label for="otherIncome">Other Monthly Income (₹)</label>
-                        <div class="input-with-icon">
-                            <i class="ti ti-currency-rupee input-icon"></i>
-                            <input type="number" id="otherIncome" value="3000" oninput="calculateBudget()">
-                        </div>
-                    </div>
-
-                    <h2 style="margin-top: 2rem;"><i class="ti ti-receipt"></i> Monthly Expenses</h2>
-                    <div id="expenseList" class="row-list">
-                        <!-- Dynamic expense rows added here -->
-                    </div>
-                    <button class="btn btn-outline btn-sm" style="margin-top: 0.75rem; width: 100%; justify-content: center;" onclick="addExpenseRow()">
-                        <i class="ti ti-plus"></i> Add Expense Category
-                    </button>
-                </div>
-
-                <!-- Outputs Side -->
-                <div>
-                    <!-- Metrics grid -->
-                    <div class="metrics-grid">
-                        <div class="metric-card">
-                            <div class="metric-label">Total Income</div>
-                            <div class="metric-value" id="totIncome">₹0</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Total Expenses</div>
-                            <div class="metric-value" id="totExpenses">₹0</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Left to Save</div>
-                            <div class="metric-value" id="leftToSave">₹0</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Savings Rate %</div>
-                            <div class="metric-value" id="savingsRate">0%</div>
-                        </div>
-                    </div>
-
-                    <!-- Alert box -->
-                    <div id="budgetAlert" class="alert"></div>
-
-                    <!-- Split Card for Charts -->
-                    <div class="grid-2">
-                        <div class="card">
-                            <h2>Expense Breakdown</h2>
-                            <div style="max-height: 200px; display: flex; justify-content: center;">
-                                <canvas id="expenseChart"></canvas>
-                            </div>
-                            <div id="expenseLegend" class="html-legend"></div>
-                        </div>
-
-                        <div class="card">
-                            <h2>50/30/20 Rule Check</h2>
-                            <p class="tip-text" style="margin-bottom: 1.25rem;"><i class="ti ti-info-circle"></i> Standard target rule: 50% for Needs, 30% for Wants, 20% for Savings.</p>
-                            
-                            <!-- Needs Bar -->
-                            <div class="progress-bar-section">
-                                <div class="progress-bar-header">
-                                    <span>Needs (Target: 50%)</span>
-                                    <span id="needsProgressLabel">0%</span>
-                                </div>
-                                <div class="progress-bar-container">
-                                    <div id="needsProgressBar" class="progress-bar-fill"></div>
-                                    <div class="progress-bar-target" style="left: 50%;"></div>
-                                </div>
-                            </div>
-
-                            <!-- Wants Bar -->
-                            <div class="progress-bar-section">
-                                <div class="progress-bar-header">
-                                    <span>Wants (Target: 30%)</span>
-                                    <span id="wantsProgressLabel">0%</span>
-                                </div>
-                                <div class="progress-bar-container">
-                                    <div id="wantsProgressBar" class="progress-bar-fill"></div>
-                                    <div class="progress-bar-target" style="left: 30%;"></div>
-                                </div>
-                            </div>
-
-                            <!-- Savings Bar -->
-                            <div class="progress-bar-section">
-                                <div class="progress-bar-header">
-                                    <span>Savings (Target: 20%)</span>
-                                    <span id="savingsProgressLabel">0%</span>
-                                </div>
-                                <div class="progress-bar-container">
-                                    <div id="savingsProgressBar" class="progress-bar-fill"></div>
-                                    <div class="progress-bar-target" style="left: 20%;"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 2 — SAVINGS GOALS -->
-        <section id="savings" class="tab-content">
-            <div class="grid-1-2">
-                <!-- Left Input Panel -->
-                <div class="card">
-                    <h2><i class="ti ti-plus"></i> Add New Savings Goal</h2>
-                    <div class="input-group">
-                        <label for="newGoalName">Goal Name</label>
-                        <input type="text" id="newGoalName" placeholder="e.g. Children's Education, Bike Purchase">
-                    </div>
-                    <div class="input-group">
-                        <label for="newGoalTarget">Target Amount Needed (₹)</label>
-                        <div class="input-with-icon">
-                            <i class="ti ti-currency-rupee input-icon"></i>
-                            <input type="number" id="newGoalTarget" placeholder="e.g. 50000">
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label for="newGoalSaved">Already Saved So Far (₹)</label>
-                        <div class="input-with-icon">
-                            <i class="ti ti-currency-rupee input-icon"></i>
-                            <input type="number" id="newGoalSaved" value="0">
-                        </div>
-                    </div>
-                    <button class="btn" style="width: 100%; justify-content: center;" onclick="addSavingsGoal()">
-                        <i class="ti ti-circle-plus"></i> Add Goal
-                    </button>
-                </div>
-
-                <!-- Right Display List -->
-                <div>
-                    <div class="card">
-                        <h2><i class="ti ti-target-arrow"></i> Active Savings Goals</h2>
-                        <div id="goalsList">
-                            <!-- Goal items generated dynamically -->
-                        </div>
-
-                        <!-- Summary Alert -->
-                        <div id="goalsSummaryAlert" class="alert green" style="margin-top: 1.25rem;">
-                            <!-- Calculated summary shows here -->
-                        </div>
-                        
-                        <div style="text-align: right; margin-top: 1rem;">
-                            <button class="btn btn-outline btn-sm" onclick="triggerAdvice('savings')">
-                                Get savings advice <i class="ti ti-arrow-up-right"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 3 — EMI & LOAN CALCULATOR -->
-        <section id="loan" class="tab-content">
-            <div class="grid-1-2">
-                <!-- Sliders Section -->
-                <div class="card">
-                    <h2><i class="ti ti-adjustments"></i> Adjust Loan Terms</h2>
-                    
-                    <div class="input-group">
-                        <label for="loanAmount">Loan Amount (₹)</label>
-                        <div class="slider-row">
-                            <input type="range" id="loanAmountSlider" min="10000" max="5000000" step="10000" value="500000" oninput="syncLoanInputs('amount', 'slider')">
-                            <input type="number" id="loanAmountInput" min="10000" max="100000000" value="500000" oninput="syncLoanInputs('amount', 'input')">
-                        </div>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="loanRate">Annual Interest Rate (%)</label>
-                        <div class="slider-row">
-                            <input type="range" id="loanRateSlider" min="5" max="30" step="0.1" value="10.5" oninput="syncLoanInputs('rate', 'slider')">
-                            <input type="number" id="loanRateInput" min="1" max="50" step="0.1" value="10.5" oninput="syncLoanInputs('rate', 'input')">
-                        </div>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="loanTenure">Loan Tenure (Months)</label>
-                        <div class="slider-row">
-                            <input type="range" id="loanTenureSlider" min="6" max="360" step="6" value="60" oninput="syncLoanInputs('tenure', 'slider')">
-                            <input type="number" id="loanTenureInput" min="1" max="600" value="60" oninput="syncLoanInputs('tenure', 'input')">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Outputs Section -->
-                <div>
-                    <div class="metrics-grid">
-                        <div class="metric-card" style="border-left-color: var(--primary);">
-                            <div class="metric-label">Monthly EMI</div>
-                            <div class="metric-value" id="loanEmi" style="color: var(--primary);">₹0</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Total Payable</div>
-                            <div class="metric-value" id="loanTotalPayable">₹0</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Total Interest Paid</div>
-                            <div class="metric-value" id="loanTotalInterest">₹0</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Interest portion %</div>
-                            <div class="metric-value" id="loanInterestRatio">0%</div>
-                        </div>
-                    </div>
-
-                    <!-- Color alert on EMI relative to income -->
-                    <div id="loanEmiAlert" class="alert"></div>
-
-                    <!-- Amortization Chart -->
-                    <div class="card">
-                        <h2>Amortization Schedule (Yearly Paid Principal vs Interest)</h2>
-                        <div style="height: 250px;">
-                            <canvas id="loanChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Optimization Tip -->
-                    <div class="card" id="loanTipBox">
-                        <h3><i class="ti ti-bulb" style="color: var(--amber);"></i> Money Saver Recommendation</h3>
-                        <p id="loanTipText" style="font-size: 0.95rem; margin-top: 0.5rem; color: var(--text-secondary);"></p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 4 — INVESTMENT GROWTH SIMULATOR -->
-        <section id="investment" class="tab-content">
-            <div class="grid-1-2">
-                <!-- Sliders -->
-                <div class="card">
-                    <h2><i class="ti ti-chart-arrows"></i> Adjust Investment Inputs</h2>
-                    
-                    <div class="input-group">
-                        <label for="sipAmount">Monthly SIP Amount (₹)</label>
-                        <div class="slider-row">
-                            <input type="range" id="sipAmountSlider" min="100" max="50000" step="100" value="2000" oninput="syncSipInputs('sip', 'slider')">
-                            <input type="number" id="sipAmountInput" value="2000" oninput="syncSipInputs('sip', 'input')">
-                        </div>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="sipReturn">Expected Annual Return (%)</label>
-                        <div class="slider-row">
-                            <input type="range" id="sipReturnSlider" min="5" max="25" step="0.5" value="12" oninput="syncSipInputs('return', 'slider')">
-                            <input type="number" id="sipReturnInput" value="12" oninput="syncSipInputs('return', 'input')">
-                        </div>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="sipPeriod">Investment Period (Years)</label>
-                        <div class="slider-row">
-                            <input type="range" id="sipPeriodSlider" min="1" max="40" step="1" value="15" oninput="syncSipInputs('period', 'slider')">
-                            <input type="number" id="sipPeriodInput" value="15" oninput="syncSipInputs('period', 'input')">
-                        </div>
-                    </div>
-
-                    <div class="input-group" style="margin-top: 2rem;">
-                        <label for="lumpSum">One-time Lump Sum Investment (₹) — Optional</label>
-                        <div class="input-with-icon">
-                            <i class="ti ti-currency-rupee input-icon"></i>
-                            <input type="number" id="lumpSum" value="10000" oninput="calculateSIP()">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Simulation results -->
-                <div>
-                    <div class="metrics-grid">
-                        <div class="metric-card" style="border-left-color: var(--green);">
-                            <div class="metric-label">Estimated Future Value</div>
-                            <div class="metric-value" id="sipCorpus" style="color: var(--green);">₹0</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Amount Invested</div>
-                            <div class="metric-value" id="sipInvested">₹0</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Wealth Gain</div>
-                            <div class="metric-value" id="sipGains">₹0</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Multiplier</div>
-                            <div class="metric-value" id="sipMultiplier" style="color: var(--primary);">1.0x</div>
-                        </div>
-                    </div>
-
-                    <!-- Advice insight -->
-                    <div class="alert green" id="sipMotivationBox" style="font-weight: 500;">
-                        <!-- dynamic motivation sentence -->
-                    </div>
-
-                    <!-- Growth Line Chart -->
-                    <div class="card">
-                        <h2>Your Money Growth Timeline</h2>
-                        <div style="height: 250px;">
-                            <canvas id="sipChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Comparison Table -->
-                    <div class="card">
-                        <h2>What a ₹2,000 Monthly SIP Becomes</h2>
-                        <table class="growth-table" id="sipComparisonTable">
-                            <thead>
-                                <tr>
-                                    <th>Period / Returns</th>
-                                    <th>8% Return</th>
-                                    <th>12% Return (Equity Mutual Fund)</th>
-                                    <th>15% Return (High Growth)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Generated Dynamically -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 5 — DEBT PAYOFF PLANNER -->
-        <section id="debt" class="tab-content">
-            <div class="grid-1-2">
-                <!-- Inputs -->
-                <div class="card">
-                    <h2><i class="ti ti-edit"></i> Loan Details</h2>
-                    <div class="input-group">
-                        <label for="debtAmount">Total Debt Owed (₹)</label>
-                        <div class="input-with-icon">
-                            <i class="ti ti-currency-rupee input-icon"></i>
-                            <input type="number" id="debtAmount" value="150000" oninput="calculateDebtPayoff()">
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label for="debtRate">Annual Interest Rate (%)</label>
-                        <div class="input-with-icon">
-                            <i class="ti ti-percent input-icon"></i>
-                            <input type="number" id="debtRate" value="14" step="0.5" oninput="calculateDebtPayoff()">
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label for="debtMonthlyPayment">Your Monthly Payment Capacity (₹)</label>
-                        <div class="input-with-icon">
-                            <i class="ti ti-currency-rupee input-icon"></i>
-                            <input type="number" id="debtMonthlyPayment" value="5000" oninput="calculateDebtPayoff()">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Outputs -->
-                <div>
-                    <div class="metrics-grid">
-                        <div class="metric-card" style="border-left-color: var(--red);">
-                            <div class="metric-label">Time to Debt Freedom</div>
-                            <div class="metric-value" id="debtMonths" style="color: var(--red);">0 months</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Total Interest Payable</div>
-                            <div class="metric-value" id="debtTotalInterest">₹0</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Total Amount Paid Back</div>
-                            <div class="metric-value" id="debtTotalPaid">₹0</div>
-                        </div>
-                    </div>
-
-                    <!-- Alert box -->
-                    <div id="debtAlert" class="alert"></div>
-
-                    <!-- Paid vs principal bar chart -->
-                    <div class="card">
-                        <h2>Debt Cost Breakdown (Principal vs Total Paid)</h2>
-                        <div style="height: 200px; max-width: 400px; margin: 0 auto;">
-                            <canvas id="debtChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Strategy explainer cards -->
-                    <div class="card">
-                        <h2>Debt Payoff Strategies</h2>
-                        <p class="tip-text" style="margin-bottom: 1.25rem;"><i class="ti ti-info-circle"></i> Best techniques to settle multiple debts faster:</p>
-                        <div class="strategy-container">
-                            <div class="strategy-card">
-                                <h3>1. Avalanche Method</h3>
-                                <p>Pay off debts with the <strong>highest interest rate first</strong>. Saves you the most interest money overall.</p>
-                            </div>
-                            <div class="strategy-card">
-                                <h3>2. Snowball Method</h3>
-                                <p>Pay off debts with the <strong>smallest balance first</strong>. Gives you quick mental wins to stay motivated.</p>
-                            </div>
-                        </div>
-                        <div style="text-align: right; margin-top: 1.25rem;">
-                            <button class="btn btn-outline btn-sm" onclick="triggerAdvice('debt')">
-                                Which is better for me? <i class="ti ti-arrow-up-right"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 6 — FINANCIAL LITERACY LESSONS -->
-        <section id="lessons" class="tab-content">
-            <div class="card" style="margin-bottom: 2rem;">
-                <h2><i class="ti ti-bulb"></i> Financial Literacy Lessons</h2>
-                <p style="font-size: 0.95rem; color: var(--text-secondary);">Learn these core financial principles in simple English to improve your money management.</p>
-            </div>
-            <div class="lessons-grid">
-                <!-- Card 1 -->
-                <div class="lesson-card">
-                    <div>
-                        <div class="lesson-icon-box"><i class="ti ti-chart-pie"></i></div>
-                        <div class="lesson-title">The 50/30/20 Rule</div>
-                        <div class="lesson-desc">A simple formula to manage your money: Spend 50% of your earnings on Needs (rent, food, bills), 30% on Wants (entertainment, eating out), and save the remaining 20% for future goals.</div>
-                    </div>
-                    <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: center;" onclick="triggerLessonAdvice(1)">
-                        Learn more <i class="ti ti-arrow-up-right"></i>
-                    </button>
-                </div>
-                <!-- Card 2 -->
-                <div class="lesson-card">
-                    <div>
-                        <div class="lesson-icon-box"><i class="ti ti-shield-check"></i></div>
-                        <div class="lesson-title">Emergency Fund</div>
-                        <div class="lesson-desc">Save enough money to cover 3 to 6 months of your family's basic needs. Keep this cash in a safe bank account. Use it only for real emergencies like medical bills or job loss.</div>
-                    </div>
-                    <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: center;" onclick="triggerLessonAdvice(2)">
-                        Learn more <i class="ti ti-arrow-up-right"></i>
-                    </button>
-                </div>
-                <!-- Card 3 -->
-                <div class="lesson-card">
-                    <div>
-                        <div class="lesson-icon-box"><i class="ti ti-sparkles"></i></div>
-                        <div class="lesson-title">Compound Interest</div>
-                        <div class="lesson-desc">When your money earns returns, those returns earn returns in the next period too. Over time, your money grows exponentially!</div>
-                    </div>
-                    <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: center;" onclick="triggerLessonAdvice(3)">
-                        Learn more <i class="ti ti-arrow-up-right"></i>
-                    </button>
-                </div>
-                <!-- Card 4 -->
-                <div class="lesson-card">
-                    <div>
-                        <div class="lesson-icon-box"><i class="ti ti-scale"></i></div>
-                        <div class="lesson-title">Good Debt vs Bad Debt</div>
-                        <div class="lesson-desc">Good debt is money borrowed to build long-term value, like a home loan. Bad debt is borrowing for everyday costs or luxury items, like buying clothes on a credit card.</div>
-                    </div>
-                    <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: center;" onclick="triggerLessonAdvice(4)">
-                        Learn more <i class="ti ti-arrow-up-right"></i>
-                    </button>
-                </div>
-                <!-- Card 5 -->
-                <div class="lesson-card">
-                    <div>
-                        <div class="lesson-icon-box"><i class="ti ti-device-analogue"></i></div>
-                        <div class="lesson-title">SIP Mutual Funds</div>
-                        <div class="lesson-desc">A Systematic Investment Plan (SIP) lets you invest a fixed small amount (like ₹500) every month. This helps you build wealth over time without timing the stock market.</div>
-                    </div>
-                    <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: center;" onclick="triggerLessonAdvice(5)">
-                        Learn more <i class="ti ti-arrow-up-right"></i>
-                    </button>
-                </div>
-                <!-- Card 6 -->
-                <div class="lesson-card">
-                    <div>
-                        <div class="lesson-icon-box"><i class="ti ti-heart-handshake"></i></div>
-                        <div class="lesson-title">Insurance First</div>
-                        <div class="lesson-desc">Protect your family before investing. Get a Term Life Insurance to secure your family's future, and Health Insurance so medical bills don't wipe out your savings.</div>
-                    </div>
-                    <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: center;" onclick="triggerLessonAdvice(6)">
-                        Learn more <i class="ti ti-arrow-up-right"></i>
-                    </button>
-                </div>
-                <!-- Card 7 -->
-                <div class="lesson-card">
-                    <div>
-                        <div class="lesson-icon-box"><i class="ti ti-arrow-bounce"></i></div>
-                        <div class="lesson-title">Inflation</div>
-                        <div class="lesson-desc">Inflation is the rate at which costs rise. If inflation is 6%, an item costing ₹10,000 will cost ₹10,600 next year. Your savings must grow faster than inflation to keep buying power.</div>
-                    </div>
-                    <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: center;" onclick="triggerLessonAdvice(7)">
-                        Learn more <i class="ti ti-arrow-up-right"></i>
-                    </button>
-                </div>
-                <!-- Card 8 -->
-                <div class="lesson-card">
-                    <div>
-                        <div class="lesson-icon-box"><i class="ti ti-star"></i></div>
-                        <div class="lesson-title">Credit Score</div>
-                        <div class="lesson-desc">A score that rates how reliably you pay back loans. Keeping a clean repayment record builds a high score, which allows you to borrow money easily at lower interest rates.</div>
-                    </div>
-                    <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: center;" onclick="triggerLessonAdvice(8)">
-                        Learn more <i class="ti ti-arrow-up-right"></i>
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 7 — NET WORTH TRACKER -->
-        <section id="networth" class="tab-content">
-            <div class="grid-1-2">
-                <!-- Assets & Liabilities Inputs -->
-                <div class="grid-2" style="grid-column: span 1;">
-                    <div class="card">
-                        <h2><i class="ti ti-plus" style="color: var(--green);"></i> My Assets</h2>
-                        <div class="input-group">
-                            <label for="assetCash">Cash & Bank Balance (₹)</label>
-                            <input type="number" id="assetCash" value="25000" oninput="calculateNetWorth()">
-                        </div>
-                        <div class="input-group">
-                            <label for="assetMF">Mutual Funds / Stocks (₹)</label>
-                            <input type="number" id="assetMF" value="40000" oninput="calculateNetWorth()">
-                        </div>
-                        <div class="input-group">
-                            <label for="assetGold">Gold Value (₹)</label>
-                            <input type="number" id="assetGold" value="60000" oninput="calculateNetWorth()">
-                        </div>
-                        <div class="input-group">
-                            <label for="assetProperty">Property / House Value (₹)</label>
-                            <input type="number" id="assetProperty" value="0" oninput="calculateNetWorth()">
-                        </div>
-                        <div class="input-group">
-                            <label for="assetOther">Other Assets (₹)</label>
-                            <input type="number" id="assetOther" value="5000" oninput="calculateNetWorth()">
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <h2><i class="ti ti-minus" style="color: var(--red);"></i> My Liabilities</h2>
-                        <div class="input-group">
-                            <label for="liabHome">Home Loan Outstanding (₹)</label>
-                            <input type="number" id="liabHome" value="0" oninput="calculateNetWorth()">
-                        </div>
-                        <div class="input-group">
-                            <label for="liabPersonal">Personal Loan (₹)</label>
-                            <input type="number" id="liabPersonal" value="15000" oninput="calculateNetWorth()">
-                        </div>
-                        <div class="input-group">
-                            <label for="liabCC">Credit Card Debt (₹)</label>
-                            <input type="number" id="liabCC" value="4500" oninput="calculateNetWorth()">
-                        </div>
-                        <div class="input-group">
-                            <label for="liabOther">Other Debts Owed (₹)</label>
-                            <input type="number" id="liabOther" value="0" oninput="calculateNetWorth()">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Outputs -->
-                <div>
-                    <!-- Net Worth Metric Cards -->
-                    <div class="metrics-grid">
-                        <div class="metric-card">
-                            <div class="metric-label">Total Assets</div>
-                            <div class="metric-value" id="nwTotalAssets" style="color: var(--green);">₹0</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Total Liabilities</div>
-                            <div class="metric-value" id="nwTotalLiabilities" style="color: var(--red);">₹0</div>
-                        </div>
-                        <div class="metric-card" id="nwNetWorthCard">
-                            <div class="metric-label">My Net Worth</div>
-                            <div class="metric-value" id="nwNetWorth">₹0</div>
-                        </div>
-                    </div>
-
-                    <!-- Assets to Liabilities Ratio Bar -->
-                    <div class="card">
-                        <h2>Assets vs Liabilities Ratio</h2>
-                        <div class="networth-ratio-bar">
-                            <div id="ratioAssetsBar" class="ratio-assets">Assets</div>
-                            <div id="ratioLiabilitiesBar" class="ratio-liabilities">Liabilities</div>
-                        </div>
-                        <p class="tip-text"><i class="ti ti-info-circle"></i> Aim to increase assets (green) and shrink liabilities (red).</p>
-                    </div>
-
-                    <!-- Donut Allocation chart -->
-                    <div class="card">
-                        <h2>Asset Allocation Breakdown</h2>
-                        <div style="height: 220px; display: flex; justify-content: center;">
-                            <canvas id="netWorthChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Action Advice Box -->
-                    <div class="card" id="netWorthAdviceBox">
-                        <h3><i class="ti ti-shield-alert" id="nwAdviceIcon"></i> Personalised Recommendation</h3>
-                        <p id="netWorthAdviceText" style="margin-top: 0.5rem; font-size: 0.95rem; color: var(--text-secondary);"></p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </div>
-
-    <!-- Floating Help Button -->
-    <button class="floating-ai-btn" onclick="openFloatingQuestion()">
-        <i class="ti ti-message-chatbot"></i> Ask AI Question
-    </button>
-
-    <!-- Side Slide-out AI Assistant Drawer -->
-    <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
-    <div class="drawer" id="drawer">
-        <div>
-            <div class="drawer-header">
-                <h3><i class="ti ti-message-chatbot" style="color: var(--primary);"></i> AI Assistant Prompt</h3>
-                <button class="drawer-close" onclick="closeDrawer()"><i class="ti ti-x"></i></button>
-            </div>
-            <div class="drawer-body">
-                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
-                    Since this application operates completely offline, we've drafted a precise prompt for you. Copy it and paste it into our AI chat window to get immediate answers!
-                </p>
-                <div class="prompt-preview-box" id="promptText"></div>
-            </div>
-        </div>
-        <div class="drawer-footer">
-            <button class="btn" onclick="copyPromptToClipboard()"><i class="ti ti-copy"></i> Copy Prompt to Clipboard</button>
-            <button class="btn btn-outline" onclick="closeDrawer()">Close</button>
-        </div>
-    </div>
-
-    <!-- Temporary Toast -->
-    <div class="copy-toast" id="copyToast">Prompt copied to clipboard!</div>
-
-    <!-- Footer Disclaimer -->
-    <footer>
-        <p>This tool is for educational purposes only and does not constitute financial advice. Consult a SEBI-registered financial advisor for personalised guidance.</p>
-    </footer>
-
-    <script>
-        // Data States & Prepopulated Lists
-        let expenses = [
-            { id: 1, name: 'Rent', amount: 10000, type: 'needs' },
-            { id: 2, name: 'Food & Groceries', amount: 6000, type: 'needs' },
-            { id: 3, name: 'Transport', amount: 2000, type: 'needs' },
-            { id: 4, name: 'Utilities', amount: 3000, type: 'needs' },
-            { id: 5, name: 'Entertainment', amount: 1500, type: 'wants' }
-        ];
-
-        let savingsGoals = [
-            { id: 1, name: 'Emergency Fund', target: 90000, saved: 15000 },
-            { id: 2, name: 'New Phone', target: 20000, saved: 8000 }
-        ];
-
-        // Chart References
-        let budgetChartInstance = null;
-        let loanChartInstance = null;
-        let sipChartInstance = null;
-        let debtChartInstance = null;
-        let netWorthChartInstance = null;
-
-        // Initialize App on load
-        window.addEventListener('DOMContentLoaded', () => {
-            renderExpensesList();
-            renderGoalsList();
-            calculateBudget();
-            calculateLoanEMI();
-            calculateSIP();
-            calculateDebtPayoff();
-            calculateNetWorth();
-        });
-
-        // ----------------------------------------------------
-        // UTILITIES
-        // ----------------------------------------------------
-        function formatINR(num) {
-            return '₹' + Math.round(num).toLocaleString('en-IN');
-        }
-
-        function toggleTheme() {
-            const body = document.body;
-            body.classList.toggle('dark');
-            const themeIcon = document.getElementById('themeIcon');
-            if(body.classList.contains('dark')) {
-                themeIcon.className = 'ti ti-moon';
-            } else {
-                themeIcon.className = 'ti ti-sun';
-            }
-            // Redraw charts to match grid color configurations if dark mode changes
-            calculateBudget();
-            calculateLoanEMI();
-            calculateSIP();
-            calculateDebtPayoff();
-            calculateNetWorth();
-        }
-
-        function switchTab(tabId) {
-            const contents = document.querySelectorAll('.tab-content');
-            contents.forEach(el => el.classList.remove('active'));
-
-            const buttons = document.querySelectorAll('.tab-btn');
-            buttons.forEach(el => el.classList.remove('active'));
-
-            document.getElementById(tabId).classList.add('active');
-            
-            // Find button corresponding to tabId and make active
-            const activeBtn = Array.from(buttons).find(btn => btn.getAttribute('onclick').includes(tabId));
-            if(activeBtn) activeBtn.classList.add('active');
-
-            // Scroll to top of tab content window
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            // Trigger updates specifically on the tabs to fix chart redraw sizing issues
-            if (tabId === 'budget') calculateBudget();
-            if (tabId === 'loan') calculateLoanEMI();
-            if (tabId === 'investment') calculateSIP();
-            if (tabId === 'debt') calculateDebtPayoff();
-            if (tabId === 'networth') calculateNetWorth();
-        }
-
-        // Drawer controllers
-        function openDrawer(text) {
-            document.getElementById('promptText').innerText = text;
-            document.getElementById('drawerOverlay').classList.add('open');
-            document.getElementById('drawer').classList.add('open');
-        }
-
-        function closeDrawer() {
-            document.getElementById('drawerOverlay').classList.remove('open');
-            document.getElementById('drawer').classList.remove('open');
-        }
-
-        function copyPromptToClipboard() {
-            const text = document.getElementById('promptText').innerText;
-            navigator.clipboard.writeText(text).then(() => {
-                showToast();
-                closeDrawer();
-            }).catch(err => {
-                console.error("Could not copy: ", err);
-            });
-        }
-
-        function showToast() {
-            const toast = document.getElementById('copyToast');
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-
-        function openFloatingQuestion() {
-            openDrawer('I have a question about personal finance in India:\n\n[Type your specific question here, e.g. "Should I pay off my loan or invest in SIP first?"]');
-        }
-
-        // ----------------------------------------------------
-        // TAB 1: BUDGET PLANNER LOGIC
-        // ----------------------------------------------------
-        function renderExpensesList() {
-            const listEl = document.getElementById('expenseList');
-            listEl.innerHTML = '';
-            expenses.forEach(exp => {
-                const div = document.createElement('div');
-                div.className = 'row-item';
-                div.innerHTML = `
-                    <input type="text" value="${exp.name}" oninput="updateExpenseRow(${exp.id}, 'name', this.value)">
-                    <div class="input-with-icon">
-                        <i class="ti ti-currency-rupee input-icon" style="left:0.4rem; font-size:0.85rem;"></i>
-                        <input type="number" value="${exp.amount}" style="padding-left:1.5rem !important;" oninput="updateExpenseRow(${exp.id}, 'amount', this.value)">
-                    </div>
-                    <select onchange="updateExpenseRow(${exp.id}, 'type', this.value)">
-                        <option value="needs" ${exp.type === 'needs' ? 'selected' : ''}>Needs</option>
-                        <option value="wants" ${exp.type === 'wants' ? 'selected' : ''}>Wants</option>
-                    </select>
-                    <button class="btn btn-danger btn-sm" onclick="removeExpenseRow(${exp.id})" title="Delete row">
-                        <i class="ti ti-trash"></i>
-                    </button>
-                `;
-                listEl.appendChild(div);
-            });
-        }
-
-        function addExpenseRow() {
-            const newId = expenses.length > 0 ? Math.max(...expenses.map(e => e.id)) + 1 : 1;
-            expenses.push({ id: newId, name: 'Custom Expense', amount: 1000, type: 'needs' });
-            renderExpensesList();
-            calculateBudget();
-        }
-
-        function removeExpenseRow(id) {
-            expenses = expenses.filter(exp => exp.id !== id);
-            renderExpensesList();
-            calculateBudget();
-        }
-
-        // Sync updates
-        function updateExpenseRow(id, field, value) {
-            const exp = expenses.find(e => e.id === id);
-            if (exp) {
-                if (field === 'amount') {
-                    exp.amount = parseFloat(value) || 0;
-                } else {
-                    exp[field] = value;
-                }
-                calculateBudget();
-            }
-        }
-
-        function calculateBudget() {
-            const salary = parseFloat(document.getElementById('takeHomeSalary').value) || 0;
-            const other = parseFloat(document.getElementById('otherIncome').value) || 0;
-            const totalIncome = salary + other;
-            
-            const totalExpenses = expenses.reduce((sum, item) => sum + item.amount, 0);
-            const leftToSave = totalIncome - totalExpenses;
-            const savingsRate = totalIncome > 0 ? (leftToSave / totalIncome) * 100 : 0;
-
-            // Update DOM metrics
-            document.getElementById('totIncome').innerText = formatINR(totalIncome);
-            document.getElementById('totExpenses').innerText = formatINR(totalExpenses);
-            document.getElementById('leftToSave').innerText = formatINR(leftToSave);
-            document.getElementById('savingsRate').innerText = (leftToSave >= 0 ? Math.round(savingsRate) : 0) + '%';
-
-            // Alert block logic
-            const alertEl = document.getElementById('budgetAlert');
-            if (leftToSave < 0) {
-                alertEl.className = 'alert red';
-                alertEl.innerHTML = `<i class="ti ti-alert-triangle"></i> You are overspending by ${formatINR(Math.abs(leftToSave))}! Lower your Wants expenses.`;
-            } else if (savingsRate < 10) {
-                alertEl.className = 'alert amber';
-                alertEl.innerHTML = `<i class="ti ti-alert-circle"></i> Saving only ${Math.round(savingsRate)}% — aim for 20% by cutting unnecessary wants.`;
-            } else {
-                alertEl.className = 'alert green';
-                alertEl.innerHTML = `<i class="ti ti-circle-check"></i> Great! You are saving ${Math.round(savingsRate)}% of your income. Keep it up!`;
-            }
-
-            // 50/30/20 Math
-            const needsTotal = expenses.filter(e => e.type === 'needs').reduce((sum, e) => sum + e.amount, 0);
-            const wantsTotal = expenses.filter(e => e.type === 'wants').reduce((sum, e) => sum + e.amount, 0);
-            
-            const needsPct = totalIncome > 0 ? Math.round((needsTotal / totalIncome) * 100) : 0;
-            const wantsPct = totalIncome > 0 ? Math.round((wantsTotal / totalIncome) * 100) : 0;
-            const savingsPct = totalIncome > 0 ? Math.round((leftToSave / totalIncome) * 100) : 0;
-
-            // Update progress bars
-            document.getElementById('needsProgressLabel').innerText = needsPct + '%';
-            const needsBar = document.getElementById('needsProgressBar');
-            needsBar.style.width = Math.min(needsPct, 100) + '%';
-            needsBar.style.backgroundColor = needsPct > 50 ? 'var(--red)' : 'var(--green)';
-
-            document.getElementById('wantsProgressLabel').innerText = wantsPct + '%';
-            const wantsBar = document.getElementById('wantsProgressBar');
-            wantsBar.style.width = Math.min(wantsPct, 100) + '%';
-            wantsBar.style.backgroundColor = wantsPct > 30 ? 'var(--amber)' : 'var(--green)';
-
-            document.getElementById('savingsProgressLabel').innerText = (savingsPct > 0 ? savingsPct : 0) + '%';
-            const savingsBar = document.getElementById('savingsProgressBar');
-            savingsBar.style.width = Math.max(0, Math.min(savingsPct, 100)) + '%';
-            savingsBar.style.backgroundColor = savingsPct >= 20 ? 'var(--green)' : 'var(--amber)';
-
-            // Donut chart setup
-            updateBudgetChart(expenses);
-            
-            // Sync default inputs for Loan Tab income check
-            const loanAlertBox = document.getElementById('loanEmiAlert');
-            if (loanAlertBox && document.getElementById('loanEmi').innerText !== '₹0') {
-                calculateLoanEMI(); // refresh EMI risk status if budget changes
-            }
-        }
-
-        function updateBudgetChart(expensesList) {
-            // Group duplicate expense names
-            const grouped = {};
-            expensesList.forEach(e => {
-                grouped[e.name] = (grouped[e.name] || 0) + e.amount;
-            });
-
-            const labels = Object.keys(grouped);
-            const data = Object.values(grouped);
-            const colors = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#14b8a6'];
-
-            // Populate Legend
-            const legendEl = document.getElementById('expenseLegend');
-            legendEl.innerHTML = '';
-            labels.forEach((label, index) => {
-                const color = colors[index % colors.length];
-                const div = document.createElement('div');
-                div.className = 'legend-item';
-                div.style.borderLeftColor = color;
-                div.innerHTML = `<span>${label}</span><strong>${formatINR(grouped[label])}</strong>`;
-                legendEl.appendChild(div);
-            });
-
-            const ctx = document.getElementById('expenseChart').getContext('2d');
-            
-            if (budgetChartInstance) {
-                budgetChartInstance.destroy();
-            }
-
-            if (data.length === 0) return;
-
-            const isDark = document.body.classList.contains('dark');
-
-            budgetChartInstance = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: data,
-                        backgroundColor: colors.slice(0, data.length),
-                        borderWidth: isDark ? 2 : 1,
-                        borderColor: isDark ? '#090d16' : '#ffffff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    cutout: '65%'
-                }
-            });
-        }
-
-        // ----------------------------------------------------
-        // TAB 2: SAVINGS GOALS LOGIC
-        // ----------------------------------------------------
-        function renderGoalsList() {
-            const listEl = document.getElementById('goalsList');
-            listEl.innerHTML = '';
-            savingsGoals.forEach(goal => {
-                const pct = goal.target > 0 ? Math.round((goal.saved / goal.target) * 100) : 0;
-                const remaining = goal.target - goal.saved;
-                const div = document.createElement('div');
-                div.className = 'goal-item';
-                div.innerHTML = `
-                    <div class="goal-header">
-                        <span class="goal-title">${goal.name}</span>
-                        <button class="btn btn-danger btn-sm" onclick="removeSavingsGoal(${goal.id})">
-                            <i class="ti ti-trash"></i>
-                        </button>
-                    </div>
-                    <div class="progress-bar-container" style="height:12px;">
-                        <div class="progress-bar-fill" style="width: ${Math.min(pct, 100)}%; background-color: var(--green);"></div>
-                    </div>
-                    <div class="goal-details">
-                        <span>${formatINR(goal.saved)} saved of ${formatINR(goal.target)}</span>
-                        <span><strong>${pct}%</strong> — ${formatINR(remaining)} to go</span>
-                    </div>
-                `;
-                listEl.appendChild(div);
-            });
-            calculateGoalsSummary();
-        }
-
-        function addSavingsGoal() {
-            const nameEl = document.getElementById('newGoalName');
-            const targetEl = document.getElementById('newGoalTarget');
-            const savedEl = document.getElementById('newGoalSaved');
-
-            const name = nameEl.value.trim() || 'New Goal';
-            const target = parseFloat(targetEl.value) || 0;
-            const saved = parseFloat(savedEl.value) || 0;
-
-            if (target <= 0) {
-                alert('Please specify a target amount greater than zero.');
-                return;
-            }
-
-            const newId = savingsGoals.length > 0 ? Math.max(...savingsGoals.map(g => g.id)) + 1 : 1;
-            savingsGoals.push({ id: newId, name, target, saved });
-            
-            // Reset input values
-            nameEl.value = '';
-            targetEl.value = '';
-            savedEl.value = '0';
-
-            renderGoalsList();
-        }
-
-        function removeSavingsGoal(id) {
-            savingsGoals = savingsGoals.filter(g => g.id !== id);
-            renderGoalsList();
-        }
-
-        function calculateGoalsSummary() {
-            const totalTarget = savingsGoals.reduce((sum, g) => sum + g.target, 0);
-            const totalSaved = savingsGoals.reduce((sum, g) => sum + g.saved, 0);
-            const totalRemaining = totalTarget - totalSaved;
-
-            const salary = parseFloat(document.getElementById('takeHomeSalary').value) || 0;
-            const other = parseFloat(document.getElementById('otherIncome').value) || 0;
-            const totalExpenses = expenses.reduce((sum, item) => sum + item.amount, 0);
-            const monthlySavings = (salary + other) - totalExpenses;
-
-            const summaryEl = document.getElementById('goalsSummaryAlert');
-
-            if (totalTarget === 0) {
-                summaryEl.className = 'alert green';
-                summaryEl.innerHTML = `<i class="ti ti-circle-check"></i> Add some savings goals above to track your timeline.`;
-                return;
-            }
-
-            if (monthlySavings <= 0) {
-                summaryEl.className = 'alert amber';
-                summaryEl.innerHTML = `<i class="ti ti-alert-triangle"></i> You need to save ${formatINR(totalRemaining)} in total. Setup a positive savings budget on Tab 1 to see how quickly you can achieve this.`;
-            } else {
-                const months = Math.ceil(totalRemaining / monthlySavings);
-                const targetMonthly12Months = totalRemaining / 12;
-
-                summaryEl.className = 'alert green';
-                summaryEl.innerHTML = `<i class="ti ti-clock"></i> You need ${formatINR(totalRemaining)} total. Saving ${formatINR(monthlySavings)}/month gets you there in <strong>${months} months</strong>.<br/>
-                <span style="font-size: 0.85rem; opacity: 0.95;">To reach this goal in exactly 12 months, you would need to save ${formatINR(targetMonthly12Months)}/month.</span>`;
-            }
-        }
-
-        // ----------------------------------------------------
-        // TAB 3: EMI & LOAN CALCULATOR LOGIC
-        // ----------------------------------------------------
-        function syncLoanInputs(field, type) {
-            const slider = document.getElementById(`loan${field.charAt(0).toUpperCase() + field.slice(1)}Slider`);
-            const input = document.getElementById(`loan${field.charAt(0).toUpperCase() + field.slice(1)}Input`);
-            if (type === 'slider') {
-                input.value = slider.value;
-            } else {
-                slider.value = input.value;
-            }
-            calculateLoanEMI();
-        }
-
-        function calculateLoanEMI() {
-            const P = parseFloat(document.getElementById('loanAmountInput').value) || 0;
-            const R = parseFloat(document.getElementById('loanRateInput').value) || 0;
-            const N = parseFloat(document.getElementById('loanTenureInput').value) || 0;
-
-            if (P <= 0 || R <= 0 || N <= 0) {
-                document.getElementById('loanEmi').innerText = '₹0';
-                document.getElementById('loanTotalPayable').innerText = '₹0';
-                document.getElementById('loanTotalInterest').innerText = '₹0';
-                document.getElementById('loanInterestRatio').innerText = '0%';
-                return;
-            }
-
-            const monthlyRate = R / (12 * 100);
-            const emi = P * monthlyRate * Math.pow(1 + monthlyRate, N) / (Math.pow(1 + monthlyRate, N) - 1);
-            const totalPayable = emi * N;
-            const totalInterest = totalPayable - P;
-            const interestPct = (totalInterest / P) * 100;
-
-            document.getElementById('loanEmi').innerText = formatINR(emi);
-            document.getElementById('loanTotalPayable').innerText = formatINR(totalPayable);
-            document.getElementById('loanTotalInterest').innerText = formatINR(totalInterest);
-            document.getElementById('loanInterestRatio').innerText = Math.round(interestPct) + '%';
-
-            // Risk Assessment based on Tab 1 income
-            const salary = parseFloat(document.getElementById('takeHomeSalary').value) || 0;
-            const other = parseFloat(document.getElementById('otherIncome').value) || 0;
-            const monthlyIncome = salary + other;
-            const alertEl = document.getElementById('loanEmiAlert');
-
-            if (monthlyIncome <= 0) {
-                alertEl.className = 'alert amber';
-                alertEl.innerHTML = `<i class="ti ti-info-circle"></i> Setup your income on Tab 1 to see how safe this EMI is for your budget.`;
-            } else {
-                const emiRatio = (emi / monthlyIncome) * 100;
-                if (emiRatio > 40) {
-                    alertEl.className = 'alert red';
-                    alertEl.innerHTML = `<i class="ti ti-alert-triangle"></i> DANGER: Your EMI is <strong>${Math.round(emiRatio)}%</strong> of your income! Keep EMIs below 30% of salary.`;
-                } else if (emiRatio >= 30) {
-                    alertEl.className = 'alert amber';
-                    alertEl.innerHTML = `<i class="ti ti-alert-circle"></i> WARNING: EMI is <strong>${Math.round(emiRatio)}%</strong> of income. Try increasing tenure to make payments safer.`;
-                } else {
-                    alertEl.className = 'alert green';
-                    alertEl.innerHTML = `<i class="ti ti-circle-check"></i> SAFE: EMI is only <strong>${Math.round(emiRatio)}%</strong> of your monthly income.`;
-                }
-            }
-
-            // Payoff optimization suggestions
-            const extraPayment = emi * 0.10; // suggest 10% extra per month
-            let simulatedBalance = P;
-            let simulatedMonths = 0;
-            let simulatedTotalInterest = 0;
-            const enhancedMonthlyPayment = emi + extraPayment;
-
-            while (simulatedBalance > 0 && simulatedMonths < 600) {
-                const interestThisMonth = simulatedBalance * monthlyRate;
-                const principalThisMonth = enhancedMonthlyPayment - interestThisMonth;
-                if (principalThisMonth <= 0) break; // payment cannot cover interest, abort simulation
-                
-                simulatedTotalInterest += interestThisMonth;
-                simulatedBalance -= principalThisMonth;
-                simulatedMonths++;
-            }
-
-            const interestSaved = totalInterest - simulatedTotalInterest;
-            const monthsSaved = N - simulatedMonths;
-
-            const tipTextEl = document.getElementById('loanTipText');
-            if (monthsSaved > 0 && interestSaved > 100) {
-                tipTextEl.innerHTML = `Paying just <strong>10% extra</strong> every month (an extra <strong>${formatINR(extraPayment)}</strong>) will help you pay off this loan <strong>${monthsSaved} months earlier</strong> and save you <strong>${formatINR(interestSaved)}</strong> in total interest!`;
-            } else {
-                tipTextEl.innerText = "To reduce your EMI burden, try increasing the tenure. To save interest, pay a little extra principal whenever you can.";
-            }
-
-            // Update Amortization Chart
-            updateLoanChart(P, R, N, emi);
-        }
-
-        function updateLoanChart(principal, rate, months, emi) {
-            const monthlyRate = rate / (12 * 100);
-            let balance = principal;
-            const years = Math.ceil(months / 12);
-            
-            const labels = [];
-            const principalPaidData = [];
-            const interestPaidData = [];
-
-            let totalPrincipalPaidSoFar = 0;
-            let totalInterestPaidSoFar = 0;
-
-            for (let year = 1; year <= years; year++) {
-                labels.push(`Year ${year}`);
-                let interestThisYear = 0;
-                let principalThisYear = 0;
-
-                for (let month = 1; month <= 12; month++) {
-                    const currentMonthIndex = (year - 1) * 12 + month;
-                    if (currentMonthIndex > months) break;
-
-                    const interest = balance * monthlyRate;
-                    const principalPaid = emi - interest;
-                    
-                    interestThisYear += interest;
-                    principalThisYear += principalPaid;
-                    balance -= principalPaid;
-                }
-
-                totalPrincipalPaidSoFar += principalThisYear;
-                totalInterestPaidSoFar += interestThisYear;
-
-                principalPaidData.push(totalPrincipalPaidSoFar);
-                interestPaidData.push(totalInterestPaidSoFar);
-            }
-
-            const ctx = document.getElementById('loanChart').getContext('2d');
-            if (loanChartInstance) {
-                loanChartInstance.destroy();
-            }
-
-            const isDark = document.body.classList.contains('dark');
-            const gridColor = isDark ? '#1f2937' : '#e2e8f0';
-            const textColor = isDark ? '#9ca3af' : '#475569';
-
-            // Create canvas area gradients for premium look
-            const prGradient = ctx.createLinearGradient(0, 0, 0, 220);
-            prGradient.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
-            prGradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
-
-            const intGradient = ctx.createLinearGradient(0, 0, 0, 220);
-            intGradient.addColorStop(0, 'rgba(239, 68, 68, 0.25)');
-            intGradient.addColorStop(1, 'rgba(239, 68, 68, 0.0)');
-
-            loanChartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Cumulative Principal Paid',
-                            data: principalPaidData,
-                            borderColor: '#10b981',
-                            backgroundColor: prGradient,
-                            fill: true,
-                            tension: 0.3,
-                            borderWidth: 2
-                        },
-                        {
-                            label: 'Cumulative Interest Paid',
-                            data: interestPaidData,
-                            borderColor: '#ef4444',
-                            backgroundColor: intGradient,
-                            fill: true,
-                            tension: 0.3,
-                            borderWidth: 2
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: { color: isDark ? '#f3f4f6' : '#0f172a', font: { family: 'Outfit', size: 11 } }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: { color: gridColor },
-                            ticks: { color: textColor, font: { family: 'Outfit' } }
-                        },
-                        y: {
-                            grid: { color: gridColor },
-                            ticks: {
-                                color: textColor,
-                                font: { family: 'Outfit' },
-                                callback: function(value) { return '₹' + value.toLocaleString('en-IN'); }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        // ----------------------------------------------------
-        // TAB 4: SIP GROWTH SIMULATOR LOGIC
-        // ----------------------------------------------------
-        function syncSipInputs(field, type) {
-            let sliderEl, inputEl;
-            if (field === 'sip') {
-                sliderEl = document.getElementById('sipAmountSlider');
-                inputEl = document.getElementById('sipAmountInput');
-            } else if (field === 'return') {
-                sliderEl = document.getElementById('sipReturnSlider');
-                inputEl = document.getElementById('sipReturnInput');
-            } else if (field === 'period') {
-                sliderEl = document.getElementById('sipPeriodSlider');
-                inputEl = document.getElementById('sipPeriodInput');
-            }
-
-            if (type === 'slider') {
-                inputEl.value = sliderEl.value;
-            } else {
-                sliderEl.value = inputEl.value;
-            }
-            calculateSIP();
-        }
-
-        function calculateSIP() {
-            const S = parseFloat(document.getElementById('sipAmountInput').value) || 0;
-            const R = parseFloat(document.getElementById('sipReturnInput').value) || 0;
-            const Y = parseFloat(document.getElementById('sipPeriodInput').value) || 0;
-            const L = parseFloat(document.getElementById('lumpSum').value) || 0;
-
-            const n = Y * 12;
-            const r = R / (12 * 100);
-
-            // SIP future value formula: S * [ ( (1 + r)^n - 1 ) / r ] * (1 + r)
-            let futureValueSip = 0;
-            if (S > 0 && r > 0) {
-                futureValueSip = S * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
-            } else if (S > 0) {
-                futureValueSip = S * n; // zero interest
-            }
-
-            // Lump sum compound value: L * (1 + R/100)^Y
-            const futureValueLump = L * Math.pow(1 + R/100, Y);
-            const finalCorpus = futureValueSip + futureValueLump;
-
-            const totalInvested = (S * n) + L;
-            const wealthGained = Math.max(0, finalCorpus - totalInvested);
-            const multiplier = totalInvested > 0 ? (finalCorpus / totalInvested) : 1;
-
-            document.getElementById('sipCorpus').innerText = formatINR(finalCorpus);
-            document.getElementById('sipInvested').innerText = formatINR(totalInvested);
-            document.getElementById('sipGains').innerText = formatINR(wealthGained);
-            document.getElementById('sipMultiplier').innerText = multiplier.toFixed(1) + 'x your investment';
-
-            // Start 5 years earlier calculation
-            const earlyN = (Y + 5) * 12;
-            let earlyFVSip = 0;
-            if (S > 0 && r > 0) {
-                earlyFVSip = S * ((Math.pow(1 + r, earlyN) - 1) / r) * (1 + r);
-            } else {
-                earlyFVSip = S * earlyN;
-            }
-            const earlyFVLump = L * Math.pow(1 + R/100, Y + 5);
-            const earlyCorpus = earlyFVSip + earlyFVLump;
-            const earlyDifference = earlyCorpus - finalCorpus;
-
-            document.getElementById('sipMotivationBox').innerHTML = `<i class="ti ti-bulb"></i> <strong>Motivational Rule</strong>: Starting 5 years earlier would have given you an extra <strong>${formatINR(earlyDifference)}</strong>! Compound interest builds fastest over time.`;
-
-            // Draw growth timeline chart
-            updateSipChart(S, R, Y, L);
-
-            // Redraw comparison matrix
-            updateSipComparisonTable();
-        }
-
-        function updateSipChart(sip, rate, years, lump) {
-            const r = rate / (12 * 100);
-            const labels = [];
-            const investedData = [];
-            const growthData = [];
-
-            for (let year = 1; year <= years; year++) {
-                labels.push(`Yr ${year}`);
-                const currentMonths = year * 12;
-                
-                const invested = (sip * currentMonths) + lump;
-                let futureValueSip = 0;
-                if (sip > 0 && r > 0) {
-                    futureValueSip = sip * ((Math.pow(1 + r, currentMonths) - 1) / r) * (1 + r);
-                } else {
-                    futureValueSip = sip * currentMonths;
-                }
-                const futureValueLump = lump * Math.pow(1 + rate/100, year);
-                
-                investedData.push(invested);
-                growthData.push(futureValueSip + futureValueLump);
-            }
-
-            const ctx = document.getElementById('sipChart').getContext('2d');
-            if (sipChartInstance) {
-                sipChartInstance.destroy();
-            }
-
-            const isDark = document.body.classList.contains('dark');
-            const gridColor = isDark ? '#1f2937' : '#e2e8f0';
-            const textColor = isDark ? '#9ca3af' : '#475569';
-
-            // Area chart gradients
-            const corpusGradient = ctx.createLinearGradient(0, 0, 0, 220);
-            corpusGradient.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
-            corpusGradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
-
-            const investGradient = ctx.createLinearGradient(0, 0, 0, 220);
-            investGradient.addColorStop(0, 'rgba(99, 102, 241, 0.15)');
-            investGradient.addColorStop(1, 'rgba(99, 102, 241, 0.0)');
-
-            sipChartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Total Corpus Value',
-                            data: growthData,
-                            borderColor: '#10b981',
-                            backgroundColor: corpusGradient,
-                            fill: true,
-                            tension: 0.3,
-                            borderWidth: 2
-                        },
-                        {
-                            label: 'Amount Invested',
-                            data: investedData,
-                            borderColor: '#6366f1',
-                            backgroundColor: investGradient,
-                            fill: true,
-                            tension: 0.3,
-                            borderWidth: 2
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: { color: isDark ? '#f3f4f6' : '#0f172a', font: { family: 'Outfit', size: 11 } }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: { color: gridColor },
-                            ticks: { color: textColor, font: { family: 'Outfit' } }
-                        },
-                        y: {
-                            grid: { color: gridColor },
-                            ticks: {
-                                color: textColor,
-                                font: { family: 'Outfit' },
-                                callback: function(value) { return '₹' + value.toLocaleString('en-IN'); }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function updateSipComparisonTable() {
-            const tableBody = document.querySelector('#sipComparisonTable tbody');
-            tableBody.innerHTML = '';
-            
-            const periods = [10, 20, 30];
-            const rates = [8, 12, 15];
-            const baseSip = 2000;
-
-            periods.forEach(yr => {
-                const tr = document.createElement('tr');
-                const tdLabel = document.createElement('td');
-                tdLabel.innerText = `${yr} Years`;
-                tr.appendChild(tdLabel);
-
-                rates.forEach(rt => {
-                    const months = yr * 12;
-                    const r = rt / (12 * 100);
-                    const fv = baseSip * ((Math.pow(1 + r, months) - 1) / r) * (1 + r);
-                    
-                    const tdValue = document.createElement('td');
-                    tdValue.innerText = formatINR(fv);
-                    tr.appendChild(tdValue);
-                });
-                tableBody.appendChild(tr);
-            });
-        }
-
-        // ----------------------------------------------------
-        // TAB 5: DEBT PAYOFF PLANNER LOGIC
-        // ----------------------------------------------------
-        function calculateDebtPayoff() {
-            const debt = parseFloat(document.getElementById('debtAmount').value) || 0;
-            const rate = parseFloat(document.getElementById('debtRate').value) || 0;
-            const pay = parseFloat(document.getElementById('debtMonthlyPayment').value) || 0;
-
-            const alertEl = document.getElementById('debtAlert');
-            
-            if (debt <= 0 || pay <= 0) {
-                document.getElementById('debtMonths').innerText = '0 months';
-                document.getElementById('debtTotalInterest').innerText = '₹0';
-                document.getElementById('debtTotalPaid').innerText = '₹0';
-                alertEl.style.display = 'none';
-                return;
-            }
-
-            const monthlyRate = rate / (12 * 100);
-            const monthlyInterestAccrued = debt * monthlyRate;
-
-            if (pay <= monthlyInterestAccrued) {
-                alertEl.style.display = 'flex';
-                alertEl.className = 'alert red';
-                const minRecommended = Math.ceil(monthlyInterestAccrued + 200);
-                alertEl.innerHTML = `<i class="ti ti-alert-triangle"></i> DANGER: Your monthly payment of ${formatINR(pay)} is less than the monthly interest of ${formatINR(monthlyInterestAccrued)}. The debt will grow forever! Pay at least <strong>${formatINR(minRecommended)}</strong> to start reducing principal.`;
-                
-                document.getElementById('debtMonths').innerText = 'Infinite';
-                document.getElementById('debtTotalInterest').innerText = 'N/A';
-                document.getElementById('debtTotalPaid').innerText = 'N/A';
-                
-                updateDebtPayoffChart(debt, 0);
-                return;
-            }
-
-            alertEl.style.display = 'none';
-
-            // Simulate payoff monthly
-            let balance = debt;
-            let months = 0;
-            let totalInterest = 0;
-
-            while (balance > 0 && months < 1200) {
-                const interest = balance * monthlyRate;
-                const principalPaid = pay - interest;
-                totalInterest += interest;
-                balance -= principalPaid;
-                months++;
-            }
-
-            const totalPaid = debt + totalInterest;
-
-            document.getElementById('debtMonths').innerText = `${months} Months (${(months/12).toFixed(1)} Years)`;
-            document.getElementById('debtTotalInterest').innerText = formatINR(totalInterest);
-            document.getElementById('debtTotalPaid').innerText = formatINR(totalPaid);
-
-            updateDebtPayoffChart(debt, totalInterest);
-        }
-
-        function updateDebtPayoffChart(principal, interest) {
-            const ctx = document.getElementById('debtChart').getContext('2d');
-            if (debtChartInstance) {
-                debtChartInstance.destroy();
-            }
-
-            const isDark = document.body.classList.contains('dark');
-            const textColor = isDark ? '#9ca3af' : '#475569';
-
-            debtChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Initial Loan', 'Total Paid Back'],
-                    datasets: [
-                        {
-                            label: 'Principal Owed',
-                            data: [principal, principal],
-                            backgroundColor: '#6366f1',
-                            borderRadius: 4
-                        },
-                        {
-                            label: 'Interest Cost',
-                            data: [0, interest],
-                            backgroundColor: '#ef4444',
-                            borderRadius: 4
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        x: {
-                            stacked: true,
-                            ticks: { color: textColor, font: { family: 'Outfit' } }
-                        },
-                        y: {
-                            stacked: true,
-                            ticks: {
-                                color: textColor,
-                                font: { family: 'Outfit' },
-                                callback: function(value) { return '₹' + value.toLocaleString('en-IN'); }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        // ----------------------------------------------------
-        // TAB 6: FINANCIAL LITERACY LESSONS LOGIC
-        // ----------------------------------------------------
-        const lessonPrompts = {
-            1: 'Can you explain the 50/30/20 rule in plain, simple English with Indian examples? Explain how a family with an income of ₹30,000 should budget using this rule.',
-            2: 'What is an Emergency Fund and why is it important for low-income households in India? How should we build one and where should we keep this money safely?',
-            3: 'How does Compound Interest work? Show me a simple calculation showing how saving ₹1,000 per month becomes a large amount over 20 years in simple words.',
-            4: 'What is the difference between Good Debt and Bad Debt? Give me common examples in India like home loans vs credit cards or gold loans.',
-            5: 'Explain Systematic Investment Plan (SIP) in mutual funds. How can a beginner in India start with ₹500/month? What are the risks and benefits?',
-            6: 'Why is Term Life Insurance and Health Insurance critical before starting any investments? Explain how it protects families from medical bankruptcy in India.',
-            7: 'What is Inflation? Explain in simple terms why ₹10,000 kept in a cash locker loses value over 10 years and how we can protect our savings.',
-            8: 'What is a Credit Score (like CIBIL) in India? How does it affect our ability to get a loan, and what are 3 simple habits to improve it?'
+<body class="bg-slate-100 text-slate-900 dark:bg-darkbg dark:text-slate-100 transition-colors duration-300">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo, useRef } = React;
+
+        // ====================================================
+        // VECTOR SVG ICONS COMPONENTS
+        // ====================================================
+        const Icons = {
+            Wallet: () => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>,
+            Goal: () => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
+            Percent: () => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>,
+            Growth: () => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>,
+            TrendingDown: () => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6" /></svg>,
+            Book: () => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>,
+            Bank: () => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>,
+            Sun: () => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 4.343l-.707-.707M14.25 12a2.25 2.25 0 11-4.5 0 2.25 2.25 0 01-4.5 0z" /></svg>,
+            Moon: () => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>,
+            Chat: () => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>,
+            Download: () => <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>,
+            Info: () => <svg className="w-5 h-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
         };
 
-        function triggerLessonAdvice(id) {
-            const prompt = lessonPrompts[id] || 'Can you tell me more about financial literacy in India?';
-            openDrawer(prompt);
-        }
+        // ====================================================
+        // REACTIVE REUSABLE CHART.JS COMPONENT
+        // ====================================================
+        const ChartjsComponent = ({ type, data, options, height = 240 }) => {
+            const canvasRef = useRef(null);
+            const chartRef = useRef(null);
 
-        function triggerAdvice(type) {
-            let prompt = '';
-            if (type === 'savings') {
-                const totalTarget = savingsGoals.reduce((sum, g) => sum + g.target, 0);
-                const totalSaved = savingsGoals.reduce((sum, g) => sum + g.saved, 0);
-                const salary = parseFloat(document.getElementById('takeHomeSalary').value) || 0;
-                const other = parseFloat(document.getElementById('otherIncome').value) || 0;
-                const totalExpenses = expenses.reduce((sum, item) => sum + item.amount, 0);
-                const monthlySavings = (salary + other) - totalExpenses;
-
-                prompt = `I am planning my savings goals.
-Total Target: ${formatINR(totalTarget)}
-Total Saved So Far: ${formatINR(totalSaved)}
-Monthly Savings Capacity: ${formatINR(monthlySavings)}
-
-Please provide simple, actionable advice on how to build my emergency fund, reduce unnecessary spending, and reach these targets faster.`;
-            } else if (type === 'debt') {
-                const debt = parseFloat(document.getElementById('debtAmount').value) || 0;
-                const rate = parseFloat(document.getElementById('debtRate').value) || 0;
-                const pay = parseFloat(document.getElementById('debtMonthlyPayment').value) || 0;
-
-                prompt = `I have a debt of ${formatINR(debt)} at an annual interest rate of ${rate}%.
-I can afford a monthly payment of ${formatINR(pay)}.
-
-Please explain if the Avalanche Method or Snowball Method is better for my situation, and suggest simple habits to become debt-free faster.`;
-            }
-            openDrawer(prompt);
-        }
-
-        // ----------------------------------------------------
-        // TAB 7: NET WORTH TRACKER LOGIC
-        // ----------------------------------------------------
-        function calculateNetWorth() {
-            const assetCash = parseFloat(document.getElementById('assetCash').value) || 0;
-            const assetMF = parseFloat(document.getElementById('assetMF').value) || 0;
-            const assetGold = parseFloat(document.getElementById('assetGold').value) || 0;
-            const assetProperty = parseFloat(document.getElementById('assetProperty').value) || 0;
-            const assetOther = parseFloat(document.getElementById('assetOther').value) || 0;
-
-            const liabHome = parseFloat(document.getElementById('liabHome').value) || 0;
-            const liabPersonal = parseFloat(document.getElementById('liabPersonal').value) || 0;
-            const liabCC = parseFloat(document.getElementById('liabCC').value) || 0;
-            const liabOther = parseFloat(document.getElementById('liabOther').value) || 0;
-
-            const totalAssets = assetCash + assetMF + assetGold + assetProperty + assetOther;
-            const totalLiabilities = liabHome + liabPersonal + liabCC + liabOther;
-            const netWorth = totalAssets - totalLiabilities;
-
-            document.getElementById('nwTotalAssets').innerText = formatINR(totalAssets);
-            document.getElementById('nwTotalLiabilities').innerText = formatINR(totalLiabilities);
-            document.getElementById('nwNetWorth').innerText = formatINR(netWorth);
-
-            const nwCard = document.getElementById('nwNetWorthCard');
-            if (netWorth >= 0) {
-                nwCard.style.borderColor = 'var(--green)';
-                nwCard.querySelector('.metric-value').style.color = 'var(--green)';
-            } else {
-                nwCard.style.borderColor = 'var(--red)';
-                nwCard.querySelector('.metric-value').style.color = 'var(--red)';
-            }
-
-            // Ratio calculation
-            const sumAll = totalAssets + totalLiabilities;
-            const ratioAssetsBar = document.getElementById('ratioAssetsBar');
-            const ratioLiabilitiesBar = document.getElementById('ratioLiabilitiesBar');
-
-            if (sumAll === 0) {
-                ratioAssetsBar.style.width = '50%';
-                ratioLiabilitiesBar.style.width = '50%';
-                ratioAssetsBar.innerText = 'Assets (0%)';
-                ratioLiabilitiesBar.innerText = 'Liabilities (0%)';
-            } else {
-                const assetPct = Math.round((totalAssets / sumAll) * 100);
-                const liabPct = 100 - assetPct;
-                
-                ratioAssetsBar.style.width = assetPct + '%';
-                ratioLiabilitiesBar.style.width = liabPct + '%';
-                ratioAssetsBar.innerText = `Assets (${assetPct}%)`;
-                ratioLiabilitiesBar.innerText = `Liabilities (${liabPct}%)`;
-            }
-
-            // Recommendation engine
-            const adviceIcon = document.getElementById('nwAdviceIcon');
-            const adviceText = document.getElementById('netWorthAdviceText');
-            
-            // Fetch basic monthly expenses from Tab 1 to run the liquidity/emergency test
-            const totalExpenses = expenses.reduce((sum, item) => sum + item.amount, 0);
-
-            if (netWorth < 0) {
-                adviceIcon.className = 'ti ti-shield-alert';
-                adviceIcon.style.color = 'var(--red)';
-                adviceText.innerHTML = `Your liabilities exceed your assets (Negative Net Worth). <strong>Priority Action:</strong> Focus on paying off high-interest debts like credit cards and personal loans before spending or investing elsewhere.`;
-            } else if (assetCash < (3 * totalExpenses)) {
-                adviceIcon.className = 'ti ti-alert-circle';
-                adviceIcon.style.color = 'var(--amber)';
-                adviceText.innerHTML = `Your cash reserves (${formatINR(assetCash)}) are less than 3 months of basic living costs (${formatINR(totalExpenses * 3)}). <strong>Priority Action:</strong> Build your Emergency Fund in cash first before investing in mutual funds or buying physical assets.`;
-            } else {
-                adviceIcon.className = 'ti ti-shield-check';
-                adviceIcon.style.color = 'var(--green)';
-                adviceText.innerHTML = `Your net worth is positive and you have a solid emergency buffer. <strong>Priority Action:</strong> Keep building wealth by diversifying into equity mutual funds (SIP) or gold for long-term growth.`;
-            }
-
-            // Asset donut chart
-            updateNetWorthChart(assetCash, assetMF, assetGold, assetProperty, assetOther);
-        }
-
-        function updateNetWorthChart(cash, mf, gold, prop, other) {
-            const ctx = document.getElementById('netWorthChart').getContext('2d');
-            if (netWorthChartInstance) {
-                netWorthChartInstance.destroy();
-            }
-
-            const data = [cash, mf, gold, prop, other];
-            if (data.reduce((sum, v) => sum + v, 0) === 0) return;
-
-            const isDark = document.body.classList.contains('dark');
-
-            netWorthChartInstance = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Cash & Bank', 'Mutual Funds', 'Gold', 'Property', 'Other Assets'],
-                    datasets: [{
+            useEffect(() => {
+                if (canvasRef.current) {
+                    if (chartRef.current) {
+                        chartRef.current.destroy();
+                    }
+                    const ctx = canvasRef.current.getContext('2d');
+                    chartRef.current = new Chart(ctx, {
+                        type: type,
                         data: data,
-                        backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ec4899', '#6b7280'],
-                        borderWidth: isDark ? 2 : 1,
-                        borderColor: isDark ? '#090d16' : '#ffffff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                            labels: {
-                                color: isDark ? '#f3f4f6' : '#0f172a',
-                                font: { family: 'Outfit', size: 10 }
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            ...options
+                        }
+                    });
+                }
+                return () => {
+                    if (chartRef.current) {
+                        chartRef.current.destroy();
+                    }
+                };
+            }, [type, data, options]);
+
+            return (
+                <div style={{ height: height, position: 'relative' }}>
+                    <canvas ref={canvasRef}></canvas>
+                </div>
+            );
+        };
+
+        // Currency utility
+        const formatINR = (num) => {
+            return '₹' + Math.round(num).toLocaleString('en-IN');
+        };
+
+        // ====================================================
+        // MAIN APPLICATION CONTAINER
+        // ====================================================
+        const ApexWealthApp = () => {
+            const [darkMode, setDarkMode] = useState(true);
+            const [activeTab, setActiveTab] = useState('budget');
+            const [showAiDrawer, setShowAiDrawer] = useState(false);
+            const [aiPromptText, setAiPromptText] = useState('');
+            const [showToast, setShowToast] = useState(false);
+
+            // 1. Budget State
+            const [salary, setSalary] = useState(25000);
+            const [otherIncome, setOtherIncome] = useState(3000);
+            const [expenses, setExpenses] = useState([
+                { id: 1, name: 'Rent/Home EMI', amount: 10000, type: 'Need' },
+                { id: 2, name: 'Groceries', amount: 6000, type: 'Need' },
+                { id: 3, name: 'Utilities', amount: 3000, type: 'Need' },
+                { id: 4, name: 'Entertainment', amount: 1500, type: 'Want' },
+                { id: 5, name: 'Dining Out', amount: 1200, type: 'Want' },
+                { id: 6, name: 'Insurance', amount: 1000, type: 'Need' }
+            ]);
+            const [newExpName, setNewExpName] = useState('');
+            const [newExpAmt, setNewExpAmt] = useState('');
+            const [newExpType, setNewExpType] = useState('Need');
+
+            // 2. Savings State
+            const [savingsGoals, setSavingsGoals] = useState([
+                { id: 1, name: 'Emergency Fund', target: 90000, saved: 15000, years: 3, adjustInflation: false },
+                { id: 2, name: 'New Phone', target: 20000, saved: 8000, years: 1, adjustInflation: false }
+            ]);
+            const [newGoalName, setNewGoalName] = useState('');
+            const [newGoalTarget, setNewGoalTarget] = useState('');
+            const [newGoalSaved, setNewGoalSaved] = useState('');
+            const [newGoalYears, setNewGoalYears] = useState(2);
+            const [selectedGoalForSurplus, setSelectedGoalForSurplus] = useState(1);
+
+            // 3. EMI State
+            const [loanAmount, setLoanAmount] = useState(500000);
+            const [loanRate, setLoanRate] = useState(10.5);
+            const [loanTenure, setLoanTenure] = useState(60);
+
+            // 4. SIP Growth State
+            const [sipAmount, setSipAmount] = useState(2000);
+            const [lumpSum, setLumpSum] = useState(10000);
+            const [sipReturn, setSipReturn] = useState(12);
+            const [sipPeriod, setSipPeriod] = useState(15);
+            const [sipStepUp, setSipStepUp] = useState(5); // Annual Step-up %
+
+            // 5. Debt Payoff State
+            const [debts, setDebts] = useState([
+                { id: 1, name: 'Credit Card Debt', balance: 25000, rate: 24, minPayment: 1500 },
+                { id: 2, name: 'Personal Loan', balance: 120000, rate: 14, minPayment: 4000 }
+            ]);
+            const [newDebtName, setNewDebtName] = useState('');
+            const [newDebtBalance, setNewDebtBalance] = useState('');
+            const [newDebtRate, setNewDebtRate] = useState('');
+            const [newDebtMin, setNewDebtMin] = useState('');
+            const [extraDebtCapacity, setExtraDebtCapacity] = useState(3000);
+            const [debtStrategy, setDebtStrategy] = useState('Avalanche'); // Avalanche vs Snowball
+
+            // 6. Net Worth State
+            const [nwAssets, setNwAssets] = useState({ cash: 25000, stocks: 40000, gold: 60000, property: 0, other: 5000 });
+            const [nwLiabilities, setNwLiabilities] = useState({ homeLoan: 0, personalLoan: 15000, creditCard: 4500, otherDebt: 0 });
+
+            // 7. Literacy state
+            const [r72Rate, setR72Rate] = useState(12);
+
+            // Toggle Dark Mode class on body
+            useEffect(() => {
+                if (darkMode) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }, [darkMode]);
+
+            // ====================================================
+            // SHARED REACTIVE LOGIC CALCULATIONS
+            // ====================================================
+            const budgetSummary = useMemo(() => {
+                const totalIncome = salary + otherIncome;
+                const totalExpenses = expenses.reduce((sum, item) => sum + item.amount, 0);
+                const leftToSave = totalIncome - totalExpenses;
+                const savingsRate = totalIncome > 0 ? (leftToSave / totalIncome) * 100 : 0;
+
+                const needsTotal = expenses.filter(e => e.type === 'Need').reduce((sum, e) => sum + e.amount, 0);
+                const wantsTotal = expenses.filter(e => e.type === 'Want').reduce((sum, e) => sum + e.amount, 0);
+
+                const needsPct = totalIncome > 0 ? (needsTotal / totalIncome) * 100 : 0;
+                const wantsPct = totalIncome > 0 ? (wantsTotal / totalIncome) * 100 : 0;
+                const savingsPct = totalIncome > 0 ? (leftToSave / totalIncome) * 100 : 0;
+
+                return { totalIncome, totalExpenses, leftToSave, savingsRate, needsPct, wantsPct, savingsPct, needsTotal, wantsTotal };
+            }, [salary, otherIncome, expenses]);
+
+            const emiSummary = useMemo(() => {
+                const P = loanAmount;
+                const R = loanRate;
+                const N = loanTenure;
+                const r = R / 12 / 100;
+
+                let emi = 0;
+                if (P > 0 && R > 0 && N > 0) {
+                    emi = P * r * Math.pow(1 + r, N) / (Math.pow(1 + r, N) - 1);
+                } else if (P > 0 && N > 0) {
+                    emi = P / N;
+                }
+
+                const totalPayable = emi * N;
+                const totalInterest = totalPayable - P;
+                const interestPct = P > 0 ? (totalInterest / P) * 100 : 0;
+
+                // Smart Prepayment simulation: 10% annual prepayment
+                let prepayBalance = P;
+                let prepayMonths = 0;
+                let prepayTotalInterest = 0;
+                const annualPrepayAmount = P * 0.10;
+
+                for (let m = 1; m <= 600; m++) {
+                    if (prepayBalance <= 0) break;
+                    const monthlyInterest = prepayBalance * r;
+                    let principalPaid = emi - monthlyInterest;
+                    if (principalPaid < 0) break; // Cannot cover interest
+
+                    prepayTotalInterest += monthlyInterest;
+                    prepayBalance -= principalPaid;
+
+                    // Apply annual prepayment
+                    if (m % 12 === 0 && prepayBalance > 0) {
+                        prepayBalance -= annualPrepayAmount;
+                    }
+                    prepayMonths++;
+                }
+
+                const prepayInterestSaved = Math.max(0, totalInterest - prepayTotalInterest);
+                const prepayTenureSaved = Math.max(0, N - prepayMonths);
+
+                return { emi, totalPayable, totalInterest, interestPct, prepayInterestSaved, prepayTenureSaved, annualPrepayAmount };
+            }, [loanAmount, loanRate, loanTenure]);
+
+            const netWorthSummary = useMemo(() => {
+                const totalAssets = Object.values(nwAssets).reduce((a, b) => a + b, 0);
+                const totalLiabilities = Object.values(nwLiabilities).reduce((a, b) => a + b, 0);
+                const netWorth = totalAssets - totalLiabilities;
+                const ratio = totalAssets > 0 ? (totalLiabilities / totalAssets) * 100 : 0;
+                return { totalAssets, totalLiabilities, netWorth, ratio };
+            }, [nwAssets, nwLiabilities]);
+
+            const healthScore = useMemo(() => {
+                let score = 0;
+                // 1. Savings Rate
+                if (budgetSummary.savingsRate >= 20) score += 30;
+                else if (budgetSummary.savingsRate >= 10) score += 15;
+
+                // 2. Emergency fund progress (using index 0 of savingsGoals as Emergency Fund)
+                const emFund = savingsGoals.find(g => g.name.toLowerCase().includes('emergency'));
+                if (emFund) {
+                    const emFundPct = emFund.target > 0 ? (emFund.saved / emFund.target) * 100 : 0;
+                    if (emFundPct >= 100) score += 20;
+                    else if (emFundPct >= 50) score += 10;
+                }
+
+                // 3. Net worth is positive
+                if (netWorthSummary.netWorth > 0) score += 20;
+
+                // 4. Liabilities ratio < 40%
+                if (netWorthSummary.ratio < 40) score += 20;
+                else if (netWorthSummary.ratio < 60) score += 10;
+
+                // 5. Debt capacity check
+                const totalCCDebt = debts.reduce((sum, d) => sum + d.balance, 0);
+                if (totalCCDebt === 0) score += 10;
+
+                return score;
+            }, [budgetSummary, savingsGoals, netWorthSummary, debts]);
+
+            // ====================================================
+            // STRATEGIC DEBT TIMELINE SIMULATION
+            // ====================================================
+            const debtPayoffDetails = useMemo(() => {
+                const simulatePayoff = (strategy) => {
+                    let activeDebts = debts.map(d => ({ ...d }));
+                    let totalPaymentsCapacity = activeDebts.reduce((sum, d) => sum + d.minPayment, 0) + extraDebtCapacity;
+                    let months = 0;
+                    let totalInterestPaid = 0;
+                    let timeline = [];
+
+                    while (activeDebts.some(d => d.balance > 0) && months < 360) {
+                        months++;
+                        // 1. Accrue Interest
+                        activeDebts.forEach(d => {
+                            if (d.balance > 0) {
+                                const interest = d.balance * (d.rate / 12 / 100);
+                                d.balance += interest;
+                                totalInterestPaid += interest;
+                            }
+                        });
+
+                        const totalRemainingDebt = activeDebts.reduce((sum, d) => sum + d.balance, 0);
+                        timeline.push({ month: months, remaining: totalRemainingDebt });
+
+                        if (totalRemainingDebt <= 0) break;
+
+                        // Sort active debts depending on Strategy
+                        if (strategy === 'Avalanche') {
+                            activeDebts.sort((a, b) => b.rate - a.rate); // Highest interest first
+                        } else {
+                            activeDebts.sort((a, b) => a.balance - b.balance); // Smallest balance first
+                        }
+
+                        let extraCash = extraDebtCapacity;
+
+                        // 2. Pay Minimums
+                        activeDebts.forEach(d => {
+                            if (d.balance > 0) {
+                                const minPay = Math.min(d.balance, d.minPayment);
+                                d.balance -= minPay;
+                                if (d.balance <= 0) {
+                                    // Balance was less than minimum, carry over surplus
+                                    extraCash += (d.minPayment - minPay);
+                                }
+                            } else {
+                                // Already paid off, carry over minimum payment to extra stack
+                                extraCash += d.minPayment;
+                            }
+                        });
+
+                        // 3. Apply Extra Stack to Target Debt
+                        for (let d of activeDebts) {
+                            if (d.balance > 0) {
+                                const extraPay = Math.min(d.balance, extraCash);
+                                d.balance -= extraPay;
+                                extraCash -= extraPay;
+                                if (extraCash <= 0) break;
                             }
                         }
-                    },
-                    cutout: '55%'
+                    }
+                    return { months, totalInterestPaid, timeline };
+                };
+
+                const avalanche = simulatePayoff('Avalanche');
+                const snowball = simulatePayoff('Snowball');
+
+                // Simulate baseline (paying just minimums)
+                let baselineDebts = debts.map(d => ({ ...d }));
+                let baselineMonths = 0;
+                let baselineInterest = 0;
+                while (baselineDebts.some(d => d.balance > 0) && baselineMonths < 360) {
+                    baselineMonths++;
+                    baselineDebts.forEach(d => {
+                        if (d.balance > 0) {
+                            const interest = d.balance * (d.rate / 12 / 100);
+                            d.balance += interest;
+                            baselineInterest += interest;
+                            d.balance -= Math.min(d.balance, d.minPayment);
+                        }
+                    });
                 }
-            });
-        }
+
+                return { avalanche, snowball, baselineInterest, baselineMonths };
+            }, [debts, extraDebtCapacity]);
+
+            // ====================================================
+            // DATA EXPORT FUNCTION
+            // ====================================================
+            const exportReport = () => {
+                const dataStr = JSON.stringify({
+                    income: { salary, otherIncome },
+                    expenses,
+                    savingsGoals,
+                    loan: { loanAmount, loanRate, loanTenure },
+                    sip: { sipAmount, lumpSum, sipReturn, sipPeriod, sipStepUp },
+                    debts,
+                    extraDebtCapacity,
+                    assets: nwAssets,
+                    liabilities: nwLiabilities
+                }, null, 2);
+
+                const blob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `apex_wealth_report.json`;
+                link.click();
+            };
+
+            // ====================================================
+            // AI DRAWER PROMPT COMPILER
+            // ====================================================
+            const handleOpenAiDrawer = () => {
+                const totalGoalRemaining = savingsGoals.reduce((sum, g) => sum + (g.target - g.saved), 0);
+                const emFund = savingsGoals.find(g => g.name.toLowerCase().includes('emergency'));
+                const emFundPct = emFund ? ((emFund.saved / emFund.target) * 100) : 0;
+
+                const text = `I am using Apex Wealth to manage my personal finances. Here is my context:
+- Monthly Income: ${formatINR(budgetSummary.totalIncome)} (Salary: ${formatINR(salary)}, Other: ${formatINR(otherIncome)})
+- Monthly Expenses: ${formatINR(budgetSummary.totalExpenses)} (Savings Rate: ${budgetSummary.savingsRate.toFixed(1)}%)
+- Budget Ratios: Needs is ${budgetSummary.needsPct.toFixed(1)}% of income, Wants is ${budgetSummary.wantsPct.toFixed(1)}%
+- Savings Goals Total Remaining: ${formatINR(totalGoalRemaining)}
+- Emergency Fund Progress: ${emFund ? emFundPct.toFixed(0) + '%' : 'Not configured'}
+- Active Debt Owed: ${formatINR(debts.reduce((sum, d) => sum + d.balance, 0))} (Extra payoff capacity: ${formatINR(extraDebtCapacity)}/mo)
+- Loan Details: EMI is ${formatINR(emiSummary.emi)} on a ${formatINR(loanAmount)} principal at ${loanRate}% interest
+- Net Worth Status: Assets: ${formatINR(netWorthSummary.totalAssets)}, Liabilities: ${formatINR(netWorthSummary.totalLiabilities)}, Net Worth: ${formatINR(netWorthSummary.netWorth)}
+- Financial Health Score: ${healthScore}/100
+
+Please provide a personalized, hyper-targeted 3-step action plan in simple English to improve my net worth, clear my debts using the best method, and maximize my wealth growth.`;
+
+                setAiPromptText(text);
+                setShowAiDrawer(true);
+            };
+
+            const copyPrompt = () => {
+                navigator.clipboard.writeText(aiPromptText).then(() => {
+                    setShowToast(true);
+                    setTimeout(() => setShowToast(false), 3000);
+                    setShowAiDrawer(false);
+                });
+            };
+
+            return (
+                <div className="min-h-screen flex flex-col justify-between">
+                    
+                    {/* Header */}
+                    <header className="flex justify-between items-center px-8 py-4 bg-white dark:bg-darkcard backdrop-blur-md border-b border-slate-200 dark:border-card-border shadow-md">
+                        <h1 className="text-2xl font-extrabold bg-gradient-to-r from-indigo-500 to-blue-500 bg-clip-text text-transparent flex items-center gap-2">
+                            <Icons.Wallet /> Apex Wealth
+                        </h1>
+                        <div className="flex items-center gap-4">
+                            <button onClick={exportReport} className="btn btn-outline py-2 px-4 flex items-center gap-2 text-sm">
+                                <Icons.Download /> Export Report
+                            </button>
+                            <button onClick={() => setDarkMode(!darkMode)} className="theme-toggle" title="Toggle Mode">
+                                {darkMode ? <Icons.Sun /> : <Icons.Moon />}
+                            </button>
+                        </div>
+                    </header>
+
+                    {/* Tab Navigation */}
+                    <nav className="tabs-container sticky top-0 bg-white dark:bg-darkcard backdrop-blur-md border-b border-slate-200 dark:border-card-border flex shadow-sm">
+                        <button onClick={() => setActiveTab('budget')} className={`tab-btn ${activeTab === 'budget' ? 'active text-indigo-500' : ''}`}><Icons.Wallet /> Budget Planner</button>
+                        <button onClick={() => setActiveTab('savings')} className={`tab-btn ${activeTab === 'savings' ? 'active text-indigo-500' : ''}`}><Icons.Goal /> Savings Goals</button>
+                        <button onClick={() => setActiveTab('loan')} className={`tab-btn ${activeTab === 'loan' ? 'active text-indigo-500' : ''}`}><Icons.Percent /> EMI Calculator</button>
+                        <button onClick={() => setActiveTab('investment')} className={`tab-btn ${activeTab === 'investment' ? 'active text-indigo-500' : ''}`}><Icons.Growth /> Growth Simulator</button>
+                        <button onClick={() => setActiveTab('debt')} className={`tab-btn ${activeTab === 'debt' ? 'active text-indigo-500' : ''}`}><Icons.TrendingDown /> Debt Payoff</button>
+                        <button onClick={() => setActiveTab('lessons')} className={`tab-btn ${activeTab === 'lessons' ? 'active text-indigo-500' : ''}`}><Icons.Book /> Lessons</button>
+                        <button onClick={() => setActiveTab('networth')} className={`tab-btn ${activeTab === 'networth' ? 'active text-indigo-500' : ''}`}><Icons.Bank /> Net Worth</button>
+                    </nav>
+
+                    {/* Main Container */}
+                    <main className="container flex-1">
+
+                        {/* MODULE 1: BUDGET PLANNER */}
+                        {activeTab === 'budget' && (
+                            <div className="slide-up grid-1-2">
+                                <div className="card">
+                                    <h2 className="text-xl font-bold flex items-center gap-2"><Icons.Wallet /> Monthly Income</h2>
+                                    <div className="input-group">
+                                        <label>Take-Home Salary (₹)</label>
+                                        <input type="number" value={salary} onChange={(e) => setSalary(Number(e.target.value))} />
+                                    </div>
+                                    <div className="input-group">
+                                        <label>Other Income (₹)</label>
+                                        <input type="number" value={otherIncome} onChange={(e) => setOtherIncome(Number(e.target.value))} />
+                                    </div>
+
+                                    <h2 className="text-xl font-bold mt-6"><Icons.TrendingDown /> Expense Categories</h2>
+                                    <div className="space-y-3">
+                                        {expenses.map(exp => (
+                                            <div key={exp.id} className="flex justify-between items-center bg-slate-50 dark:bg-slate-800/40 p-3 rounded-lg border border-slate-200 dark:border-slate-700">
+                                                <div className="flex-1 font-semibold">{exp.name}</div>
+                                                <div className="w-24 text-right pr-4 font-semibold text-indigo-500">{formatINR(exp.amount)}</div>
+                                                <div className="text-xs px-2 py-1 bg-slate-200 dark:bg-slate-700 rounded mr-4">{exp.type}</div>
+                                                <button onClick={() => setExpenses(expenses.filter(e => e.id !== exp.id))} className="text-red-500 hover:text-red-600">❌</button>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800 space-y-3">
+                                        <div className="grid grid-cols-3 gap-2">
+                                            <input type="text" placeholder="Category" value={newExpName} onChange={(e) => setNewExpName(e.target.value)} className="col-span-1" />
+                                            <input type="number" placeholder="Amount (₹)" value={newExpAmt} onChange={(e) => setNewExpAmt(e.target.value)} className="col-span-1" />
+                                            <select value={newExpType} onChange={(e) => setNewExpType(e.target.value)} className="col-span-1">
+                                                <option value="Need">Need</option>
+                                                <option value="Want">Want</option>
+                                            </select>
+                                        </div>
+                                        <button onClick={() => {
+                                            if (newExpName && newExpAmt) {
+                                                setExpenses([...expenses, { id: Date.now(), name: newExpName, amount: Number(newExpAmt), type: newExpType }]);
+                                                setNewExpName('');
+                                                setNewExpAmt('');
+                                            }
+                                        }} className="btn w-full justify-center">Add Expense</button>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-6">
+                                    <div className="metrics-grid">
+                                        <div className="metric-card">
+                                            <div className="metric-label">Total Income</div>
+                                            <div className="metric-value">{formatINR(budgetSummary.totalIncome)}</div>
+                                        </div>
+                                        <div className="metric-card">
+                                            <div className="metric-label">Total Expenses</div>
+                                            <div className="metric-value text-red-500">{formatINR(budgetSummary.totalExpenses)}</div>
+                                        </div>
+                                        <div className="metric-card">
+                                            <div className="metric-label">Left to Save</div>
+                                            <div className="metric-value text-emerald-500">{formatINR(budgetSummary.leftToSave)}</div>
+                                        </div>
+                                        <div className="metric-card">
+                                            <div className="metric-label">Savings Rate %</div>
+                                            <div className="metric-value text-indigo-500">{Math.round(budgetSummary.savingsRate)}%</div>
+                                        </div>
+                                    </div>
+
+                                    {budgetSummary.leftToSave < 0 ? (
+                                        <div className="alert red"><Icons.Info /> You are overspending by {formatINR(Math.abs(budgetSummary.leftToSave))}! Consider reducing your Wants.</div>
+                                    ) : budgetSummary.savingsRate < 10 ? (
+                                        <div className="alert amber"><Icons.Info /> Saving only {Math.round(budgetSummary.savingsRate)}% — aim for 20% by budgeting Wants.</div>
+                                    ) : (
+                                        <div className="alert green"><Icons.Info /> Great job! You are saving {Math.round(budgetSummary.savingsRate)}% of your income.</div>
+                                    )}
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="card">
+                                            <h2 className="text-xl font-bold">Expense Breakdown</h2>
+                                            {expenses.length > 0 && budgetSummary.totalExpenses > 0 ? (
+                                                <ChartjsComponent
+                                                    type="doughnut"
+                                                    data={{
+                                                        labels: expenses.map(e => e.name),
+                                                        datasets: [{
+                                                            data: expenses.map(e => e.amount),
+                                                            backgroundColor: ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4']
+                                                        }]
+                                                    }}
+                                                    options={{ cutout: '65%' }}
+                                                />
+                                            ) : <p className="text-slate-400">No data available</p>}
+                                        </div>
+
+                                        <div className="card">
+                                            <h2 className="text-xl font-bold">50/30/20 Rule Check</h2>
+                                            <p className="text-sm text-slate-400 mb-4">Standard splits: Needs (50%), Wants (30%), Savings (20%).</p>
+                                            
+                                            <div className="progress-bar-section">
+                                                <div className="progress-bar-header">
+                                                    <span>Needs (Actual: {Math.round(budgetSummary.needsPct)}%)</span>
+                                                    <span className={budgetSummary.needsPct > 50 ? 'text-red-500' : 'text-slate-400'}>Limit: 50%</span>
+                                                </div>
+                                                <div className="progress-bar-container">
+                                                    <div className="progress-bar-fill" style={{ width: `${Math.min(budgetSummary.needsPct, 100)}%`, background: budgetSummary.needsPct > 50 ? '#ef4444' : '#10b981' }}></div>
+                                                    <div className="progress-bar-target" style={{ left: '50%' }}></div>
+                                                </div>
+                                            </div>
+
+                                            <div className="progress-bar-section">
+                                                <div className="progress-bar-header">
+                                                    <span>Wants (Actual: {Math.round(budgetSummary.wantsPct)}%)</span>
+                                                    <span className={budgetSummary.wantsPct > 30 ? 'text-amber-500' : 'text-slate-400'}>Limit: 30%</span>
+                                                </div>
+                                                <div className="progress-bar-container">
+                                                    <div className="progress-bar-fill" style={{ width: `${Math.min(budgetSummary.wantsPct, 100)}%`, background: budgetSummary.wantsPct > 30 ? '#f59e0b' : '#10b981' }}></div>
+                                                    <div className="progress-bar-target" style={{ left: '30%' }}></div>
+                                                </div>
+                                            </div>
+
+                                            <div className="progress-bar-section">
+                                                <div className="progress-bar-header">
+                                                    <span>Savings (Actual: {Math.round(budgetSummary.savingsPct)}%)</span>
+                                                    <span>Target: 20%</span>
+                                                </div>
+                                                <div className="progress-bar-container">
+                                                    <div className="progress-bar-fill" style={{ width: `${Math.max(0, Math.min(budgetSummary.savingsPct, 100))}%`, background: '#6366f1' }}></div>
+                                                    <div className="progress-bar-target" style={{ left: '20%' }}></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* MODULE 2: SAVINGS GOALS */}
+                        {activeTab === 'savings' && (
+                            <div className="slide-up grid-1-2">
+                                <div className="card">
+                                    <h2 className="text-xl font-bold flex items-center gap-2"><Icons.Goal /> Add Savings Goal</h2>
+                                    <div className="input-group">
+                                        <label>Goal Name</label>
+                                        <input type="text" placeholder="e.g. Dream House" value={newGoalName} onChange={(e) => setNewGoalName(e.target.value)} />
+                                    </div>
+                                    <div className="input-group">
+                                        <label>Target Amount (₹)</label>
+                                        <input type="number" value={newGoalTarget} onChange={(e) => setNewGoalTarget(e.target.value)} />
+                                    </div>
+                                    <div className="input-group">
+                                        <label>Saved So Far (₹)</label>
+                                        <input type="number" value={newGoalSaved} onChange={(e) => setNewGoalSaved(e.target.value)} />
+                                    </div>
+                                    <div className="input-group">
+                                        <label>Timeline (Years)</label>
+                                        <input type="number" value={newGoalYears} onChange={(e) => setNewGoalYears(Number(e.target.value))} />
+                                    </div>
+                                    <button onClick={() => {
+                                        if (newGoalName && newGoalTarget) {
+                                            setSavingsGoals([...savingsGoals, { id: Date.now(), name: newGoalName, target: Number(newGoalTarget), saved: Number(newGoalSaved), years: newGoalYears, adjustInflation: false }]);
+                                            setNewGoalName('');
+                                            setNewGoalTarget('');
+                                            setNewGoalSaved('');
+                                        }
+                                    }} className="btn w-full justify-center">Add Goal</button>
+                                </div>
+
+                                <div className="card">
+                                    <h2 className="text-xl font-bold">Goals Tracker</h2>
+                                    <div className="space-y-6">
+                                        {savingsGoals.map(goal => {
+                                            const adjustedTarget = goal.adjustInflation ? goal.target * Math.pow(1 + 0.06, goal.years) : goal.target;
+                                            const pct = Math.min(100, Math.round((goal.saved / adjustedTarget) * 100));
+                                            const remaining = Math.max(0, adjustedTarget - goal.saved);
+                                            
+                                            // Surplus allocate months
+                                            const monthsWithSurplus = budgetSummary.leftToSave > 0 ? Math.ceil(remaining / budgetSummary.leftToSave) : 'Infinite';
+
+                                            return (
+                                                <div key={goal.id} className="goal-item relative">
+                                                    <div className="flex justify-between items-start mb-2">
+                                                        <div>
+                                                            <h3 className="font-bold text-lg">{goal.name}</h3>
+                                                            <div className="text-xs text-slate-400">Target Years: {goal.years}</div>
+                                                        </div>
+                                                        <div className="flex items-center gap-2">
+                                                            <span className="text-xs text-slate-400">Adjust Inflation (6%)</span>
+                                                            <input type="checkbox" checked={goal.adjustInflation} onChange={(e) => {
+                                                                setSavingsGoals(savingsGoals.map(g => g.id === goal.id ? { ...g, adjustInflation: e.target.checked } : g));
+                                                            }} />
+                                                            <button onClick={() => setSavingsGoals(savingsGoals.filter(g => g.id !== goal.id))} className="text-red-500 ml-2">❌</button>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div className="progress-bar-container">
+                                                        <div className="progress-bar-fill" style={{ width: `${pct}%`, background: '#10b981' }}></div>
+                                                    </div>
+                                                    <div className="goal-details">
+                                                        <span>{formatINR(goal.saved)} saved of {formatINR(adjustedTarget)} {goal.adjustInflation && `(Inflation Adjusted from ${formatINR(goal.target)})`}</span>
+                                                        <span className="font-bold text-emerald-500">{pct}%</span>
+                                                    </div>
+
+                                                    {budgetSummary.leftToSave > 0 && (
+                                                        <div className="mt-3 bg-indigo-50 dark:bg-indigo-950/20 p-2 rounded text-xs flex justify-between items-center text-indigo-600 dark:text-indigo-400">
+                                                            <span>With budget surplus ({formatINR(budgetSummary.leftToSave)}/mo), reach goal in **{monthsWithSurplus} months**</span>
+                                                            <button onClick={() => {
+                                                                setSavingsGoals(savingsGoals.map(g => g.id === goal.id ? { ...g, saved: Math.min(adjustedTarget, g.saved + budgetSummary.leftToSave) } : g));
+                                                            }} className="btn btn-outline py-1 px-2 text-[10px] font-bold">Allocate Surplus</button>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* MODULE 3: EMI CALCULATOR */}
+                        {activeTab === 'loan' && (
+                            <div className="slide-up grid-1-2">
+                                <div className="card space-y-6">
+                                    <h2 className="text-xl font-bold flex items-center gap-2"><Icons.Percent /> Configure Loan terms</h2>
+                                    
+                                    <div className="input-group">
+                                        <label>Loan Amount: {formatINR(loanAmount)}</label>
+                                        <div className="slider-row">
+                                            <input type="range" min="10000" max="5000000" step="10000" value={loanAmount} onChange={(e) => setLoanAmount(Number(e.target.value))} />
+                                            <input type="number" value={loanAmount} onChange={(e) => setLoanAmount(Number(e.target.value))} />
+                                        </div>
+                                    </div>
+
+                                    <div className="input-group">
+                                        <label>Annual Interest Rate: {loanRate}%</label>
+                                        <div className="slider-row">
+                                            <input type="range" min="1.0" max="30.0" step="0.1" value={loanRate} onChange={(e) => setLoanRate(Number(e.target.value))} />
+                                            <input type="number" value={loanRate} step="0.1" onChange={(e) => setLoanRate(Number(e.target.value))} />
+                                        </div>
+                                    </div>
+
+                                    <div className="input-group">
+                                        <label>Tenure (Months): {loanTenure}</label>
+                                        <div className="slider-row">
+                                            <input type="range" min="6" max="360" step="6" value={loanTenure} onChange={(e) => setLoanTenure(Number(e.target.value))} />
+                                            <input type="number" value={loanTenure} onChange={(e) => setLoanTenure(Number(e.target.value))} />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-6">
+                                    <div className="metrics-grid">
+                                        <div className="metric-card" style={{ borderLeftColor: '#6366f1' }}>
+                                            <div className="metric-label">Monthly EMI</div>
+                                            <div className="metric-value text-indigo-500">{formatINR(emiSummary.emi)}</div>
+                                        </div>
+                                        <div className="metric-card">
+                                            <div className="metric-label">Total Payable</div>
+                                            <div className="metric-value">{formatINR(emiSummary.totalPayable)}</div>
+                                        </div>
+                                        <div className="metric-card">
+                                            <div className="metric-label">Total Interest Paid</div>
+                                            <div className="metric-value text-red-500">{formatINR(emiSummary.totalInterest)}</div>
+                                        </div>
+                                        <div className="metric-card">
+                                            <div className="metric-label">Interest portion %</div>
+                                            <div className="metric-value">{Math.round(emiSummary.interestPct)}%</div>
+                                        </div>
+                                    </div>
+
+                                    {budgetSummary.totalIncome > 0 && (
+                                        <div className={`alert ${emiSummary.emi / budgetSummary.totalIncome > 0.4 ? 'red' : emiSummary.emi / budgetSummary.totalIncome >= 0.3 ? 'amber' : 'green'}`}>
+                                            <Icons.Info /> EMI takes {Math.round((emiSummary.emi / budgetSummary.totalIncome) * 100)}% of your monthly income.
+                                        </div>
+                                    )}
+
+                                    {/* Amortization Chart */}
+                                    <div className="card">
+                                        <h2 className="text-xl font-bold">Yearly Amortization Schedule</h2>
+                                        {loanAmount > 0 && loanTenure > 0 ? (
+                                            <ChartjsComponent
+                                                type="line"
+                                                data={{
+                                                    labels: Array.from({ length: Math.ceil(loanTenure / 12) }, (_, i) => `Year ${i + 1}`),
+                                                    datasets: [
+                                                        {
+                                                            label: 'Cumulative Principal Paid (₹)',
+                                                            data: Array.from({ length: Math.ceil(loanTenure / 12) }, (_, i) => {
+                                                                const currentMonths = (i + 1) * 12;
+                                                                const r = loanRate / 12 / 100;
+                                                                let balance = loanAmount;
+                                                                let totalPr = 0;
+                                                                for (let m = 1; m <= currentMonths; m++) {
+                                                                    if (m > loanTenure) break;
+                                                                    const interest = balance * r;
+                                                                    const pr = emiSummary.emi - interest;
+                                                                    balance -= pr;
+                                                                    totalPr += pr;
+                                                                }
+                                                                return Math.round(totalPr);
+                                                            }),
+                                                            borderColor: '#10b981',
+                                                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                                            fill: true
+                                                        },
+                                                        {
+                                                            label: 'Cumulative Interest Paid (₹)',
+                                                            data: Array.from({ length: Math.ceil(loanTenure / 12) }, (_, i) => {
+                                                                const currentMonths = (i + 1) * 12;
+                                                                const r = loanRate / 12 / 100;
+                                                                let balance = loanAmount;
+                                                                let totalInt = 0;
+                                                                for (let m = 1; m <= currentMonths; m++) {
+                                                                    if (m > loanTenure) break;
+                                                                    const interest = balance * r;
+                                                                    balance -= (emiSummary.emi - interest);
+                                                                    totalInt += interest;
+                                                                }
+                                                                return Math.round(totalInt);
+                                                            }),
+                                                            borderColor: '#ef4444',
+                                                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                                                            fill: true
+                                                        }
+                                                    ]
+                                                }}
+                                                options={{
+                                                    tension: 0.3
+                                                }}
+                                            />
+                                        ) : null}
+                                    </div>
+
+                                    {/* Smart Prepayment Optimizer */}
+                                    {emiSummary.prepayTenureSaved > 0 && (
+                                        <div className="card border-l-4 border-indigo-500">
+                                            <h3 className="text-lg font-bold text-indigo-500 flex items-center gap-2"><Icons.Percent /> Smart Prepayment Recommendation</h3>
+                                            <p className="mt-2 text-slate-600 dark:text-slate-300 text-sm">
+                                                By making an annual principal prepayment of 10% (<strong>{formatINR(emiSummary.annualPrepayAmount)}</strong> once a year), you will pay off your loan <strong>{emiSummary.prepayTenureSaved} months early</strong> and save <strong>{formatINR(emiSummary.prepayInterestSaved)}</strong> in total interest payments!
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* MODULE 4: SIP GROWTH SIMULATOR */}
+                        {activeTab === 'investment' && (
+                            <div className="slide-up grid-1-2">
+                                <div className="card space-y-6">
+                                    <h2 className="text-xl font-bold flex items-center gap-2"><Icons.Growth /> Growth Simulator</h2>
+                                    
+                                    <div className="input-group">
+                                        <label>Monthly SIP: {formatINR(sipAmount)}</label>
+                                        <input type="range" className="w-full" min="500" max="50000" step="500" value={sipAmount} onChange={(e) => setSipAmount(Number(e.target.value))} />
+                                    </div>
+
+                                    <div className="input-group">
+                                        <label>Expected Return Rate: {sipReturn}%</label>
+                                        <input type="range" className="w-full" min="5" max="25" step="0.5" value={sipReturn} onChange={(e) => setSipReturn(Number(e.target.value))} />
+                                    </div>
+
+                                    <div className="input-group">
+                                        <label>Investment Period (Years): {sipPeriod}</label>
+                                        <input type="range" className="w-full" min="1" max="40" step="1" value={sipPeriod} onChange={(e) => setSipPeriod(Number(e.target.value))} />
+                                    </div>
+
+                                    <div className="input-group">
+                                        <label>Annual Step-Up (%): {sipStepUp}%</label>
+                                        <input type="range" className="w-full" min="0" max="25" step="1" value={sipStepUp} onChange={(e) => setSipStepUp(Number(e.target.value))} />
+                                    </div>
+
+                                    <div className="input-group">
+                                        <label>One-time Lump Sum (₹, Optional)</label>
+                                        <input type="number" value={lumpSum} onChange={(e) => setLumpSum(Number(e.target.value))} />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-6">
+                                    {(() => {
+                                        // Simulator math with Step-Up
+                                        const r = sipReturn / 12 / 100;
+                                        let balance = lumpSum;
+                                        let totalInvested = lumpSum;
+                                        const timelineLabels = [];
+                                        const timelineInvested = [];
+                                        const timelineCorpus = [];
+
+                                        for (let y = 1; y <= sipPeriod; y++) {
+                                            const currentSIPAmount = sipAmount * Math.pow(1 + sipStepUp / 100, y - 1);
+                                            for (let m = 1; m <= 12; m++) {
+                                                balance = (balance + currentSIPAmount) * (1 + r);
+                                                totalInvested += currentSIPAmount;
+                                            }
+                                            timelineLabels.push(`Yr ${y}`);
+                                            timelineInvested.push(Math.round(totalInvested));
+                                            timelineCorpus.push(Math.round(balance));
+                                        }
+
+                                        const wealthGain = Math.max(0, balance - totalInvested);
+                                        const mult = totalInvested > 0 ? balance / totalInvested : 1;
+
+                                        return (
+                                            <React.Fragment>
+                                                <div className="metrics-grid">
+                                                    <div className="metric-card" style={{ borderLeftColor: '#10b981' }}>
+                                                        <div className="metric-label">Estimated Future Value</div>
+                                                        <div className="metric-value text-emerald-500">{formatINR(balance)}</div>
+                                                    </div>
+                                                    <div className="metric-card">
+                                                        <div className="metric-label">Total Amount Invested</div>
+                                                        <div className="metric-value">{formatINR(totalInvested)}</div>
+                                                    </div>
+                                                    <div className="metric-card">
+                                                        <div className="metric-label">Wealth Gains</div>
+                                                        <div className="metric-value text-indigo-500">{formatINR(wealthGain)}</div>
+                                                    </div>
+                                                    <div className="metric-card">
+                                                        <div className="metric-label">Multiplier</div>
+                                                        <div className="metric-value">{mult.toFixed(1)}x returns</div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="card">
+                                                    <h2 className="text-xl font-bold">Wealth Timeline (with Step-Up)</h2>
+                                                    <ChartjsComponent
+                                                        type="line"
+                                                        data={{
+                                                            labels: timelineLabels,
+                                                            datasets: [
+                                                                {
+                                                                    label: 'Future Corpus (₹)',
+                                                                    data: timelineCorpus,
+                                                                    borderColor: '#10b981',
+                                                                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                                                    fill: true,
+                                                                    tension: 0.3
+                                                                },
+                                                                {
+                                                                    label: 'Amount Invested (₹)',
+                                                                    data: timelineInvested,
+                                                                    borderColor: '#6366f1',
+                                                                    backgroundColor: 'rgba(99, 102, 241, 0.05)',
+                                                                    fill: true,
+                                                                    tension: 0.3
+                                                                }
+                                                            ]
+                                                        }}
+                                                        options={{}}
+                                                    />
+                                                </div>
+                                            </React.Fragment>
+                                        );
+                                    })()}
+
+                                    {/* Matrix comparison */}
+                                    <div className="card">
+                                        <h2 className="text-xl font-bold">Matrix Baseline (Regular ₹2,000 monthly SIP without step-up)</h2>
+                                        <table className="growth-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Timeline</th>
+                                                    <th>8% Return</th>
+                                                    <th>12% Return</th>
+                                                    <th>15% Return</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {[5, 10, 15, 20].map(yr => {
+                                                    const calculateFV = (rate) => {
+                                                        const months = yr * 12;
+                                                        const rVal = rate / 12 / 100;
+                                                        return 2000 * ((Math.pow(1 + rVal, months) - 1) / rVal) * (1 + rVal);
+                                                    };
+                                                    return (
+                                                        <tr key={yr}>
+                                                            <td>{yr} Years</td>
+                                                            <td>{formatINR(calculateFV(8))}</td>
+                                                            <td>{formatINR(calculateFV(12))}</td>
+                                                            <td>{formatINR(calculateFV(15))}</td>
+                                                        </tr>
+                                                    );
+                                                })}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* MODULE 5: MULTI-DEBT PAYOFF STRATEGIST */}
+                        {activeTab === 'debt' && (
+                            <div className="slide-up grid-1-2">
+                                <div className="card">
+                                    <h2 className="text-xl font-bold flex items-center gap-2"><Icons.TrendingDown /> Add Debt</h2>
+                                    <div className="input-group">
+                                        <label>Debt Name</label>
+                                        <input type="text" placeholder="e.g. Credit Card A" value={newDebtName} onChange={(e) => setNewDebtName(e.target.value)} />
+                                    </div>
+                                    <div className="input-group">
+                                        <label>Outstanding Balance (₹)</label>
+                                        <input type="number" value={newDebtBalance} onChange={(e) => setNewDebtBalance(e.target.value)} />
+                                    </div>
+                                    <div className="input-group">
+                                        <label>Annual Interest Rate (%)</label>
+                                        <input type="number" value={newDebtRate} onChange={(e) => setNewDebtRate(e.target.value)} />
+                                    </div>
+                                    <div className="input-group">
+                                        <label>Minimum Monthly Payment (₹)</label>
+                                        <input type="number" value={newDebtMin} onChange={(e) => setNewDebtMin(e.target.value)} />
+                                    </div>
+                                    <button onClick={() => {
+                                        if (newDebtName && newDebtBalance && newDebtRate && newDebtMin) {
+                                            setDebts([...debts, { id: Date.now(), name: newDebtName, balance: Number(newDebtBalance), rate: Number(newDebtRate), minPayment: Number(newDebtMin) }]);
+                                            setNewDebtName('');
+                                            setNewDebtBalance('');
+                                            setNewDebtRate('');
+                                            setNewDebtMin('');
+                                        }
+                                    }} className="btn w-full justify-center">Add Debt</button>
+
+                                    <h2 className="text-xl font-bold mt-6"><Icons.Percent /> Extra Monthly Payment Capacity</h2>
+                                    <div className="input-group">
+                                        <label>Extra Payment Stack (₹)</label>
+                                        <input type="number" value={extraDebtCapacity} onChange={(e) => setExtraDebtCapacity(Number(e.target.value))} />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-6">
+                                    <div className="card">
+                                        <h2 className="text-xl font-bold">Active Debts</h2>
+                                        <div className="space-y-3">
+                                            {debts.map(d => (
+                                                <div key={d.id} className="flex justify-between items-center bg-slate-50 dark:bg-slate-800/40 p-3 rounded-lg border border-slate-200 dark:border-slate-700">
+                                                    <div>
+                                                        <div className="font-semibold">{d.name}</div>
+                                                        <div className="text-xs text-slate-400">Rate: {d.rate}% | Min Pay: {formatINR(d.minPayment)}</div>
+                                                    </div>
+                                                    <div className="flex items-center gap-4">
+                                                        <span className="font-bold text-red-500">{formatINR(d.balance)}</span>
+                                                        <button onClick={() => setDebts(debts.filter(item => item.id !== d.id))} className="text-red-500">❌</button>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Payoff comparison results */}
+                                    <div className="metrics-grid">
+                                        <div className="metric-card" style={{ borderLeftColor: '#ef4444' }}>
+                                            <div className="metric-label">Avalanche Months to Freedom</div>
+                                            <div className="metric-value text-red-500">{debtPayoffDetails.avalanche.months} Months</div>
+                                        </div>
+                                        <div className="metric-card" style={{ borderLeftColor: '#f59e0b' }}>
+                                            <div className="metric-label">Snowball Months to Freedom</div>
+                                            <div className="metric-value text-amber-500">{debtPayoffDetails.snowball.months} Months</div>
+                                        </div>
+                                        <div className="metric-card">
+                                            <div className="metric-label">Interest Saved (vs baseline)</div>
+                                            <div className="metric-value text-emerald-500">
+                                                {formatINR(Math.max(0, debtPayoffDetails.baselineInterest - debtPayoffDetails.avalanche.totalInterestPaid))}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="card">
+                                        <div className="flex justify-between items-center mb-4">
+                                            <h2 className="text-xl font-bold">Debt Payoff Timeline Comparison</h2>
+                                            <select value={debtStrategy} onChange={(e) => setDebtStrategy(e.target.value)}>
+                                                <option value="Avalanche">Avalanche (Highest Rate)</option>
+                                                <option value="Snowball">Snowball (Smallest Balance)</option>
+                                            </select>
+                                        </div>
+                                        {debts.length > 0 ? (
+                                            <ChartjsComponent
+                                                type="line"
+                                                data={{
+                                                    labels: (debtStrategy === 'Avalanche' ? debtPayoffDetails.avalanche.timeline : debtPayoffDetails.snowball.timeline).map(t => `Mo ${t.month}`),
+                                                    datasets: [
+                                                        {
+                                                            label: 'Remaining Total Debt (₹)',
+                                                            data: (debtStrategy === 'Avalanche' ? debtPayoffDetails.avalanche.timeline : debtPayoffDetails.snowball.timeline).map(t => t.remaining),
+                                                            borderColor: '#ef4444',
+                                                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                                                            fill: true,
+                                                            tension: 0.3
+                                                        }
+                                                    ]
+                                                }}
+                                                options={{}}
+                                            />
+                                        ) : <p className="text-slate-400">No debt details added</p>}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* MODULE 6: NET WORTH TRACKER */}
+                        {activeTab === 'networth' && (
+                            <div className="slide-up grid-1-2">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6" style={{ gridColumn: 'span 1' }}>
+                                    <div className="card">
+                                        <h2 className="text-xl font-bold text-emerald-500">🟢 Assets Sheet</h2>
+                                        <div className="input-group">
+                                            <label>Cash & Bank Balance (₹)</label>
+                                            <input type="number" value={nwAssets.cash} onChange={(e) => setNwAssets({ ...nwAssets, cash: Number(e.target.value) })} />
+                                        </div>
+                                        <div className="input-group">
+                                            <label>Mutual Funds & Stocks (₹)</label>
+                                            <input type="number" value={nwAssets.stocks} onChange={(e) => setNwAssets({ ...nwAssets, stocks: Number(e.target.value) })} />
+                                        </div>
+                                        <div className="input-group">
+                                            <label>Gold Value (₹)</label>
+                                            <input type="number" value={nwAssets.gold} onChange={(e) => setNwAssets({ ...nwAssets, gold: Number(e.target.value) })} />
+                                        </div>
+                                        <div className="input-group">
+                                            <label>Property/Real Estate (₹)</label>
+                                            <input type="number" value={nwAssets.property} onChange={(e) => setNwAssets({ ...nwAssets, property: Number(e.target.value) })} />
+                                        </div>
+                                        <div className="input-group">
+                                            <label>Other Assets (₹)</label>
+                                            <input type="number" value={nwAssets.other} onChange={(e) => setNwAssets({ ...nwAssets, other: Number(e.target.value) })} />
+                                        </div>
+                                    </div>
+
+                                    <div className="card">
+                                        <h2 className="text-xl font-bold text-red-500">🔴 Liabilities Sheet</h2>
+                                        <div className="input-group">
+                                            <label>Home Loan Outstanding (₹)</label>
+                                            <input type="number" value={nwLiabilities.homeLoan} onChange={(e) => setNwLiabilities({ ...nwLiabilities, homeLoan: Number(e.target.value) })} />
+                                        </div>
+                                        <div className="input-group">
+                                            <label>Personal Loans (₹)</label>
+                                            <input type="number" value={nwLiabilities.personalLoan} onChange={(e) => setNwLiabilities({ ...nwLiabilities, personalLoan: Number(e.target.value) })} />
+                                        </div>
+                                        <div className="input-group">
+                                            <label>Credit Card Debt (₹)</label>
+                                            <input type="number" value={nwLiabilities.creditCard} onChange={(e) => setNwLiabilities({ ...nwLiabilities, creditCard: Number(e.target.value) })} />
+                                        </div>
+                                        <div className="input-group">
+                                            <label>Other Debts Owed (₹)</label>
+                                            <input type="number" value={nwLiabilities.otherDebt} onChange={(e) => setNwLiabilities({ ...nwLiabilities, otherDebt: Number(e.target.value) })} />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-6">
+                                    <div className="metrics-grid">
+                                        <div className="metric-card">
+                                            <div className="metric-label">Total Assets</div>
+                                            <div className="metric-value text-emerald-500">{formatINR(netWorthSummary.totalAssets)}</div>
+                                        </div>
+                                        <div className="metric-card">
+                                            <div className="metric-label">Total Liabilities</div>
+                                            <div className="metric-value text-red-500">{formatINR(netWorthSummary.totalLiabilities)}</div>
+                                        </div>
+                                        <div className="metric-card" style={{ borderLeftColor: netWorthSummary.netWorth >= 0 ? '#10b981' : '#ef4444' }}>
+                                            <div className="metric-label">Net Worth</div>
+                                            <div className={`metric-value ${netWorthSummary.netWorth >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>{formatINR(netWorthSummary.netWorth)}</div>
+                                        </div>
+                                    </div>
+
+                                    {netWorthSummary.ratio > 40 && (
+                                        <div className="alert red"><Icons.Info /> WARNING: Liabilities make {Math.round(netWorthSummary.ratio)}% of your assets. We recommend debt consolidation or payoff stacks.</div>
+                                    )}
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="card">
+                                            <h2 className="text-xl font-bold">Assets vs Liabilities Ratio</h2>
+                                            <div className="networth-ratio-bar">
+                                                <div className="ratio-assets" style={{ width: `${100 - Math.min(100, netWorthSummary.ratio)}%` }}>Assets ({Math.round(100 - Math.min(100, netWorthSummary.ratio))}%)</div>
+                                                <div className="ratio-liabilities" style={{ width: `${Math.min(100, netWorthSummary.ratio)}%` }}>Liabilities ({Math.round(netWorthSummary.ratio)}%)</div>
+                                            </div>
+                                        </div>
+
+                                        <div className="card">
+                                            <h2 className="text-xl font-bold">Asset Allocation Breakdown</h2>
+                                            {netWorthSummary.totalAssets > 0 ? (
+                                                <ChartjsComponent
+                                                    type="doughnut"
+                                                    data={{
+                                                        labels: ['Cash & Bank', 'Mutual Funds', 'Gold', 'Property', 'Others'],
+                                                        datasets: [{
+                                                            data: [nwAssets.cash, nwAssets.stocks, nwAssets.gold, nwAssets.property, nwAssets.other],
+                                                            backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ec4899', '#6b7280']
+                                                        }]
+                                                    }}
+                                                    options={{ cutout: '55%' }}
+                                                />
+                                            ) : <p className="text-slate-400">No assets entered</p>}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* MODULE 7: LITERACY LESSONS & HEALTH SCORE */}
+                        {activeTab === 'lessons' && (
+                            <div className="slide-up space-y-6">
+                                <div className="card flex justify-between items-center bg-gradient-to-r from-indigo-900 to-indigo-950 text-white border-none">
+                                    <div>
+                                        <h2 className="text-2xl font-bold text-white mb-1"><Icons.Goal /> Apex Financial Health Score</h2>
+                                        <p className="text-sm text-indigo-200">Based on your dynamic budget, savings goals, and debts.</p>
+                                    </div>
+                                    <div className="text-center bg-white/10 px-6 py-4 rounded-xl border border-white/20">
+                                        <div className="text-5xl font-extrabold text-indigo-400">{healthScore}</div>
+                                        <div className="text-[10px] uppercase font-bold tracking-widest text-indigo-200">Out of 100</div>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                    <div className="lesson-card">
+                                        <div className="lesson-icon-box"><Icons.Wallet /></div>
+                                        <h3 className="lesson-title">50/30/20 Rule</h3>
+                                        <p className="lesson-desc">A basic guide for budgeting. Divide net salary: 50% for core Needs, 30% for discretionary Wants, and 20% for future Savings.</p>
+                                    </div>
+
+                                    <div className="lesson-card">
+                                        <div className="lesson-icon-box"><Icons.Goal /></div>
+                                        <h3 className="lesson-title">Emergency Fund</h3>
+                                        <p className="lesson-desc">A safety buffer covering 3 to 6 months of living costs. Keep this fund liquid in a safe, accessible bank account.</p>
+                                    </div>
+
+                                    <div className="lesson-card">
+                                        <div className="lesson-icon-box"><Icons.Percent /></div>
+                                        <h3 className="lesson-title">Compound Interest</h3>
+                                        <p className="lesson-desc">Earning interest on interest. Over long periods, it exponentially multiplies your initial investments.</p>
+                                        <div className="mt-4 bg-slate-50 dark:bg-slate-800/40 p-2 rounded text-xs">
+                                            <strong>Rule of 72 doubles widget:</strong>
+                                            <div className="flex items-center gap-2 mt-1">
+                                                <span>Return Rate (%):</span>
+                                                <input type="number" value={r72Rate} onChange={(e) => setR72Rate(Number(e.target.value))} className="w-14 p-1 text-[10px]" />
+                                            </div>
+                                            <div className="mt-1 text-indigo-500 font-bold">Doubles your money in {r72Rate > 0 ? (72 / r72Rate).toFixed(1) : 'Infinite'} years!</div>
+                                        </div>
+                                    </div>
+
+                                    <div className="lesson-card">
+                                        <div className="lesson-icon-box"><Icons.TrendingDown /></div>
+                                        <h3 className="lesson-title">Good vs Bad Debt</h3>
+                                        <p className="lesson-desc">Good debt creates future assets or income (education, home). Bad debt finances depreciating assets (credit card, gadgets).</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                    </main>
+
+                    {/* Floating Help Button */}
+                    <button onClick={handleOpenAiDrawer} className="floating-ai-btn pulse-glow">
+                        <Icons.Chat /> AI Advisor Prompt
+                    </button>
+
+                    {/* Slide-out Drawer */}
+                    {showAiDrawer && (
+                        <React.Fragment>
+                            <div className="drawer-overlay open" onClick={() => setShowAiDrawer(false)}></div>
+                            <div className="drawer open">
+                                <div className="drawer-header">
+                                    <h3><Icons.Chat /> AI Prompt Generator</h3>
+                                    <button onClick={() => setShowAiDrawer(false)} className="drawer-close">❌</button>
+                                </div>
+                                <div className="drawer-body">
+                                    <p className="text-xs text-slate-400">Copy this customized prompt filled with your real-time numbers, and paste it into our chat window to get immediate analysis:</p>
+                                    <div className="prompt-preview-box text-xs">{aiPromptText}</div>
+                                </div>
+                                <div className="drawer-footer">
+                                    <button onClick={copyPrompt} className="btn w-full justify-center">Copy Prompt to Clipboard</button>
+                                    <button onClick={() => setShowAiDrawer(false)} className="btn btn-outline w-full justify-center">Close</button>
+                                </div>
+                            </div>
+                        </React.Fragment>
+                    )}
+
+                    {/* Toast */}
+                    {showToast && (
+                        <div className="copy-toast show">Prompt copied to clipboard!</div>
+                    )}
+
+                    {/* Footer */}
+                    <footer className="text-center py-6 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-400">
+                        This tool is for educational purposes only and does not constitute financial advice. Consult a SEBI-registered financial advisor for personalised guidance.
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<ApexWealthApp />);
     </script>
 </body>
 </html>
