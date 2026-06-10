@@ -1,15 +1,15 @@
-const CACHE_NAME = 'apex-intel-cache-v1';
-const ASSETS_TO_CACHE = [
-  './',
-  './index.html',
-  './manifest.json',
-  './icon.svg'
+const CACHE_NAME = 'apex-intel-vite-cache-v1';
+const PRECACHE_ASSETS = [
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/icon.svg'
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
+      return cache.addAll(PRECACHE_ASSETS);
     })
   );
   self.skipWaiting();
@@ -31,16 +31,20 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  const url = new URL(event.request.url);
-  
-  // Cache-first for external assets that don't change
-  const isCDN = url.host.includes('cdnjs.cloudflare.com') ||
-                url.host.includes('unpkg.com') ||
-                url.host.includes('cdn.tailwindcss.com') ||
-                url.host.includes('fonts.googleapis.com') ||
-                url.host.includes('fonts.gstatic.com');
+  if (event.request.method !== 'GET') return;
 
-  if (isCDN) {
+  const url = new URL(event.request.url);
+
+  // Dynamic Cache-first for compiled assets, network-first for local entrypoints
+  const isStaticAsset = url.pathname.includes('/assets/') ||
+                        url.pathname.endsWith('.js') ||
+                        url.pathname.endsWith('.css') ||
+                        url.pathname.endsWith('.svg') ||
+                        url.pathname.endsWith('.png') ||
+                        url.host.includes('fonts.googleapis.com') ||
+                        url.host.includes('fonts.gstatic.com');
+
+  if (isStaticAsset) {
     event.respondWith(
       caches.match(event.request).then((cachedResponse) => {
         if (cachedResponse) {
@@ -55,13 +59,11 @@ self.addEventListener('fetch', (event) => {
           }
           return networkResponse;
         }).catch(() => {
-          // If offline and not cached yet, fail silently
           return new Response('Offline resource not cached');
         });
       })
     );
   } else {
-    // Network-first for local assets so changes deploy instantly
     event.respondWith(
       fetch(event.request).then((networkResponse) => {
         if (networkResponse.status === 200) {
@@ -72,7 +74,12 @@ self.addEventListener('fetch', (event) => {
         }
         return networkResponse;
       }).catch(() => {
-        return caches.match(event.request);
+        return caches.match(event.request).then((cachedResponse) => {
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+          return caches.match('/');
+        });
       })
     );
   }
