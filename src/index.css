@@ -1,6 +1,18 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-appBg: var(--bg-color);
+  --color-appCard: var(--card-bg);
+  --color-appBorder: var(--card-border);
+  --color-appText: var(--text-color);
+  --color-appTextSec: var(--text-secondary);
+  --color-appPrimary: var(--primary);
+  --color-appPrimaryHover: var(--primary-hover);
+  --color-appGlow: var(--glow);
+  --color-appHoverBg: var(--hover-bg);
+  --shadow-glass: var(--glass-shadow);
+  --shadow-glassHover: var(--card-shadow-hover);
+}
 
 /* CSS Monochromatic Themes for Arctic Minimalism */
 .theme-emerald-matrix {
