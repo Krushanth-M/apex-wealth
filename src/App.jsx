@@ -7,7 +7,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { Html5Qrcode } from 'html5-qrcode';
 import { 
   Wallet, Target, Percent, TrendingUp, BarChart3, Lock, Eye, EyeOff, 
-  Download, Upload, Info, X, Plus, Trash2, ShieldAlert, Sparkles
+  Download, Upload, Info, X, Plus, Trash2, ShieldAlert, Sparkles, Settings, CreditCard, Menu
 } from 'lucide-react';
 
 // ====================================================
@@ -407,6 +407,8 @@ export default function App() {
   const [showQrModal, setShowQrModal] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
   const [scanError, setScanError] = useState('');
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const fileInputRef = useRef(null);
 
   const handleThemeChange = (newTheme) => {
@@ -684,96 +686,176 @@ export default function App() {
     }
   };
 
-  return (
-    <div className="flex-1 flex flex-col justify-between bg-white text-gray-900 selection:bg-appPrimary/10">
-      
-      {/* Header Navigation bar */}
-      <header className="flex flex-col md:flex-row justify-between items-center px-8 py-5 border-b border-gray-100 bg-white/80 backdrop-blur-md sticky top-0 z-30 gap-4">
-        <div className="flex items-center gap-3">
-          <img src="/icon.svg" className="w-9 h-9" alt="Logo" />
-          <div>
-            <h1 className="text-xl font-extrabold text-gray-900 tracking-tight">{t('title')}</h1>
-            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">{t('tagline')}</p>
-          </div>
-        </div>
+  const tabsList = [
+    { id: 'budget', icon: <Wallet size={16} /> },
+    { id: 'savings', icon: <Target size={16} /> },
+    { id: 'loan', icon: <CreditCard size={16} /> },
+    { id: 'growth', icon: <TrendingUp size={16} /> },
+    { id: 'debt', icon: <Percent size={16} /> },
+    { id: 'networth', icon: <BarChart3 size={16} /> },
+    { id: 'stresstest', icon: <ShieldAlert size={16} /> },
+    { id: 'vault', icon: <Lock size={16} /> }
+  ];
 
-        {/* Action controllers */}
-        <div className="flex flex-wrap items-center gap-3">
-          
-          {/* Eye Icon Privacy Toggle */}
+  return (
+    <div className="min-h-screen flex flex-col md:flex-row bg-gray-50/30 text-gray-900 font-sans selection:bg-appPrimary/10 w-full overflow-x-hidden">
+      
+      {/* Mobile Top Header */}
+      <div className="md:hidden flex items-center justify-between px-6 py-4 bg-white border-b border-gray-100 sticky top-0 z-40">
+        <div className="flex items-center gap-2">
+          <img src="/icon.svg" className="w-8 h-8" alt="Logo" />
+          <span className="font-extrabold text-sm tracking-tight text-gray-900">{t('title')}</span>
+        </div>
+        <div className="flex items-center gap-3">
           <button 
             onClick={() => setState(prev => ({ ...prev, privacyActive: !prev.privacyActive }))}
-            className={`p-2 rounded-xl border transition-all ${state.privacyActive ? 'bg-red-50/50 border-red-200 text-red-500' : 'bg-gray-50 border-gray-100 text-gray-400 hover:text-gray-900'}`}
-            title="Privacy Masking Eye Toggle"
+            className={`p-2 rounded-xl border transition-all ${state.privacyActive ? 'bg-red-50 border-red-100 text-red-500' : 'bg-gray-50 border-gray-100 text-gray-400'}`}
           >
-            {state.privacyActive ? <EyeOff size={18} /> : <Eye size={18} />}
+            {state.privacyActive ? <EyeOff size={16} /> : <Eye size={16} />}
           </button>
-
-          {/* Theme custom variable list */}
-          <select 
-            value={state.theme}
-            onChange={(e) => handleThemeChange(e.target.value)}
-            className="bg-gray-50 border border-gray-100 text-gray-600 rounded-xl py-1.5 px-3 text-xs focus:outline-none"
-          >
-            <option value="theme-emerald-matrix">Emerald Matrix</option>
-            <option value="theme-nordic-slate">Nordic Slate</option>
-            <option value="theme-midnight-cyber">Midnight Cyber</option>
-          </select>
-
-          {/* Language Flag triggers */}
-          <div className="flex gap-1 bg-gray-50 border border-gray-100 rounded-xl p-0.5">
-            {['en', 'kn', 'hi', 'ta', 'te'].map(code => (
-              <button 
-                key={code}
-                onClick={() => setState(prev => ({ ...prev, lang: code }))}
-                className={`px-2.5 py-1 text-[10px] font-extrabold rounded-lg uppercase transition-all ${state.lang === code ? 'bg-appPrimary text-white shadow-sm' : 'text-gray-400 hover:text-gray-900'}`}
-              >
-                {code}
-              </button>
-            ))}
-          </div>
-
-          {/* QR Sync & Backup exporters */}
-          <button onClick={() => setShowQrModal(true)} className="bg-gray-50 hover:bg-gray-100 border border-gray-100 text-gray-600 hover:text-gray-900 text-[10px] font-extrabold px-3 py-2 rounded-xl flex items-center gap-1.5 transition-all">
-            {t('btn_show_qr')}
-          </button>
-          <button onClick={startCameraScanner} className="bg-gray-50 hover:bg-gray-100 border border-gray-100 text-gray-600 hover:text-gray-900 text-[10px] font-extrabold px-3 py-2 rounded-xl flex items-center gap-1.5 transition-all">
-            {t('btn_scan_qr')}
-          </button>
-          <input 
-            type="file" 
-            ref={fileInputRef} 
-            onChange={handleImportJson} 
-            style={{ display: 'none' }} 
-            accept=".txt"
-          />
           <button 
-            onClick={() => fileInputRef.current?.click()} 
-            className="bg-gray-50 hover:bg-gray-100 border border-gray-100 text-gray-600 hover:text-gray-900 text-[10px] font-extrabold px-3 py-2 rounded-xl flex items-center gap-1.5 transition-all"
+            onClick={() => setSidebarOpen(true)}
+            className="p-2 bg-gray-50 border border-gray-100 rounded-xl text-gray-600 hover:bg-gray-100 transition-all"
           >
-            {t('btn_import')}
-          </button>
-          <button onClick={handleExportJson} className="bg-appPrimary hover:bg-appPrimaryHover text-white shadow-sm text-[10px] font-extrabold px-4 py-2 rounded-xl transition-all">
-            {t('btn_export')}
+            <Menu size={18} />
           </button>
         </div>
-      </header>
+      </div>
 
-      {/* Tabs Switcher Grid */}
-      <nav className="flex overflow-x-auto whitespace-nowrap bg-white border-b border-gray-100 scrollbar-none sticky top-16 z-20 shadow-sm">
-        {['budget', 'savings', 'loan', 'growth', 'debt', 'networth', 'stresstest', 'vault'].map(tab => (
+      {/* Mobile Sidebar Drawer */}
+      <AnimatePresence>
+        {sidebarOpen && (
+          <div className="fixed inset-0 z-50 flex md:hidden">
+            {/* Backdrop */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSidebarOpen(false)}
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            />
+            {/* Slide drawer */}
+            <motion.div 
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="relative w-64 h-full bg-white shadow-2xl p-6 flex flex-col justify-between"
+            >
+              <div className="space-y-6">
+                <div className="flex justify-between items-center border-b border-gray-100 pb-4">
+                  <div className="flex items-center gap-3">
+                    <img src="/icon.svg" className="w-8 h-8" alt="Logo" />
+                    <div>
+                      <h1 className="text-sm font-extrabold text-gray-900 tracking-tight">{t('title')}</h1>
+                      <p className="text-[8px] text-gray-400 font-bold uppercase tracking-wider">Offline Finance</p>
+                    </div>
+                  </div>
+                  <button onClick={() => setSidebarOpen(false)} className="text-gray-400 hover:text-gray-900 p-1">
+                    <X size={18} />
+                  </button>
+                </div>
+
+                <nav className="space-y-1.5">
+                  {tabsList.map(tab => (
+                    <button
+                      key={tab.id}
+                      onClick={() => { setActiveTab(tab.id); setSidebarOpen(false); }}
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all ${activeTab === tab.id ? 'bg-appPrimary text-white shadow-sm' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}
+                    >
+                      {tab.icon}
+                      <span>{t(`tab_${tab.id}`)}</span>
+                    </button>
+                  ))}
+                </nav>
+              </div>
+
+              <div className="border-t border-gray-100 pt-4">
+                <button 
+                  onClick={() => { setSidebarOpen(false); setShowSettingsModal(true); }}
+                  className="w-full flex items-center justify-between px-4 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-all"
+                >
+                  <span className="flex items-center gap-3">
+                    <Settings size={16} />
+                    <span>Settings</span>
+                  </span>
+                  <span className="bg-gray-100 text-gray-500 text-[10px] px-2 py-0.5 rounded-full">v4.0</span>
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:flex flex-col w-64 bg-white border-r border-gray-100 h-screen sticky top-0 z-30 shrink-0">
+        <div className="p-6 border-b border-gray-100 flex items-center gap-3">
+          <img src="/icon.svg" className="w-8 h-8" alt="Logo" />
+          <div>
+            <h1 className="text-base font-extrabold text-gray-900 tracking-tight">{t('title')}</h1>
+            <p className="text-[9px] text-gray-400 font-bold uppercase tracking-wider">Offline Finance</p>
+          </div>
+        </div>
+
+        <nav className="flex-1 py-6 px-4 space-y-1.5 overflow-y-auto">
+          {tabsList.map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all ${activeTab === tab.id ? 'bg-appPrimary text-white shadow-sm' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}
+            >
+              {tab.icon}
+              <span>{t(`tab_${tab.id}`)}</span>
+            </button>
+          ))}
+        </nav>
+
+        <div className="p-4 border-t border-gray-100">
           <button 
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`py-4 px-6 font-bold text-xs uppercase tracking-wider border-b-2 transition-all flex items-center gap-2 ${activeTab === tab ? 'border-appPrimary text-appPrimary' : 'border-transparent text-gray-400 hover:text-gray-900'}`}
+            onClick={() => setShowSettingsModal(true)}
+            className="w-full flex items-center justify-between px-4 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-all"
           >
-            {t(`tab_${tab}`)}
+            <span className="flex items-center gap-3">
+              <Settings size={16} />
+              <span>Settings</span>
+            </span>
+            <span className="bg-gray-100 text-gray-500 text-[10px] px-2 py-0.5 rounded-full">v4.0</span>
           </button>
-        ))}
-      </nav>
+        </div>
+      </aside>
 
-      {/* Tab Contents Main */}
-      <main className="container mx-auto max-w-7xl px-8 py-8 flex-1">
+      {/* Main Content Area */}
+      <div className="flex-grow flex flex-col min-h-screen overflow-x-hidden">
+        {/* Desktop Header */}
+        <header className="hidden md:flex justify-between items-center px-8 py-5 border-b border-gray-100 bg-white/80 backdrop-blur-md sticky top-0 z-20">
+          <div>
+            <h2 className="text-lg font-extrabold text-gray-900 uppercase tracking-wider">{t(`tab_${activeTab}`)}</h2>
+            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">{t('tagline')}</p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            {/* Eye Icon Privacy Toggle */}
+            <button 
+              onClick={() => setState(prev => ({ ...prev, privacyActive: !prev.privacyActive }))}
+              className={`p-2.5 rounded-xl border transition-all ${state.privacyActive ? 'bg-red-50/50 border-red-200 text-red-500' : 'bg-gray-50 border-gray-100 text-gray-400 hover:text-gray-900'}`}
+              title="Privacy Masking Eye Toggle"
+            >
+              {state.privacyActive ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+
+            {/* Quick Settings trigger */}
+            <button 
+              onClick={() => setShowSettingsModal(true)}
+              className="p-2.5 rounded-xl border bg-gray-50 border-gray-100 text-gray-400 hover:text-gray-900 hover:bg-gray-100 transition-all"
+              title="Open Settings"
+            >
+              <Settings size={18} />
+            </button>
+          </div>
+        </header>
+
+        {/* Tab Contents Main */}
+        <main className="px-8 py-8 flex-1">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -1495,6 +1577,145 @@ export default function App() {
         </AnimatePresence>
       </main>
 
+      {/* Footer disclaimer */}
+      <footer className="text-center py-6 border-t border-gray-100 text-[10px] text-gray-400 font-medium bg-white mt-auto">
+        This app operates strictly client-side. Financial variables are encrypted under LocalStorage keys with zero cloud syncing.
+      </footer>
+      </div>
+
+      {/* Settings Side Panel (Slide-out from right) */}
+      <AnimatePresence>
+        {showSettingsModal && (
+          <div className="fixed inset-0 z-50 flex justify-end">
+            {/* Backdrop */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowSettingsModal(false)}
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            />
+            {/* Slide-over panel */}
+            <motion.div 
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="relative w-full max-w-sm h-full bg-white border-l border-gray-100 shadow-2xl p-6 flex flex-col justify-between overflow-y-auto"
+            >
+              <div className="space-y-6">
+                <div className="flex justify-between items-center border-b border-gray-100 pb-4">
+                  <div>
+                    <h3 className="font-extrabold text-sm text-gray-900 uppercase tracking-wider flex items-center gap-2">
+                      <Settings size={18} className="text-appPrimary" />
+                      System Settings
+                    </h3>
+                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-0.5">Configure local environment</p>
+                  </div>
+                  <button onClick={() => setShowSettingsModal(false)} className="text-gray-400 hover:text-gray-900 p-1 rounded-lg hover:bg-gray-50">
+                    <X size={18} />
+                  </button>
+                </div>
+
+                {/* Section 1: Themes */}
+                <div className="space-y-3">
+                  <label className="text-[10px] text-gray-400 uppercase font-black tracking-wider block">Visual Theme Accent</label>
+                  <div className="space-y-2">
+                    {[
+                      { id: 'theme-emerald-matrix', name: 'Emerald Matrix', color: 'bg-emerald-600' },
+                      { id: 'theme-nordic-slate', name: 'Nordic Slate', color: 'bg-blue-600' },
+                      { id: 'theme-midnight-cyber', name: 'Midnight Cyber', color: 'bg-fuchsia-600' }
+                    ].map(tOpt => (
+                      <button
+                        key={tOpt.id}
+                        onClick={() => handleThemeChange(tOpt.id)}
+                        className={`w-full flex items-center justify-between p-3 rounded-xl border text-xs font-bold transition-all ${state.theme === tOpt.id ? 'border-appPrimary bg-appHoverBg text-appText' : 'border-gray-100 bg-white text-gray-500 hover:bg-gray-50'}`}
+                      >
+                        <span className="flex items-center gap-2">
+                          <span className={`w-3.5 h-3.5 rounded-full ${tOpt.color}`}></span>
+                          {tOpt.name}
+                        </span>
+                        {state.theme === tOpt.id && <span className="text-appPrimary text-xs font-bold">✓</span>}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Section 2: Languages */}
+                <div className="space-y-3">
+                  <label className="text-[10px] text-gray-400 uppercase font-black tracking-wider block">i18n Vernacular Language</label>
+                  <div className="grid grid-cols-5 gap-1.5 bg-gray-50 p-1 rounded-xl border border-gray-100">
+                    {['en', 'kn', 'hi', 'ta', 'te'].map(code => (
+                      <button
+                        key={code}
+                        onClick={() => setState(prev => ({ ...prev, lang: code }))}
+                        className={`py-2 text-[10px] font-black rounded-lg uppercase transition-all ${state.lang === code ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-400 hover:text-gray-900'}`}
+                      >
+                        {code}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Section 3: QR Code Sync */}
+                <div className="space-y-3">
+                  <label className="text-[10px] text-gray-400 uppercase font-black tracking-wider block">Offline State Sync</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button 
+                      onClick={() => { setShowSettingsModal(false); setShowQrModal(true); }}
+                      className="flex flex-col items-center justify-center p-3 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-gray-50 text-gray-700 text-center gap-1.5 transition-all"
+                    >
+                      <span className="text-sm">📱</span>
+                      <span className="text-[10px] font-black uppercase tracking-wider">{t('btn_show_qr')}</span>
+                    </button>
+                    <button 
+                      onClick={() => { setShowSettingsModal(false); startCameraScanner(); }}
+                      className="flex flex-col items-center justify-center p-3 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-gray-50 text-gray-700 text-center gap-1.5 transition-all"
+                    >
+                      <span className="text-sm">📷</span>
+                      <span className="text-[10px] font-black uppercase tracking-wider">{t('btn_scan_qr')}</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Section 4: Data Portability */}
+                <div className="space-y-3">
+                  <label className="text-[10px] text-gray-400 uppercase font-black tracking-wider block">Local Storage Backup</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <input 
+                      type="file" 
+                      ref={fileInputRef} 
+                      onChange={handleImportJson} 
+                      style={{ display: 'none' }} 
+                      accept=".txt"
+                    />
+                    <button 
+                      onClick={() => { fileInputRef.current?.click(); }}
+                      className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-gray-100 bg-gray-50 hover:bg-gray-100 text-gray-700 text-[10px] font-black uppercase tracking-wider transition-all"
+                    >
+                      <Download size={12} />
+                      {t('btn_import')}
+                    </button>
+                    <button 
+                      onClick={handleExportJson}
+                      className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-appPrimary hover:bg-appPrimaryHover text-white text-[10px] font-black uppercase tracking-wider shadow-sm transition-all"
+                    >
+                      <Upload size={12} />
+                      {t('btn_export')}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-t border-gray-100 pt-4 text-center">
+                <p className="text-[9px] text-gray-400 font-bold uppercase tracking-wider">Apex Intel Toolkit v4.0</p>
+                <p className="text-[8px] text-gray-400 mt-0.5">Strictly Offline & Obfuscated Local Storage</p>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
       {/* QR code sync modal */}
       {showQrModal && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -1524,11 +1745,6 @@ export default function App() {
           </div>
         </div>
       )}
-
-      {/* Footer disclaimer */}
-      <footer className="text-center py-6 border-t border-gray-100 text-[10px] text-gray-400 font-medium">
-        This app operates strictly client-side. Financial variables are encrypted under LocalStorage keys with zero cloud syncing.
-      </footer>
     </div>
   );
 }
