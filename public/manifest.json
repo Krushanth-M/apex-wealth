@@ -1,7 +1,7 @@
 {
-  "name": "Apex Intel — Premium Personal Finance",
-  "short_name": "Apex Intel",
-  "description": "Strictly offline, privacy-first personal finance PWA toolkit & dashboard",
+  "name": "Apex Wealth — Premium Personal Finance",
+  "short_name": "Apex Wealth",
+  "description": "Strictly offline, privacy-first personal finance PWA — your premium wealth toolkit",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

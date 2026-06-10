@@ -13,7 +13,7 @@ import {
 // ====================================================
 // STATE OBFUSCATION / ENCRYPTION ENGINE
 // ====================================================
-const ENCRYPTION_KEY = 'APEX_INTEL_CYPHER_KEY';
+const ENCRYPTION_KEY = 'APEX_WEALTH_CYPHER_KEY';
 
 const encryptState = (stateObj) => {
   try {
@@ -48,8 +48,8 @@ const decryptState = (cipherText) => {
 // ====================================================
 const i18n = {
   en: {
-    title: "Apex Intel",
-    tagline: "Strictly Offline Personal Finance & Privacy PWA",
+    title: "Apex Wealth",
+    tagline: "Your Premium Offline Personal Finance Toolkit",
     tab_budget: "Budget Planner",
     tab_savings: "Savings Goals",
     tab_loan: "EMI Calculator",
@@ -393,7 +393,7 @@ const OnboardingDot = ({ text }) => {
 // ====================================================
 export default function App() {
   const [state, setState] = useState(() => {
-    const saved = localStorage.getItem('apex_intel_secured_state');
+    const saved = localStorage.getItem('apex_wealth_secured_state');
     if (saved) {
       const decrypted = decryptState(saved);
       if (decrypted) {
@@ -422,7 +422,7 @@ export default function App() {
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `apex_intel_backup_${new Date().toISOString().slice(0, 10)}.txt`;
+      link.download = `apex_wealth_backup_${new Date().toISOString().slice(0, 10)}.txt`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -459,7 +459,7 @@ export default function App() {
   // Encrypted state sync on updates
   useEffect(() => {
     const cipher = encryptState(state);
-    localStorage.setItem('apex_intel_secured_state', cipher);
+    localStorage.setItem('apex_wealth_secured_state', cipher);
     document.documentElement.className = state.theme;
   }, [state]);
 
@@ -470,7 +470,7 @@ export default function App() {
       if (e.key === 'Escape') {
         const now = Date.now();
         if (now - lastEsc < 500) {
-          localStorage.removeItem('apex_intel_secured_state');
+          localStorage.removeItem('apex_wealth_secured_state');
           window.location.href = 'https://www.google.com';
         }
         lastEsc = now;
@@ -570,7 +570,23 @@ export default function App() {
     const fixedRatio = totalIncome > 0 ? (totalFixed / totalIncome) * 100 : 100;
     const agilityScore = Math.max(0, 100 - fixedRatio);
 
-    return { totalIncome, totalFixed, totalVariable, totalExpenses, surplus, agilityScore };
+    // 50/30/20 Rule calculations
+    const ideal50 = totalIncome * 0.50; // Needs
+    const ideal30 = totalIncome * 0.30; // Wants
+    const ideal20 = totalIncome * 0.20; // Savings
+
+    // Needs = fixed expenses (rent, EMI, bills)
+    const actual50 = totalFixed + sinkingFundWithholding;
+    // Wants = variable / discretionary
+    const actual30 = totalVariable;
+    // Savings = what's left
+    const actual20 = Math.max(0, surplus);
+
+    const pct50 = totalIncome > 0 ? Math.min(100, (actual50 / totalIncome) * 100) : 0;
+    const pct30 = totalIncome > 0 ? Math.min(100, (actual30 / totalIncome) * 100) : 0;
+    const pct20 = totalIncome > 0 ? Math.min(100, (actual20 / totalIncome) * 100) : 0;
+
+    return { totalIncome, totalFixed, totalVariable, totalExpenses, surplus, agilityScore, ideal50, ideal30, ideal20, actual50, actual30, actual20, pct50, pct30, pct20 };
   }, [state.salary, state.otherIncome, state.fixedExpenses, state.variableExpenses, sinkingFundWithholding]);
 
   const impulseOppCost = state.impulseCost * 5.9958;
@@ -979,6 +995,147 @@ export default function App() {
                       <div className="text-lg font-extrabold text-emerald-600"><MaskValue value={budgetMetrics.surplus} /></div>
                     </div>
                   </div>
+
+                  {/* 50/30/20 RULE CARD — Full Width */}
+                  {(() => {
+                    const { totalIncome, ideal50, ideal30, ideal20, actual50, actual30, actual20, pct50, pct30, pct20 } = budgetMetrics;
+                    const rules = [
+                      {
+                        label: 'Needs',
+                        emoji: '🏠',
+                        pct: 50,
+                        actualAmt: actual50,
+                        idealAmt: ideal50,
+                        barColor: 'bg-blue-500',
+                        badgeBg: actual50 <= ideal50 ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-600',
+                        badgeText: actual50 <= ideal50 ? 'On Track' : 'Over Budget',
+                        tip: 'Rent, EMIs, utilities, insurance. Should stay ≤ 50% of income.',
+                      },
+                      {
+                        label: 'Wants',
+                        emoji: '🎯',
+                        pct: 30,
+                        actualAmt: actual30,
+                        idealAmt: ideal30,
+                        barColor: 'bg-violet-500',
+                        badgeBg: actual30 <= ideal30 ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700',
+                        badgeText: actual30 <= ideal30 ? 'On Track' : 'Over Limit',
+                        tip: 'Dining, leisure, entertainment. Keep below 30% for healthy budgets.',
+                      },
+                      {
+                        label: 'Savings',
+                        emoji: '💰',
+                        pct: 20,
+                        actualAmt: actual20,
+                        idealAmt: ideal20,
+                        barColor: 'bg-emerald-500',
+                        badgeBg: actual20 >= ideal20 ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-600',
+                        badgeText: actual20 >= ideal20 ? 'On Track' : 'Under Target',
+                        tip: 'Surplus for investments, emergency fund, and wealth building.',
+                      },
+                    ];
+                    const overallOk = actual50 <= ideal50 && actual30 <= ideal30 && actual20 >= ideal20;
+                    return (
+                      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                        {/* Header row */}
+                        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+                          <div className="flex items-center gap-2">
+                            <span className="text-base">⚖️</span>
+                            <h3 className="font-extrabold text-sm text-gray-900 uppercase tracking-wider">50 / 30 / 20 Rule Checker</h3>
+                            <OnboardingDot text="The 50/30/20 budget rule allocates 50% to Needs, 30% to Wants, and 20% to Savings — a globally proven framework for financial health." />
+                          </div>
+                          <span className={`text-[10px] font-black uppercase px-2.5 py-1 rounded-full ${ overallOk ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}`}>
+                            {overallOk ? '✓ Healthy Budget' : '⚠ Needs Adjustment'}
+                          </span>
+                        </div>
+
+                        {/* Stacked segmented progress bar */}
+                        <div className="px-6 pt-4 pb-2">
+                          <div className="relative w-full h-4 bg-gray-100 rounded-full overflow-hidden flex">
+                            <motion.div
+                              className="h-full bg-blue-500 rounded-l-full"
+                              initial={{ width: 0 }}
+                              animate={{ width: `${pct50}%` }}
+                              transition={{ duration: 0.8, ease: 'easeOut' }}
+                            />
+                            <motion.div
+                              className="h-full bg-violet-500"
+                              initial={{ width: 0 }}
+                              animate={{ width: `${pct30}%` }}
+                              transition={{ duration: 0.8, ease: 'easeOut', delay: 0.15 }}
+                            />
+                            <motion.div
+                              className="h-full bg-emerald-500 rounded-r-full"
+                              initial={{ width: 0 }}
+                              animate={{ width: `${pct20}%` }}
+                              transition={{ duration: 0.8, ease: 'easeOut', delay: 0.3 }}
+                            />
+                          </div>
+                          {/* Legend dots */}
+                          <div className="flex items-center gap-5 mt-2">
+                            <span className="flex items-center gap-1.5 text-[10px] text-gray-400 font-bold"><span className="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Needs</span>
+                            <span className="flex items-center gap-1.5 text-[10px] text-gray-400 font-bold"><span className="w-2 h-2 rounded-full bg-violet-500 inline-block"></span>Wants</span>
+                            <span className="flex items-center gap-1.5 text-[10px] text-gray-400 font-bold"><span className="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>Savings</span>
+                            <span className="ml-auto text-[10px] text-gray-400 font-bold">{Math.round(pct50 + pct30 + pct20)}% allocated</span>
+                          </div>
+                        </div>
+
+                        {/* Three rule cards */}
+                        <div className="grid grid-cols-3 gap-0 border-t border-gray-100">
+                          {rules.map((rule, i) => (
+                            <div key={rule.label} className={`p-5 space-y-3 ${i < 2 ? 'border-r border-gray-100' : ''}`}>
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-1.5">
+                                  <span className="text-base">{rule.emoji}</span>
+                                  <div>
+                                    <div className="font-black text-xs text-gray-900 uppercase tracking-wider">{rule.label}</div>
+                                    <div className="text-[10px] text-gray-400 font-bold">Ideal: {rule.pct}%</div>
+                                  </div>
+                                </div>
+                                <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-full ${rule.badgeBg}`}>{rule.badgeText}</span>
+                              </div>
+
+                              {/* Mini bar */}
+                              <div className="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
+                                <motion.div
+                                  className={`h-full ${rule.barColor} rounded-full`}
+                                  initial={{ width: 0 }}
+                                  animate={{ width: `${Math.min(100, (rule.actualAmt / (rule.idealAmt || 1)) * 100)}%` }}
+                                  transition={{ duration: 0.9, ease: 'easeOut', delay: 0.2 * i }}
+                                />
+                              </div>
+
+                              <div className="space-y-1">
+                                <div className="flex justify-between text-[10px]">
+                                  <span className="text-gray-400 font-bold">Actual</span>
+                                  <span className="font-black text-gray-900 font-mono"><MaskValue value={rule.actualAmt} /></span>
+                                </div>
+                                <div className="flex justify-between text-[10px]">
+                                  <span className="text-gray-400 font-bold">Ideal</span>
+                                  <span className="font-bold text-gray-500 font-mono"><MaskValue value={rule.idealAmt} /></span>
+                                </div>
+                                <div className="flex justify-between text-[10px]">
+                                  <span className="text-gray-400 font-bold">Diff</span>
+                                  <span className={`font-black font-mono ${
+                                    rule.label === 'Savings'
+                                      ? rule.actualAmt >= rule.idealAmt ? 'text-emerald-600' : 'text-red-500'
+                                      : rule.actualAmt <= rule.idealAmt ? 'text-emerald-600' : 'text-red-500'
+                                  }`}>
+                                    {rule.label === 'Savings'
+                                      ? rule.actualAmt >= rule.idealAmt ? '+' : '-'
+                                      : rule.actualAmt <= rule.idealAmt ? '-' : '+'}
+                                    <MaskValue value={Math.abs(rule.actualAmt - rule.idealAmt)} />
+                                  </span>
+                                </div>
+                              </div>
+
+                              <p className="text-[9px] text-gray-400 leading-relaxed">{rule.tip}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })()}
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Module 2: Agility Score */}
@@ -1708,7 +1865,7 @@ export default function App() {
               </div>
 
               <div className="border-t border-gray-100 pt-4 text-center">
-                <p className="text-[9px] text-gray-400 font-bold uppercase tracking-wider">Apex Intel Toolkit v4.0</p>
+                <p className="text-[9px] text-gray-400 font-bold uppercase tracking-wider">Apex Wealth v4.0</p>
                 <p className="text-[8px] text-gray-400 mt-0.5">Strictly Offline & Obfuscated Local Storage</p>
               </div>
             </motion.div>
