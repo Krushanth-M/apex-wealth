@@ -1,0 +1,2463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Finance Master Toolkit</title>
+    <!-- Tabler Icons -->
+    <link rel="stylesheet" href="https://unpkg.com/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <style>
+        /* CSS Variables for Light / Dark Mode */
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-color: #e9ecef;
+            --text-color: #212529;
+            --text-secondary: #6c757d;
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --green: #16a34a;
+            --green-bg: #f0fdf4;
+            --green-border: #bbf7d0;
+            --green-text: #166534;
+            --amber: #d97706;
+            --amber-bg: #fef3c7;
+            --amber-border: #fde68a;
+            --amber-text: #92400e;
+            --red: #dc2626;
+            --red-bg: #fef2f2;
+            --red-border: #fecaca;
+            --red-text: #991b1b;
+            --input-bg: #ffffff;
+            --slider-runway: #e9ecef;
+        }
+
+        body.dark {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --border-color: #2d2d2d;
+            --text-color: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --primary: #818cf8;
+            --primary-hover: #6366f1;
+            --green: #4ade80;
+            --green-bg: #064e3b;
+            --green-border: #065f46;
+            --green-text: #a7f3d0;
+            --amber: #fbbf24;
+            --amber-bg: #78350f;
+            --amber-border: #92400e;
+            --amber-text: #fde68a;
+            --red: #f87171;
+            --red-bg: #7f1d1d;
+            --red-border: #991b1b;
+            --red-text: #fecaca;
+            --input-bg: #2d2d2d;
+            --slider-runway: #3d3d3d;
+        }
+
+        /* Base resets and typography */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            padding-bottom: 80px;
+        }
+
+        /* Top Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--bg-color);
+        }
+
+        /* Sticky Nav Bar */
+        nav.tabs-container {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            overflow-x: auto;
+            white-space: nowrap;
+            display: flex;
+            scrollbar-width: none;
+        }
+
+        nav.tabs-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* Container & Grid layouts */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.15s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Clean Flat Cards */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .grid-1-2 {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-1-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Metric Cards */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .metric-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        /* Alert Boxes */
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid transparent;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .alert.red {
+            background-color: var(--red-bg);
+            border-color: var(--red-border);
+            color: var(--red-text);
+        }
+
+        .alert.amber {
+            background-color: var(--amber-bg);
+            border-color: var(--amber-border);
+            color: var(--amber-text);
+        }
+
+        .alert.green {
+            background-color: var(--green-bg);
+            border-color: var(--green-border);
+            color: var(--green-text);
+        }
+
+        /* Input Controls styling */
+        .input-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.35rem;
+            color: var(--text-color);
+        }
+
+        .input-with-icon {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 0.75rem;
+            color: var(--text-secondary);
+            pointer-events: none;
+        }
+
+        .input-with-icon input {
+            padding-left: 2rem !important;
+        }
+
+        input[type="number"], select, input[type="text"] {
+            width: 100%;
+            padding: 0.6rem 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+            color: var(--text-color);
+            background-color: var(--input-bg);
+            outline: none;
+        }
+
+        input[type="number"]:focus, select:focus, input[type="text"]:focus {
+            border-color: var(--primary);
+        }
+
+        /* Custom Range Slider Styling */
+        .slider-container {
+            margin-top: 0.5rem;
+        }
+
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .slider-row input[type="range"] {
+            flex: 1;
+            height: 6px;
+            background: var(--slider-runway);
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider-row input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .slider-row input[type="number"] {
+            width: 100px;
+        }
+
+        /* Dynamic Rows List styling */
+        .row-list {
+            margin-top: 0.5rem;
+        }
+
+        .row-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            align-items: center;
+        }
+
+        @media (max-width: 480px) {
+            .row-item {
+                grid-template-columns: 1fr 1fr;
+            }
+            .row-item button {
+                grid-column: span 2;
+            }
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-outline {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--bg-color);
+        }
+
+        .btn-danger {
+            background-color: #ef4444;
+            color: #ffffff;
+        }
+
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+
+        .btn-sm {
+            padding: 0.35rem 0.6rem;
+            font-size: 0.8rem;
+        }
+
+        /* Custom HTML Legend */
+        .html-legend {
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .legend-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            padding: 0.35rem 0.5rem;
+            border-radius: 4px;
+            border-left: 4px solid transparent;
+            background-color: var(--bg-color);
+        }
+
+        /* Rule check bars */
+        .progress-bar-section {
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .progress-bar-container {
+            background-color: var(--slider-runway);
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 5px;
+        }
+
+        .progress-bar-target {
+            position: absolute;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background-color: var(--text-color);
+            opacity: 0.6;
+        }
+
+        /* Savings Goals Specific styles */
+        .goal-item {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            background-color: var(--card-bg);
+        }
+
+        .goal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .goal-title {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .goal-details {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.35rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Table styles */
+        table.growth-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+        }
+
+        table.growth-table th, table.growth-table td {
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 0.75rem;
+            text-align: right;
+        }
+
+        table.growth-table th {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        table.growth-table th:first-child, table.growth-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+        }
+
+        /* Strategy Cards */
+        .strategy-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 480px) {
+            .strategy-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .strategy-card {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1rem;
+            background-color: var(--bg-color);
+        }
+
+        .strategy-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .strategy-card p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Financial Literacy Cards */
+        .lessons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1rem;
+        }
+
+        .lesson-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .lesson-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .lesson-title {
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .lesson-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            flex: 1;
+        }
+
+        /* Net Worth stacked bar */
+        .networth-ratio-bar {
+            display: flex;
+            height: 24px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .ratio-assets {
+            background-color: var(--green);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .ratio-liabilities {
+            background-color: var(--red);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 3rem;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Floating AI Prompt Button */
+        .floating-ai-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary);
+            color: #ffffff;
+            border: none;
+            border-radius: 50px;
+            padding: 0.75rem 1.25rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .floating-ai-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* AI Assistant Slider Drawer */
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .drawer-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .drawer {
+            position: fixed;
+            top: 0;
+            right: -450px;
+            width: 100%;
+            max-width: 420px;
+            height: 100%;
+            background-color: var(--card-bg);
+            border-left: 1px solid var(--border-color);
+            z-index: 1001;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: right 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .drawer.open {
+            right: 0;
+        }
+
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .drawer-header h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .drawer-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.25rem;
+            cursor: pointer;
+        }
+
+        .drawer-body {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 1.5rem;
+        }
+
+        .prompt-preview-box {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 1rem;
+            font-family: monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            margin-top: 1rem;
+            color: var(--text-color);
+        }
+
+        .drawer-footer {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .copy-toast {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background-color: #333333;
+            color: #ffffff;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 1002;
+        }
+
+        .copy-toast.show {
+            opacity: 1;
+        }
+
+        /* Tooltip text styling */
+        .tip-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <h1><i class="ti ti-wallet"></i> Personal Finance Master Toolkit</h1>
+        <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+            <i class="ti ti-sun" id="themeIcon"></i>
+        </button>
+    </header>
+
+    <!-- Sticky Tab Navigation Bar -->
+    <nav class="tabs-container">
+        <button class="tab-btn active" onclick="switchTab('budget')"><i class="ti ti-calculator"></i> Budget Planner</button>
+        <button class="tab-btn" onclick="switchTab('savings')"><i class="ti ti-pig"></i> Savings Goals</button>
+        <button class="tab-btn" onclick="switchTab('loan')"><i class="ti ti-percentage"></i> EMI Calculator</button>
+        <button class="tab-btn" onclick="switchTab('investment')"><i class="ti ti-chart-line"></i> Growth Simulator</button>
+        <button class="tab-btn" onclick="switchTab('debt')"><i class="ti ti-trending-down"></i> Debt Payoff</button>
+        <button class="tab-btn" onclick="switchTab('lessons')"><i class="ti ti-book"></i> Lessons</button>
+        <button class="tab-btn" onclick="switchTab('networth')"><i class="ti ti-building-bank"></i> Net Worth</button>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+
+        <!-- TAB 1 — BUDGET PLANNER -->
+        <section id="budget" class="tab-content active">
+            <div class="grid-1-2">
+                <!-- Inputs Side -->
+                <div class="card">
+                    <h2><i class="ti ti-settings"></i> Enter Monthly Income</h2>
+                    <div class="input-group">
+                        <label for="takeHomeSalary">Monthly Take-Home Salary (₹)</label>
+                        <div class="input-with-icon">
+                            <i class="ti ti-currency-rupee input-icon"></i>
+                            <input type="number" id="takeHomeSalary" value="25000" oninput="calculateBudget()">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="otherIncome">Other Monthly Income (₹)</label>
+                        <div class="input-with-icon">
+                            <i class="ti ti-currency-rupee input-icon"></i>
+                            <input type="number" id="otherIncome" value="3000" oninput="calculateBudget()">
+                        </div>
+                    </div>
+
+                    <h2 style="margin-top: 1.5rem;"><i class="ti ti-receipt"></i> Monthly Expenses</h2>
+                    <div id="expenseList" class="row-list">
+                        <!-- Dynamic expense rows added here -->
+                    </div>
+                    <button class="btn btn-outline btn-sm" style="margin-top: 0.5rem;" onclick="addExpenseRow()">
+                        <i class="ti ti-plus"></i> Add Expense Category
+                    </button>
+                </div>
+
+                <!-- Outputs Side -->
+                <div>
+                    <!-- Metrics grid -->
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-label">Total Income</div>
+                            <div class="metric-value" id="totIncome">₹0</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Total Expenses</div>
+                            <div class="metric-value" id="totExpenses">₹0</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Left to Save</div>
+                            <div class="metric-value" id="leftToSave">₹0</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Savings Rate %</div>
+                            <div class="metric-value" id="savingsRate">0%</div>
+                        </div>
+                    </div>
+
+                    <!-- Alert box -->
+                    <div id="budgetAlert" class="alert"></div>
+
+                    <!-- Split Card for Charts -->
+                    <div class="grid-2">
+                        <div class="card">
+                            <h2>Expense Breakdown</h2>
+                            <div style="max-height: 200px; display: flex; justify-content: center;">
+                                <canvas id="expenseChart"></canvas>
+                            </div>
+                            <div id="expenseLegend" class="html-legend"></div>
+                        </div>
+
+                        <div class="card">
+                            <h2>50/30/20 Rule Check</h2>
+                            <p class="tip-text" style="margin-bottom: 1rem;"><i class="ti ti-info-circle"></i> Standard target rule: 50% for Needs, 30% for Wants, 20% for Savings.</p>
+                            
+                            <!-- Needs Bar -->
+                            <div class="progress-bar-section">
+                                <div class="progress-bar-header">
+                                    <span>Needs (Target: 50%)</span>
+                                    <span id="needsProgressLabel">0%</span>
+                                </div>
+                                <div class="progress-bar-container">
+                                    <div id="needsProgressBar" class="progress-bar-fill"></div>
+                                    <div class="progress-bar-target" style="left: 50%;"></div>
+                                </div>
+                            </div>
+
+                            <!-- Wants Bar -->
+                            <div class="progress-bar-section">
+                                <div class="progress-bar-header">
+                                    <span>Wants (Target: 30%)</span>
+                                    <span id="wantsProgressLabel">0%</span>
+                                </div>
+                                <div class="progress-bar-container">
+                                    <div id="wantsProgressBar" class="progress-bar-fill"></div>
+                                    <div class="progress-bar-target" style="left: 30%;"></div>
+                                </div>
+                            </div>
+
+                            <!-- Savings Bar -->
+                            <div class="progress-bar-section">
+                                <div class="progress-bar-header">
+                                    <span>Savings (Target: 20%)</span>
+                                    <span id="savingsProgressLabel">0%</span>
+                                </div>
+                                <div class="progress-bar-container">
+                                    <div id="savingsProgressBar" class="progress-bar-fill"></div>
+                                    <div class="progress-bar-target" style="left: 20%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2 — SAVINGS GOALS -->
+        <section id="savings" class="tab-content">
+            <div class="grid-1-2">
+                <!-- Left Input Panel -->
+                <div class="card">
+                    <h2><i class="ti ti-plus"></i> Add New Savings Goal</h2>
+                    <div class="input-group">
+                        <label for="newGoalName">Goal Name</label>
+                        <input type="text" id="newGoalName" placeholder="e.g. Children's Education, Bike Purchase">
+                    </div>
+                    <div class="input-group">
+                        <label for="newGoalTarget">Target Amount Needed (₹)</label>
+                        <div class="input-with-icon">
+                            <i class="ti ti-currency-rupee input-icon"></i>
+                            <input type="number" id="newGoalTarget" placeholder="e.g. 50000">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="newGoalSaved">Already Saved So Far (₹)</label>
+                        <div class="input-with-icon">
+                            <i class="ti ti-currency-rupee input-icon"></i>
+                            <input type="number" id="newGoalSaved" value="0">
+                        </div>
+                    </div>
+                    <button class="btn" style="width: 100%; justify-content: center;" onclick="addSavingsGoal()">
+                        <i class="ti ti-circle-plus"></i> Add Goal
+                    </button>
+                </div>
+
+                <!-- Right Display List -->
+                <div>
+                    <div class="card">
+                        <h2><i class="ti ti-target-arrow"></i> Active Savings Goals</h2>
+                        <div id="goalsList">
+                            <!-- Goal items generated dynamically -->
+                        </div>
+
+                        <!-- Summary Alert -->
+                        <div id="goalsSummaryAlert" class="alert green" style="margin-top: 1rem;">
+                            <!-- Calculated summary shows here -->
+                        </div>
+                        
+                        <div style="text-align: right;">
+                            <button class="btn btn-outline btn-sm" onclick="triggerAdvice('savings')">
+                                Get savings advice <i class="ti ti-arrow-up-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3 — EMI & LOAN CALCULATOR -->
+        <section id="loan" class="tab-content">
+            <div class="grid-1-2">
+                <!-- Sliders Section -->
+                <div class="card">
+                    <h2><i class="ti ti-adjustments"></i> Adjust Loan Terms</h2>
+                    
+                    <div class="input-group">
+                        <label for="loanAmount">Loan Amount (₹)</label>
+                        <div class="slider-row">
+                            <input type="range" id="loanAmountSlider" min="10000" max="5000000" step="10000" value="500000" oninput="syncLoanInputs('amount', 'slider')">
+                            <input type="number" id="loanAmountInput" min="10000" max="100000000" value="500000" oninput="syncLoanInputs('amount', 'input')">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="loanRate">Annual Interest Rate (%)</label>
+                        <div class="slider-row">
+                            <input type="range" id="loanRateSlider" min="5" max="30" step="0.1" value="10.5" oninput="syncLoanInputs('rate', 'slider')">
+                            <input type="number" id="loanRateInput" min="1" max="50" step="0.1" value="10.5" oninput="syncLoanInputs('rate', 'input')">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="loanTenure">Loan Tenure (Months)</label>
+                        <div class="slider-row">
+                            <input type="range" id="loanTenureSlider" min="6" max="360" step="6" value="60" oninput="syncLoanInputs('tenure', 'slider')">
+                            <input type="number" id="loanTenureInput" min="1" max="600" value="60" oninput="syncLoanInputs('tenure', 'input')">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Outputs Section -->
+                <div>
+                    <div class="metrics-grid">
+                        <div class="metric-card" style="border: 2px solid var(--primary);">
+                            <div class="metric-label">Monthly EMI</div>
+                            <div class="metric-value" id="loanEmi" style="font-size: 2rem; color: var(--primary);">₹0</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Total Payable</div>
+                            <div class="metric-value" id="loanTotalPayable">₹0</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Total Interest Paid</div>
+                            <div class="metric-value" id="loanTotalInterest">₹0</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Interest portion %</div>
+                            <div class="metric-value" id="loanInterestRatio">0%</div>
+                        </div>
+                    </div>
+
+                    <!-- Color alert on EMI relative to income -->
+                    <div id="loanEmiAlert" class="alert"></div>
+
+                    <!-- Amortization Chart -->
+                    <div class="card">
+                        <h2>Amortization Schedule (Yearly Paid Principal vs Interest)</h2>
+                        <div style="height: 250px;">
+                            <canvas id="loanChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Optimization Tip -->
+                    <div class="card" id="loanTipBox">
+                        <h3><i class="ti ti-bulb" style="color: var(--amber);"></i> Money Saver Recommendation</h3>
+                        <p id="loanTipText" style="font-size: 0.9rem; margin-top: 0.5rem; color: var(--text-secondary);"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4 — INVESTMENT GROWTH SIMULATOR -->
+        <section id="investment" class="tab-content">
+            <div class="grid-1-2">
+                <!-- Sliders -->
+                <div class="card">
+                    <h2><i class="ti ti-chart-arrows"></i> Adjust Investment Inputs</h2>
+                    
+                    <div class="input-group">
+                        <label for="sipAmount">Monthly SIP Amount (₹)</label>
+                        <div class="slider-row">
+                            <input type="range" id="sipAmountSlider" min="100" max="50000" step="100" value="2000" oninput="syncSipInputs('sip', 'slider')">
+                            <input type="number" id="sipAmountInput" value="2000" oninput="syncSipInputs('sip', 'input')">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="sipReturn">Expected Annual Return (%)</label>
+                        <div class="slider-row">
+                            <input type="range" id="sipReturnSlider" min="5" max="25" step="0.5" value="12" oninput="syncSipInputs('return', 'slider')">
+                            <input type="number" id="sipReturnInput" value="12" oninput="syncSipInputs('return', 'input')">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="sipPeriod">Investment Period (Years)</label>
+                        <div class="slider-row">
+                            <input type="range" id="sipPeriodSlider" min="1" max="40" step="1" value="15" oninput="syncSipInputs('period', 'slider')">
+                            <input type="number" id="sipPeriodInput" value="15" oninput="syncSipInputs('period', 'input')">
+                        </div>
+                    </div>
+
+                    <div class="input-group" style="margin-top: 1.5rem;">
+                        <label for="lumpSum">One-time Lump Sum Investment (₹) — Optional</label>
+                        <div class="input-with-icon">
+                            <i class="ti ti-currency-rupee input-icon"></i>
+                            <input type="number" id="lumpSum" value="10000" oninput="calculateSIP()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simulation results -->
+                <div>
+                    <div class="metrics-grid">
+                        <div class="metric-card" style="border: 2px solid var(--green);">
+                            <div class="metric-label">Estimated Future Value</div>
+                            <div class="metric-value" id="sipCorpus" style="font-size: 2rem; color: var(--green);">₹0</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Amount Invested</div>
+                            <div class="metric-value" id="sipInvested">₹0</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Wealth Gain</div>
+                            <div class="metric-value" id="sipGains">₹0</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Multiplier</div>
+                            <div class="metric-value" id="sipMultiplier" style="color: var(--primary);">1.0x</div>
+                        </div>
+                    </div>
+
+                    <!-- Advice insight -->
+                    <div class="alert green" id="sipMotivationBox" style="font-weight: 500;">
+                        <!-- dynamic motivation sentence -->
+                    </div>
+
+                    <!-- Growth Line Chart -->
+                    <div class="card">
+                        <h2>Your Money Growth Timeline</h2>
+                        <div style="height: 250px;">
+                            <canvas id="sipChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Comparison Table -->
+                    <div class="card">
+                        <h2>What a ₹2,000 Monthly SIP Becomes</h2>
+                        <table class="growth-table" id="sipComparisonTable">
+                            <thead>
+                                <tr>
+                                    <th>Period / Returns</th>
+                                    <th>8% Return</th>
+                                    <th>12% Return (Equity Mutual Fund)</th>
+                                    <th>15% Return (High Growth)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Generated Dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5 — DEBT PAYOFF PLANNER -->
+        <section id="debt" class="tab-content">
+            <div class="grid-1-2">
+                <!-- Inputs -->
+                <div class="card">
+                    <h2><i class="ti ti-edit"></i> Loan Details</h2>
+                    <div class="input-group">
+                        <label for="debtAmount">Total Debt Owed (₹)</label>
+                        <div class="input-with-icon">
+                            <i class="ti ti-currency-rupee input-icon"></i>
+                            <input type="number" id="debtAmount" value="150000" oninput="calculateDebtPayoff()">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="debtRate">Annual Interest Rate (%)</label>
+                        <div class="input-with-icon">
+                            <i class="ti ti-percent input-icon"></i>
+                            <input type="number" id="debtRate" value="14" step="0.5" oninput="calculateDebtPayoff()">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="debtMonthlyPayment">Your Monthly Payment Capacity (₹)</label>
+                        <div class="input-with-icon">
+                            <i class="ti ti-currency-rupee input-icon"></i>
+                            <input type="number" id="debtMonthlyPayment" value="5000" oninput="calculateDebtPayoff()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Outputs -->
+                <div>
+                    <div class="metrics-grid">
+                        <div class="metric-card" style="border: 2px solid var(--red);">
+                            <div class="metric-label">Time to Debt Freedom</div>
+                            <div class="metric-value" id="debtMonths" style="color: var(--red);">0 months</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Total Interest Payable</div>
+                            <div class="metric-value" id="debtTotalInterest">₹0</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Total Amount Paid Back</div>
+                            <div class="metric-value" id="debtTotalPaid">₹0</div>
+                        </div>
+                    </div>
+
+                    <!-- Alert box -->
+                    <div id="debtAlert" class="alert"></div>
+
+                    <!-- Paid vs principal bar chart -->
+                    <div class="card">
+                        <h2>Debt Cost Breakdown (Principal vs Total Paid)</h2>
+                        <div style="height: 200px; max-width: 400px; margin: 0 auto;">
+                            <canvas id="debtChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Strategy explainer cards -->
+                    <div class="card">
+                        <h2>Debt Payoff Strategies</h2>
+                        <p class="tip-text" style="margin-bottom: 1rem;"><i class="ti ti-info-circle"></i> Best techniques to settle multiple debts faster:</p>
+                        <div class="strategy-container">
+                            <div class="strategy-card">
+                                <h3>1. Avalanche Method</h3>
+                                <p>Pay off debts with the <strong>highest interest rate first</strong>. Saves you the most interest money overall.</p>
+                            </div>
+                            <div class="strategy-card">
+                                <h3>2. Snowball Method</h3>
+                                <p>Pay off debts with the <strong>smallest balance first</strong>. Gives you quick mental wins to stay motivated.</p>
+                            </div>
+                        </div>
+                        <div style="text-align: right; margin-top: 1rem;">
+                            <button class="btn btn-outline btn-sm" onclick="triggerAdvice('debt')">
+                                Which is better for me? <i class="ti ti-arrow-up-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 6 — FINANCIAL LITERACY LESSONS -->
+        <section id="lessons" class="tab-content">
+            <div class="card" style="margin-bottom: 2rem;">
+                <h2><i class="ti ti-bulb"></i> Financial Literacy Lessons</h2>
+                <p style="font-size: 0.95rem; color: var(--text-secondary);">Learn these core financial principles in simple English to improve your money management.</p>
+            </div>
+            <div class="lessons-grid">
+                <!-- Card 1 -->
+                <div class="lesson-card">
+                    <div>
+                        <div class="lesson-icon"><i class="ti ti-chart-pie"></i></div>
+                        <div class="lesson-title">The 50/30/20 Rule</div>
+                        <div class="lesson-desc">A simple formula to manage your money: Spend 50% of your earnings on Needs (rent, food, bills), 30% on Wants (entertainment, eating out), and save the remaining 20% for future goals.</div>
+                    </div>
+                    <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: center;" onclick="triggerLessonAdvice(1)">
+                        Learn more <i class="ti ti-arrow-up-right"></i>
+                    </button>
+                </div>
+                <!-- Card 2 -->
+                <div class="lesson-card">
+                    <div>
+                        <div class="lesson-icon"><i class="ti ti-shield-check"></i></div>
+                        <div class="lesson-title">Emergency Fund</div>
+                        <div class="lesson-desc">Save enough money to cover 3 to 6 months of your family's basic needs. Keep this cash in a safe bank account. Use it only for real emergencies like medical bills or job loss.</div>
+                    </div>
+                    <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: center;" onclick="triggerLessonAdvice(2)">
+                        Learn more <i class="ti ti-arrow-up-right"></i>
+                    </button>
+                </div>
+                <!-- Card 3 -->
+                <div class="lesson-card">
+                    <div>
+                        <div class="lesson-icon"><i class="ti ti-sparkles"></i></div>
+                        <div class="lesson-title">Compound Interest</div>
+                        <div class="lesson-desc">When you invest, your money earns returns. In the next period, you earn interest on both your initial money and the returns already earned. Over time, your money grows exponentially!</div>
+                    </div>
+                    <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: center;" onclick="triggerLessonAdvice(3)">
+                        Learn more <i class="ti ti-arrow-up-right"></i>
+                    </button>
+                </div>
+                <!-- Card 4 -->
+                <div class="lesson-card">
+                    <div>
+                        <div class="lesson-icon"><i class="ti ti-scale"></i></div>
+                        <div class="lesson-title">Good Debt vs Bad Debt</div>
+                        <div class="lesson-desc">Good debt is money borrowed to build long-term value, like a home loan or education. Bad debt is borrowing for everyday costs or luxury items, like buying clothes on a credit card.</div>
+                    </div>
+                    <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: center;" onclick="triggerLessonAdvice(4)">
+                        Learn more <i class="ti ti-arrow-up-right"></i>
+                    </button>
+                </div>
+                <!-- Card 5 -->
+                <div class="lesson-card">
+                    <div>
+                        <div class="lesson-icon"><i class="ti ti-device-analogue"></i></div>
+                        <div class="lesson-title">SIP Mutual Funds</div>
+                        <div class="lesson-desc">A Systematic Investment Plan (SIP) lets you invest a fixed small amount (like ₹500 or ₹1,000) every month. This helps you build wealth over time without timing the stock market.</div>
+                    </div>
+                    <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: center;" onclick="triggerLessonAdvice(5)">
+                        Learn more <i class="ti ti-arrow-up-right"></i>
+                    </button>
+                </div>
+                <!-- Card 6 -->
+                <div class="lesson-card">
+                    <div>
+                        <div class="lesson-icon"><i class="ti ti-heart-handshake"></i></div>
+                        <div class="lesson-title">Insurance First</div>
+                        <div class="lesson-desc">Protect your family before investing. Get a Term Life Insurance to secure your family's future if you're not around, and Health Insurance so medical bills don't wipe out your savings.</div>
+                    </div>
+                    <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: center;" onclick="triggerLessonAdvice(6)">
+                        Learn more <i class="ti ti-arrow-up-right"></i>
+                    </button>
+                </div>
+                <!-- Card 7 -->
+                <div class="lesson-card">
+                    <div>
+                        <div class="lesson-icon"><i class="ti ti-arrow-bounce"></i></div>
+                        <div class="lesson-title">Inflation</div>
+                        <div class="lesson-desc">Inflation is the rate at which costs rise. If inflation is 6%, an item costing ₹10,000 will cost ₹10,600 next year. Your savings must grow faster than inflation to keep buying power.</div>
+                    </div>
+                    <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: center;" onclick="triggerLessonAdvice(7)">
+                        Learn more <i class="ti ti-arrow-up-right"></i>
+                    </button>
+                </div>
+                <!-- Card 8 -->
+                <div class="lesson-card">
+                    <div>
+                        <div class="lesson-icon"><i class="ti ti-star"></i></div>
+                        <div class="lesson-title">Credit Score</div>
+                        <div class="lesson-desc">A score that rates how responsibly you pay back loans. Keeping a clean repayment record builds a high score, which allows you to borrow money easily at lower interest rates.</div>
+                    </div>
+                    <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: center;" onclick="triggerLessonAdvice(8)">
+                        Learn more <i class="ti ti-arrow-up-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 7 — NET WORTH TRACKER -->
+        <section id="networth" class="tab-content">
+            <div class="grid-1-2">
+                <!-- Assets & Liabilities Inputs -->
+                <div class="grid-2" style="grid-column: span 1;">
+                    <div class="card">
+                        <h2><i class="ti ti-plus" style="color: var(--green);"></i> My Assets</h2>
+                        <div class="input-group">
+                            <label for="assetCash">Cash & Bank Balance (₹)</label>
+                            <input type="number" id="assetCash" value="25000" oninput="calculateNetWorth()">
+                        </div>
+                        <div class="input-group">
+                            <label for="assetMF">Mutual Funds / Stocks (₹)</label>
+                            <input type="number" id="assetMF" value="40000" oninput="calculateNetWorth()">
+                        </div>
+                        <div class="input-group">
+                            <label for="assetGold">Gold Value (₹)</label>
+                            <input type="number" id="assetGold" value="60000" oninput="calculateNetWorth()">
+                        </div>
+                        <div class="input-group">
+                            <label for="assetProperty">Property / House Value (₹)</label>
+                            <input type="number" id="assetProperty" value="0" oninput="calculateNetWorth()">
+                        </div>
+                        <div class="input-group">
+                            <label for="assetOther">Other Assets (₹)</label>
+                            <input type="number" id="assetOther" value="5000" oninput="calculateNetWorth()">
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2><i class="ti ti-minus" style="color: var(--red);"></i> My Liabilities</h2>
+                        <div class="input-group">
+                            <label for="liabHome">Home Loan Outstanding (₹)</label>
+                            <input type="number" id="liabHome" value="0" oninput="calculateNetWorth()">
+                        </div>
+                        <div class="input-group">
+                            <label for="liabPersonal">Personal Loan (₹)</label>
+                            <input type="number" id="liabPersonal" value="15000" oninput="calculateNetWorth()">
+                        </div>
+                        <div class="input-group">
+                            <label for="liabCC">Credit Card Debt (₹)</label>
+                            <input type="number" id="liabCC" value="4500" oninput="calculateNetWorth()">
+                        </div>
+                        <div class="input-group">
+                            <label for="liabOther">Other Debts Owed (₹)</label>
+                            <input type="number" id="liabOther" value="0" oninput="calculateNetWorth()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Outputs -->
+                <div>
+                    <!-- Net Worth Metric Cards -->
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-label">Total Assets</div>
+                            <div class="metric-value" id="nwTotalAssets" style="color: var(--green);">₹0</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Total Liabilities</div>
+                            <div class="metric-value" id="nwTotalLiabilities" style="color: var(--red);">₹0</div>
+                        </div>
+                        <div class="metric-card" id="nwNetWorthCard" style="border: 2px solid var(--border-color);">
+                            <div class="metric-label">My Net Worth</div>
+                            <div class="metric-value" id="nwNetWorth">₹0</div>
+                        </div>
+                    </div>
+
+                    <!-- Assets to Liabilities Ratio Bar -->
+                    <div class="card">
+                        <h2>Assets vs Liabilities Ratio</h2>
+                        <div class="networth-ratio-bar">
+                            <div id="ratioAssetsBar" class="ratio-assets">Assets</div>
+                            <div id="ratioLiabilitiesBar" class="ratio-liabilities">Liabilities</div>
+                        </div>
+                        <p class="tip-text"><i class="ti ti-info-circle"></i> Aim to increase assets (green) and shrink liabilities (red).</p>
+                    </div>
+
+                    <!-- Donut Allocation chart -->
+                    <div class="card">
+                        <h2>Asset Allocation Breakdown</h2>
+                        <div style="height: 220px; display: flex; justify-content: center;">
+                            <canvas id="netWorthChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Action Advice Box -->
+                    <div class="card" id="netWorthAdviceBox">
+                        <h3><i class="ti ti-shield-alert" id="nwAdviceIcon"></i> Personalised Recommendation</h3>
+                        <p id="netWorthAdviceText" style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-secondary);"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Floating Help Button -->
+    <button class="floating-ai-btn" onclick="openFloatingQuestion()">
+        <i class="ti ti-message-chatbot"></i> Ask AI Question
+    </button>
+
+    <!-- Side Slide-out AI Assistant Drawer -->
+    <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+    <div class="drawer" id="drawer">
+        <div>
+            <div class="drawer-header">
+                <h3><i class="ti ti-message-chatbot" style="color: var(--primary);"></i> AI Assistant Prompt</h3>
+                <button class="drawer-close" onclick="closeDrawer()"><i class="ti ti-x"></i></button>
+            </div>
+            <div class="drawer-body">
+                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                    Since this application operates completely offline, we've drafted a precise prompt for you. Copy it and paste it into our AI chat window to get immediate answers!
+                </p>
+                <div class="prompt-preview-box" id="promptText"></div>
+            </div>
+        </div>
+        <div class="drawer-footer">
+            <button class="btn" onclick="copyPromptToClipboard()"><i class="ti ti-copy"></i> Copy Prompt to Clipboard</button>
+            <button class="btn btn-outline" onclick="closeDrawer()">Close</button>
+        </div>
+    </div>
+
+    <!-- Temporary Toast -->
+    <div class="copy-toast" id="copyToast">Prompt copied to clipboard!</div>
+
+    <!-- Footer Disclaimer -->
+    <footer>
+        <p>This tool is for educational purposes only and does not constitute financial advice. Consult a SEBI-registered financial advisor for personalised guidance.</p>
+    </footer>
+
+    <script>
+        // Data States & Prepopulated Lists
+        let expenses = [
+            { id: 1, name: 'Rent', amount: 10000, type: 'needs' },
+            { id: 2, name: 'Food & Groceries', amount: 6000, type: 'needs' },
+            { id: 3, name: 'Transport', amount: 2000, type: 'needs' },
+            { id: 4, name: 'Utilities', amount: 3000, type: 'needs' },
+            { id: 5, name: 'Entertainment', amount: 1500, type: 'wants' }
+        ];
+
+        let savingsGoals = [
+            { id: 1, name: 'Emergency Fund', target: 90000, saved: 15000 },
+            { id: 2, name: 'New Phone', target: 20000, saved: 8000 }
+        ];
+
+        // Chart References
+        let budgetChartInstance = null;
+        let loanChartInstance = null;
+        let sipChartInstance = null;
+        let debtChartInstance = null;
+        let netWorthChartInstance = null;
+
+        // Initialize App on load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderExpensesList();
+            renderGoalsList();
+            calculateBudget();
+            calculateLoanEMI();
+            calculateSIP();
+            calculateDebtPayoff();
+            calculateNetWorth();
+        });
+
+        // ----------------------------------------------------
+        // UTILITIES
+        // ----------------------------------------------------
+        function formatINR(num) {
+            return '₹' + Math.round(num).toLocaleString('en-IN');
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            body.classList.toggle('dark');
+            const themeIcon = document.getElementById('themeIcon');
+            if(body.classList.contains('dark')) {
+                themeIcon.className = 'ti ti-moon';
+            } else {
+                themeIcon.className = 'ti ti-sun';
+            }
+            // Redraw charts to match grid color configurations if dark mode changes
+            calculateBudget();
+            calculateLoanEMI();
+            calculateSIP();
+            calculateDebtPayoff();
+            calculateNetWorth();
+        }
+
+        function switchTab(tabId) {
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(el => el.classList.remove('active'));
+
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(el => el.classList.remove('active'));
+
+            document.getElementById(tabId).classList.add('active');
+            
+            // Find button corresponding to tabId and make active
+            const activeBtn = Array.from(buttons).find(btn => btn.getAttribute('onclick').includes(tabId));
+            if(activeBtn) activeBtn.classList.add('active');
+
+            // Scroll to top of tab content window
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Trigger updates specifically on the tabs to fix chart redraw sizing issues
+            if (tabId === 'budget') calculateBudget();
+            if (tabId === 'loan') calculateLoanEMI();
+            if (tabId === 'investment') calculateSIP();
+            if (tabId === 'debt') calculateDebtPayoff();
+            if (tabId === 'networth') calculateNetWorth();
+        }
+
+        // Drawer controllers
+        function openDrawer(text) {
+            document.getElementById('promptText').innerText = text;
+            document.getElementById('drawerOverlay').classList.add('open');
+            document.getElementById('drawer').classList.add('open');
+        }
+
+        function closeDrawer() {
+            document.getElementById('drawerOverlay').classList.remove('open');
+            document.getElementById('drawer').classList.remove('open');
+        }
+
+        function copyPromptToClipboard() {
+            const text = document.getElementById('promptText').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast();
+                closeDrawer();
+            }).catch(err => {
+                console.error("Could not copy: ", err);
+            });
+        }
+
+        function showToast() {
+            const toast = document.getElementById('copyToast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function openFloatingQuestion() {
+            openDrawer('I have a question about personal finance in India:\n\n[Type your specific question here, e.g. "Should I pay off my loan or invest in SIP first?"]');
+        }
+
+        // ----------------------------------------------------
+        // TAB 1: BUDGET PLANNER LOGIC
+        // ----------------------------------------------------
+        function renderExpensesList() {
+            const listEl = document.getElementById('expenseList');
+            listEl.innerHTML = '';
+            expenses.forEach(exp => {
+                const div = document.createElement('div');
+                div.className = 'row-item';
+                div.innerHTML = `
+                    <input type="text" value="${exp.name}" oninput="updateExpenseRow(${exp.id}, 'name', this.value)">
+                    <div class="input-with-icon">
+                        <i class="ti ti-currency-rupee input-icon" style="left:0.4rem; font-size:0.85rem;"></i>
+                        <input type="number" value="${exp.amount}" style="padding-left:1.5rem !important;" oninput="updateExpenseRow(${exp.id}, 'amount', this.value)">
+                    </div>
+                    <select onchange="updateExpenseRow(${exp.id}, 'type', this.value)">
+                        <option value="needs" ${exp.type === 'needs' ? 'selected' : ''}>Needs</option>
+                        <option value="wants" ${exp.type === 'wants' ? 'selected' : ''}>Wants</option>
+                    </select>
+                    <button class="btn btn-danger btn-sm" onclick="removeExpenseRow(${exp.id})" title="Delete row">
+                        <i class="ti ti-trash"></i>
+                    </button>
+                `;
+                listEl.appendChild(div);
+            });
+        }
+
+        function addExpenseRow() {
+            const newId = expenses.length > 0 ? Math.max(...expenses.map(e => e.id)) + 1 : 1;
+            expenses.push({ id: newId, name: 'Custom Expense', amount: 1000, type: 'needs' });
+            renderExpensesList();
+            calculateBudget();
+        }
+
+        function removeExpenseRow(id) {
+            expenses = expenses.filter(exp => exp.id !== id);
+            renderExpensesList();
+            calculateBudget();
+        }
+
+        function updateExpenseRow(id, field, value) {
+            const exp = expenses.find(e => e.id === id);
+            if (exp) {
+                if (field === 'amount') {
+                    exp.amount = parseFloat(value) || 0;
+                } else {
+                    exp[field] = value;
+                }
+                calculateBudget();
+            }
+        }
+
+        function calculateBudget() {
+            const salary = parseFloat(document.getElementById('takeHomeSalary').value) || 0;
+            const other = parseFloat(document.getElementById('otherIncome').value) || 0;
+            const totalIncome = salary + other;
+            
+            const totalExpenses = expenses.reduce((sum, item) => sum + item.amount, 0);
+            const leftToSave = totalIncome - totalExpenses;
+            const savingsRate = totalIncome > 0 ? (leftToSave / totalIncome) * 100 : 0;
+
+            // Update DOM metrics
+            document.getElementById('totIncome').innerText = formatINR(totalIncome);
+            document.getElementById('totExpenses').innerText = formatINR(totalExpenses);
+            document.getElementById('leftToSave').innerText = formatINR(leftToSave);
+            document.getElementById('savingsRate').innerText = (leftToSave >= 0 ? Math.round(savingsRate) : 0) + '%';
+
+            // Alert block logic
+            const alertEl = document.getElementById('budgetAlert');
+            if (leftToSave < 0) {
+                alertEl.className = 'alert red';
+                alertEl.innerHTML = `<i class="ti ti-alert-triangle"></i> You are overspending by ${formatINR(Math.abs(leftToSave))}! Lower your Wants expenses.`;
+            } else if (savingsRate < 10) {
+                alertEl.className = 'alert amber';
+                alertEl.innerHTML = `<i class="ti ti-alert-circle"></i> Saving only ${Math.round(savingsRate)}% — aim for 20% by cutting unnecessary wants.`;
+            } else {
+                alertEl.className = 'alert green';
+                alertEl.innerHTML = `<i class="ti ti-circle-check"></i> Great! You are saving ${Math.round(savingsRate)}% of your income. Keep it up!`;
+            }
+
+            // 50/30/20 Math
+            const needsTotal = expenses.filter(e => e.type === 'needs').reduce((sum, e) => sum + e.amount, 0);
+            const wantsTotal = expenses.filter(e => e.type === 'wants').reduce((sum, e) => sum + e.amount, 0);
+            
+            const needsPct = totalIncome > 0 ? Math.round((needsTotal / totalIncome) * 100) : 0;
+            const wantsPct = totalIncome > 0 ? Math.round((wantsTotal / totalIncome) * 100) : 0;
+            const savingsPct = totalIncome > 0 ? Math.round((leftToSave / totalIncome) * 100) : 0;
+
+            // Update progress bars
+            document.getElementById('needsProgressLabel').innerText = needsPct + '%';
+            const needsBar = document.getElementById('needsProgressBar');
+            needsBar.style.width = Math.min(needsPct, 100) + '%';
+            needsBar.style.backgroundColor = needsPct > 50 ? 'var(--red)' : 'var(--green)';
+
+            document.getElementById('wantsProgressLabel').innerText = wantsPct + '%';
+            const wantsBar = document.getElementById('wantsProgressBar');
+            wantsBar.style.width = Math.min(wantsPct, 100) + '%';
+            wantsBar.style.backgroundColor = wantsPct > 30 ? 'var(--amber)' : 'var(--green)';
+
+            document.getElementById('savingsProgressLabel').innerText = (savingsPct > 0 ? savingsPct : 0) + '%';
+            const savingsBar = document.getElementById('savingsProgressBar');
+            savingsBar.style.width = Math.max(0, Math.min(savingsPct, 100)) + '%';
+            savingsBar.style.backgroundColor = savingsPct >= 20 ? 'var(--green)' : 'var(--amber)';
+
+            // Donut chart setup
+            updateBudgetChart(expenses);
+            
+            // Sync default inputs for Loan Tab income check
+            const loanAlertBox = document.getElementById('loanEmiAlert');
+            if (loanAlertBox && document.getElementById('loanEmi').innerText !== '₹0') {
+                calculateLoanEMI(); // refresh EMI risk status if budget changes
+            }
+        }
+
+        function updateBudgetChart(expensesList) {
+            // Group duplicate expense names
+            const grouped = {};
+            expensesList.forEach(e => {
+                grouped[e.name] = (grouped[e.name] || 0) + e.amount;
+            });
+
+            const labels = Object.keys(grouped);
+            const data = Object.values(grouped);
+            const colors = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#14b8a6'];
+
+            // Populate Legend
+            const legendEl = document.getElementById('expenseLegend');
+            legendEl.innerHTML = '';
+            labels.forEach((label, index) => {
+                const color = colors[index % colors.length];
+                const div = document.createElement('div');
+                div.className = 'legend-item';
+                div.style.borderLeftColor = color;
+                div.innerHTML = `<span>${label}</span><strong>${formatINR(grouped[label])}</strong>`;
+                legendEl.appendChild(div);
+            });
+
+            const ctx = document.getElementById('expenseChart').getContext('2d');
+            
+            if (budgetChartInstance) {
+                budgetChartInstance.destroy();
+            }
+
+            if (data.length === 0) return;
+
+            const isDark = document.body.classList.contains('dark');
+
+            budgetChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors.slice(0, data.length),
+                        borderWidth: isDark ? 2 : 1,
+                        borderColor: isDark ? '#1e1e1e' : '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    cutout: '65%'
+                }
+            });
+        }
+
+        // ----------------------------------------------------
+        // TAB 2: SAVINGS GOALS LOGIC
+        // ----------------------------------------------------
+        function renderGoalsList() {
+            const listEl = document.getElementById('goalsList');
+            listEl.innerHTML = '';
+            savingsGoals.forEach(goal => {
+                const pct = goal.target > 0 ? Math.round((goal.saved / goal.target) * 100) : 0;
+                const remaining = goal.target - goal.saved;
+                const div = document.createElement('div');
+                div.className = 'goal-item';
+                div.innerHTML = `
+                    <div class="goal-header">
+                        <span class="goal-title">${goal.name}</span>
+                        <button class="btn btn-danger btn-sm" onclick="removeSavingsGoal(${goal.id})">
+                            <i class="ti ti-trash"></i>
+                        </button>
+                    </div>
+                    <div class="progress-bar-container" style="height:12px;">
+                        <div class="progress-bar-fill" style="width: ${Math.min(pct, 100)}%; background-color: var(--green);"></div>
+                    </div>
+                    <div class="goal-details">
+                        <span>${formatINR(goal.saved)} saved of ${formatINR(goal.target)}</span>
+                        <span><strong>${pct}%</strong> — ${formatINR(remaining)} to go</span>
+                    </div>
+                `;
+                listEl.appendChild(div);
+            });
+            calculateGoalsSummary();
+        }
+
+        function addSavingsGoal() {
+            const nameEl = document.getElementById('newGoalName');
+            const targetEl = document.getElementById('newGoalTarget');
+            const savedEl = document.getElementById('newGoalSaved');
+
+            const name = nameEl.value.trim() || 'New Goal';
+            const target = parseFloat(targetEl.value) || 0;
+            const saved = parseFloat(savedEl.value) || 0;
+
+            if (target <= 0) {
+                alert('Please specify a target amount greater than zero.');
+                return;
+            }
+
+            const newId = savingsGoals.length > 0 ? Math.max(...savingsGoals.map(g => g.id)) + 1 : 1;
+            savingsGoals.push({ id: newId, name, target, saved });
+            
+            // Reset input values
+            nameEl.value = '';
+            targetEl.value = '';
+            savedEl.value = '0';
+
+            renderGoalsList();
+        }
+
+        function removeSavingsGoal(id) {
+            savingsGoals = savingsGoals.filter(g => g.id !== id);
+            renderGoalsList();
+        }
+
+        function calculateGoalsSummary() {
+            const totalTarget = savingsGoals.reduce((sum, g) => sum + g.target, 0);
+            const totalSaved = savingsGoals.reduce((sum, g) => sum + g.saved, 0);
+            const totalRemaining = totalTarget - totalSaved;
+
+            const salary = parseFloat(document.getElementById('takeHomeSalary').value) || 0;
+            const other = parseFloat(document.getElementById('otherIncome').value) || 0;
+            const totalExpenses = expenses.reduce((sum, item) => sum + item.amount, 0);
+            const monthlySavings = (salary + other) - totalExpenses;
+
+            const summaryEl = document.getElementById('goalsSummaryAlert');
+
+            if (totalTarget === 0) {
+                summaryEl.className = 'alert green';
+                summaryEl.innerHTML = `<i class="ti ti-circle-check"></i> Add some savings goals above to track your timeline.`;
+                return;
+            }
+
+            if (monthlySavings <= 0) {
+                summaryEl.className = 'alert amber';
+                summaryEl.innerHTML = `<i class="ti ti-alert-triangle"></i> You need to save ${formatINR(totalRemaining)} in total. Setup a positive savings budget on Tab 1 to see how quickly you can achieve this.`;
+            } else {
+                const months = Math.ceil(totalRemaining / monthlySavings);
+                const targetMonthly12Months = totalRemaining / 12;
+
+                summaryEl.className = 'alert green';
+                summaryEl.innerHTML = `<i class="ti ti-clock"></i> You need ${formatINR(totalRemaining)} total. Saving ${formatINR(monthlySavings)}/month gets you there in <strong>${months} months</strong>.<br/>
+                <span style="font-size: 0.85rem; opacity: 0.95;">To reach this goal in exactly 12 months, you would need to save ${formatINR(targetMonthly12Months)}/month.</span>`;
+            }
+        }
+
+        // ----------------------------------------------------
+        // TAB 3: EMI & LOAN CALCULATOR LOGIC
+        // ----------------------------------------------------
+        function syncLoanInputs(field, type) {
+            const slider = document.getElementById(`loan${field.charAt(0).toUpperCase() + field.slice(1)}Slider`);
+            const input = document.getElementById(`loan${field.charAt(0).toUpperCase() + field.slice(1)}Input`);
+            if (type === 'slider') {
+                input.value = slider.value;
+            } else {
+                slider.value = input.value;
+            }
+            calculateLoanEMI();
+        }
+
+        function calculateLoanEMI() {
+            const P = parseFloat(document.getElementById('loanAmountInput').value) || 0;
+            const R = parseFloat(document.getElementById('loanRateInput').value) || 0;
+            const N = parseFloat(document.getElementById('loanTenureInput').value) || 0;
+
+            if (P <= 0 || R <= 0 || N <= 0) {
+                document.getElementById('loanEmi').innerText = '₹0';
+                document.getElementById('loanTotalPayable').innerText = '₹0';
+                document.getElementById('loanTotalInterest').innerText = '₹0';
+                document.getElementById('loanInterestRatio').innerText = '0%';
+                return;
+            }
+
+            const monthlyRate = R / (12 * 100);
+            const emi = P * monthlyRate * Math.pow(1 + monthlyRate, N) / (Math.pow(1 + monthlyRate, N) - 1);
+            const totalPayable = emi * N;
+            const totalInterest = totalPayable - P;
+            const interestPct = (totalInterest / P) * 100;
+
+            document.getElementById('loanEmi').innerText = formatINR(emi);
+            document.getElementById('loanTotalPayable').innerText = formatINR(totalPayable);
+            document.getElementById('loanTotalInterest').innerText = formatINR(totalInterest);
+            document.getElementById('loanInterestRatio').innerText = Math.round(interestPct) + '%';
+
+            // Risk Assessment based on Tab 1 income
+            const salary = parseFloat(document.getElementById('takeHomeSalary').value) || 0;
+            const other = parseFloat(document.getElementById('otherIncome').value) || 0;
+            const monthlyIncome = salary + other;
+            const alertEl = document.getElementById('loanEmiAlert');
+
+            if (monthlyIncome <= 0) {
+                alertEl.className = 'alert amber';
+                alertEl.innerHTML = `<i class="ti ti-info-circle"></i> Setup your income on Tab 1 to see how safe this EMI is for your budget.`;
+            } else {
+                const emiRatio = (emi / monthlyIncome) * 100;
+                if (emiRatio > 40) {
+                    alertEl.className = 'alert red';
+                    alertEl.innerHTML = `<i class="ti ti-alert-triangle"></i> DANGER: Your EMI is <strong>${Math.round(emiRatio)}%</strong> of your income! Keep EMIs below 30% of salary.`;
+                } else if (emiRatio >= 30) {
+                    alertEl.className = 'alert amber';
+                    alertEl.innerHTML = `<i class="ti ti-alert-circle"></i> WARNING: EMI is <strong>${Math.round(emiRatio)}%</strong> of income. Try increasing tenure to make payments safer.`;
+                } else {
+                    alertEl.className = 'alert green';
+                    alertEl.innerHTML = `<i class="ti ti-circle-check"></i> SAFE: EMI is only <strong>${Math.round(emiRatio)}%</strong> of your monthly income.`;
+                }
+            }
+
+            // Payoff optimization suggestions
+            const extraPayment = emi * 0.10; // suggest 10% extra per month
+            let simulatedBalance = P;
+            let simulatedMonths = 0;
+            let simulatedTotalInterest = 0;
+            const enhancedMonthlyPayment = emi + extraPayment;
+
+            while (simulatedBalance > 0 && simulatedMonths < 600) {
+                const interestThisMonth = simulatedBalance * monthlyRate;
+                const principalThisMonth = enhancedMonthlyPayment - interestThisMonth;
+                if (principalThisMonth <= 0) break; // payment cannot cover interest, abort simulation
+                
+                simulatedTotalInterest += interestThisMonth;
+                simulatedBalance -= principalThisMonth;
+                simulatedMonths++;
+            }
+
+            const interestSaved = totalInterest - simulatedTotalInterest;
+            const monthsSaved = N - simulatedMonths;
+
+            const tipTextEl = document.getElementById('loanTipText');
+            if (monthsSaved > 0 && interestSaved > 100) {
+                tipTextEl.innerHTML = `Paying just <strong>10% extra</strong> every month (an extra <strong>${formatINR(extraPayment)}</strong>) will help you pay off this loan <strong>${monthsSaved} months earlier</strong> and save you <strong>${formatINR(interestSaved)}</strong> in total interest!`;
+            } else {
+                tipTextEl.innerText = "To reduce your EMI burden, try increasing the tenure. To save interest, pay a little extra principal whenever you can.";
+            }
+
+            // Update Amortization Chart
+            updateLoanChart(P, R, N, emi);
+        }
+
+        function updateLoanChart(principal, rate, months, emi) {
+            const monthlyRate = rate / (12 * 100);
+            let balance = principal;
+            const years = Math.ceil(months / 12);
+            
+            const labels = [];
+            const principalPaidData = [];
+            const interestPaidData = [];
+
+            let totalPrincipalPaidSoFar = 0;
+            let totalInterestPaidSoFar = 0;
+
+            for (let year = 1; year <= years; year++) {
+                labels.push(`Year ${year}`);
+                let interestThisYear = 0;
+                let principalThisYear = 0;
+
+                for (let month = 1; month <= 12; month++) {
+                    const currentMonthIndex = (year - 1) * 12 + month;
+                    if (currentMonthIndex > months) break;
+
+                    const interest = balance * monthlyRate;
+                    const principalPaid = emi - interest;
+                    
+                    interestThisYear += interest;
+                    principalThisYear += principalPaid;
+                    balance -= principalPaid;
+                }
+
+                totalPrincipalPaidSoFar += principalThisYear;
+                totalInterestPaidSoFar += interestThisYear;
+
+                principalPaidData.push(totalPrincipalPaidSoFar);
+                interestPaidData.push(totalInterestPaidSoFar);
+            }
+
+            const ctx = document.getElementById('loanChart').getContext('2d');
+            if (loanChartInstance) {
+                loanChartInstance.destroy();
+            }
+
+            const isDark = document.body.classList.contains('dark');
+            const gridColor = isDark ? '#2d2d2d' : '#e9ecef';
+            const textColor = isDark ? '#9ca3af' : '#6c757d';
+
+            loanChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Cumulative Principal Paid',
+                            data: principalPaidData,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            fill: true,
+                            tension: 0.1
+                        },
+                        {
+                            label: 'Cumulative Interest Paid',
+                            data: interestPaidData,
+                            borderColor: '#ef4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            fill: true,
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: isDark ? '#e0e0e0' : '#212529' }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: gridColor },
+                            ticks: { color: textColor }
+                        },
+                        y: {
+                            grid: { color: gridColor },
+                            ticks: {
+                                color: textColor,
+                                callback: function(value) { return '₹' + value.toLocaleString('en-IN'); }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ----------------------------------------------------
+        // TAB 4: SIP GROWTH SIMULATOR LOGIC
+        // ----------------------------------------------------
+        function syncSipInputs(field, type) {
+            const slider = document.getElementById(`${field}AmountSlider` || `${field}ReturnSlider` || `${field}PeriodSlider`);
+            const input = document.getElementById(`${field}AmountInput` || `${field}ReturnInput` || `${field}PeriodInput`);
+            
+            // Since elements have different naming suffixes, let's map them explicitly
+            let sliderEl, inputEl;
+            if (field === 'sip') {
+                sliderEl = document.getElementById('sipAmountSlider');
+                inputEl = document.getElementById('sipAmountInput');
+            } else if (field === 'return') {
+                sliderEl = document.getElementById('sipReturnSlider');
+                inputEl = document.getElementById('sipReturnInput');
+            } else if (field === 'period') {
+                sliderEl = document.getElementById('sipPeriodSlider');
+                inputEl = document.getElementById('sipPeriodInput');
+            }
+
+            if (type === 'slider') {
+                inputEl.value = sliderEl.value;
+            } else {
+                sliderEl.value = inputEl.value;
+            }
+            calculateSIP();
+        }
+
+        function calculateSIP() {
+            const S = parseFloat(document.getElementById('sipAmountInput').value) || 0;
+            const R = parseFloat(document.getElementById('sipReturnInput').value) || 0;
+            const Y = parseFloat(document.getElementById('sipPeriodInput').value) || 0;
+            const L = parseFloat(document.getElementById('lumpSum').value) || 0;
+
+            const n = Y * 12;
+            const r = R / (12 * 100);
+
+            // SIP future value formula: S * [ ( (1 + r)^n - 1 ) / r ] * (1 + r)
+            let futureValueSip = 0;
+            if (S > 0 && r > 0) {
+                futureValueSip = S * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
+            } else if (S > 0) {
+                futureValueSip = S * n; // zero interest
+            }
+
+            // Lump sum compound value: L * (1 + R/100)^Y
+            const futureValueLump = L * Math.pow(1 + R/100, Y);
+            const finalCorpus = futureValueSip + futureValueLump;
+
+            const totalInvested = (S * n) + L;
+            const wealthGained = Math.max(0, finalCorpus - totalInvested);
+            const multiplier = totalInvested > 0 ? (finalCorpus / totalInvested) : 1;
+
+            document.getElementById('sipCorpus').innerText = formatINR(finalCorpus);
+            document.getElementById('sipInvested').innerText = formatINR(totalInvested);
+            document.getElementById('sipGains').innerText = formatINR(wealthGained);
+            document.getElementById('sipMultiplier').innerText = multiplier.toFixed(1) + 'x your investment';
+
+            // Start 5 years earlier calculation
+            const earlyN = (Y + 5) * 12;
+            let earlyFVSip = 0;
+            if (S > 0 && r > 0) {
+                earlyFVSip = S * ((Math.pow(1 + r, earlyN) - 1) / r) * (1 + r);
+            } else {
+                earlyFVSip = S * earlyN;
+            }
+            const earlyFVLump = L * Math.pow(1 + R/100, Y + 5);
+            const earlyCorpus = earlyFVSip + earlyFVLump;
+            const earlyDifference = earlyCorpus - finalCorpus;
+
+            document.getElementById('sipMotivationBox').innerHTML = `<i class="ti ti-bulb"></i> <strong>Motivational Rule</strong>: Starting 5 years earlier would have given you an extra <strong>${formatINR(earlyDifference)}</strong>! Compound interest builds fastest over time.`;
+
+            // Draw growth timeline chart
+            updateSipChart(S, R, Y, L);
+
+            // Redraw comparison matrix
+            updateSipComparisonTable();
+        }
+
+        function updateSipChart(sip, rate, years, lump) {
+            const r = rate / (12 * 100);
+            const labels = [];
+            const investedData = [];
+            const growthData = [];
+
+            for (let year = 1; year <= years; year++) {
+                labels.push(`Yr ${year}`);
+                const currentMonths = year * 12;
+                
+                const invested = (sip * currentMonths) + lump;
+                let futureValueSip = 0;
+                if (sip > 0 && r > 0) {
+                    futureValueSip = sip * ((Math.pow(1 + r, currentMonths) - 1) / r) * (1 + r);
+                } else {
+                    futureValueSip = sip * currentMonths;
+                }
+                const futureValueLump = lump * Math.pow(1 + rate/100, year);
+                
+                investedData.push(invested);
+                growthData.push(futureValueSip + futureValueLump);
+            }
+
+            const ctx = document.getElementById('sipChart').getContext('2d');
+            if (sipChartInstance) {
+                sipChartInstance.destroy();
+            }
+
+            const isDark = document.body.classList.contains('dark');
+            const gridColor = isDark ? '#2d2d2d' : '#e9ecef';
+            const textColor = isDark ? '#9ca3af' : '#6c757d';
+
+            sipChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Total Corpus Value',
+                            data: growthData,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                            fill: true,
+                            tension: 0.1
+                        },
+                        {
+                            label: 'Amount Invested',
+                            data: investedData,
+                            borderColor: '#6366f1',
+                            backgroundColor: 'rgba(99, 102, 241, 0.05)',
+                            fill: true,
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: isDark ? '#e0e0e0' : '#212529' }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: gridColor },
+                            ticks: { color: textColor }
+                        },
+                        y: {
+                            grid: { color: gridColor },
+                            ticks: {
+                                color: textColor,
+                                callback: function(value) { return '₹' + value.toLocaleString('en-IN'); }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateSipComparisonTable() {
+            const tableBody = document.querySelector('#sipComparisonTable tbody');
+            tableBody.innerHTML = '';
+            
+            const periods = [10, 20, 30];
+            const rates = [8, 12, 15];
+            const baseSip = 2000;
+
+            periods.forEach(yr => {
+                const tr = document.createElement('tr');
+                const tdLabel = document.createElement('td');
+                tdLabel.innerText = `${yr} Years`;
+                tr.appendChild(tdLabel);
+
+                rates.forEach(rt => {
+                    const months = yr * 12;
+                    const r = rt / (12 * 100);
+                    const fv = baseSip * ((Math.pow(1 + r, months) - 1) / r) * (1 + r);
+                    
+                    const tdValue = document.createElement('td');
+                    tdValue.innerText = formatINR(fv);
+                    tr.appendChild(tdValue);
+                });
+                tableBody.appendChild(tr);
+            });
+        }
+
+        // ----------------------------------------------------
+        // TAB 5: DEBT PAYOFF PLANNER LOGIC
+        // ----------------------------------------------------
+        function calculateDebtPayoff() {
+            const debt = parseFloat(document.getElementById('debtAmount').value) || 0;
+            const rate = parseFloat(document.getElementById('debtRate').value) || 0;
+            const pay = parseFloat(document.getElementById('debtMonthlyPayment').value) || 0;
+
+            const alertEl = document.getElementById('debtAlert');
+            
+            if (debt <= 0 || pay <= 0) {
+                document.getElementById('debtMonths').innerText = '0 months';
+                document.getElementById('debtTotalInterest').innerText = '₹0';
+                document.getElementById('debtTotalPaid').innerText = '₹0';
+                alertEl.style.display = 'none';
+                return;
+            }
+
+            const monthlyRate = rate / (12 * 100);
+            const monthlyInterestAccrued = debt * monthlyRate;
+
+            if (pay <= monthlyInterestAccrued) {
+                alertEl.style.display = 'flex';
+                alertEl.className = 'alert red';
+                const minRecommended = Math.ceil(monthlyInterestAccrued + 200);
+                alertEl.innerHTML = `<i class="ti ti-alert-triangle"></i> DANGER: Your monthly payment of ${formatINR(pay)} is less than the monthly interest of ${formatINR(monthlyInterestAccrued)}. The debt will grow forever! Pay at least <strong>${formatINR(minRecommended)}</strong> to start reducing principal.`;
+                
+                document.getElementById('debtMonths').innerText = 'Infinite';
+                document.getElementById('debtTotalInterest').innerText = 'N/A';
+                document.getElementById('debtTotalPaid').innerText = 'N/A';
+                
+                updateDebtPayoffChart(debt, 0);
+                return;
+            }
+
+            alertEl.style.display = 'none';
+
+            // Simulate payoff monthly
+            let balance = debt;
+            let months = 0;
+            let totalInterest = 0;
+
+            while (balance > 0 && months < 1200) {
+                const interest = balance * monthlyRate;
+                const principalPaid = pay - interest;
+                totalInterest += interest;
+                balance -= principalPaid;
+                months++;
+            }
+
+            const totalPaid = debt + totalInterest;
+
+            document.getElementById('debtMonths').innerText = `${months} Months (${(months/12).toFixed(1)} Years)`;
+            document.getElementById('debtTotalInterest').innerText = formatINR(totalInterest);
+            document.getElementById('debtTotalPaid').innerText = formatINR(totalPaid);
+
+            updateDebtPayoffChart(debt, totalInterest);
+        }
+
+        function updateDebtPayoffChart(principal, interest) {
+            const ctx = document.getElementById('debtChart').getContext('2d');
+            if (debtChartInstance) {
+                debtChartInstance.destroy();
+            }
+
+            const isDark = document.body.classList.contains('dark');
+
+            debtChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Initial Loan', 'Total Paid Back'],
+                    datasets: [
+                        {
+                            label: 'Principal Owed',
+                            data: [principal, principal],
+                            backgroundColor: '#6366f1'
+                        },
+                        {
+                            label: 'Interest Cost',
+                            data: [0, interest],
+                            backgroundColor: '#ef4444'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                            ticks: { color: isDark ? '#9ca3af' : '#6c757d' }
+                        },
+                        y: {
+                            stacked: true,
+                            ticks: {
+                                color: isDark ? '#9ca3af' : '#6c757d',
+                                callback: function(value) { return '₹' + value.toLocaleString('en-IN'); }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ----------------------------------------------------
+        // TAB 6: FINANCIAL LITERACY LESSONS LOGIC
+        // ----------------------------------------------------
+        const lessonPrompts = {
+            1: 'Can you explain the 50/30/20 rule in plain, simple English with Indian examples? Explain how a family with an income of ₹30,000 should budget using this rule.',
+            2: 'What is an Emergency Fund and why is it important for low-income households in India? How should we build one and where should we keep this money safely?',
+            3: 'How does Compound Interest work? Show me a simple calculation showing how saving ₹1,000 per month becomes a large amount over 20 years in simple words.',
+            4: 'What is the difference between Good Debt and Bad Debt? Give me common examples in India like home loans vs credit cards or gold loans.',
+            5: 'Explain Systematic Investment Plan (SIP) in mutual funds. How can a beginner in India start with ₹500/month? What are the risks and benefits?',
+            6: 'Why is Term Life Insurance and Health Insurance critical before starting any investments? Explain how it protects families from medical bankruptcy in India.',
+            7: 'What is Inflation? Explain in simple terms why ₹10,000 kept in a cash locker loses value over 10 years and how we can protect our savings.',
+            8: 'What is a Credit Score (like CIBIL) in India? How does it affect our ability to get a loan, and what are 3 simple habits to improve it?'
+        };
+
+        function triggerLessonAdvice(id) {
+            const prompt = lessonPrompts[id] || 'Can you tell me more about financial literacy in India?';
+            openDrawer(prompt);
+        }
+
+        function triggerAdvice(type) {
+            let prompt = '';
+            if (type === 'savings') {
+                const totalTarget = savingsGoals.reduce((sum, g) => sum + g.target, 0);
+                const totalSaved = savingsGoals.reduce((sum, g) => sum + g.saved, 0);
+                const salary = parseFloat(document.getElementById('takeHomeSalary').value) || 0;
+                const other = parseFloat(document.getElementById('otherIncome').value) || 0;
+                const totalExpenses = expenses.reduce((sum, item) => sum + item.amount, 0);
+                const monthlySavings = (salary + other) - totalExpenses;
+
+                prompt = `I am planning my savings goals.
+Total Target: ${formatINR(totalTarget)}
+Total Saved So Far: ${formatINR(totalSaved)}
+Monthly Savings Capacity: ${formatINR(monthlySavings)}
+
+Please provide simple, actionable advice on how to build my emergency fund, reduce unnecessary spending, and reach these targets faster.`;
+            } else if (type === 'debt') {
+                const debt = parseFloat(document.getElementById('debtAmount').value) || 0;
+                const rate = parseFloat(document.getElementById('debtRate').value) || 0;
+                const pay = parseFloat(document.getElementById('debtMonthlyPayment').value) || 0;
+
+                prompt = `I have a debt of ${formatINR(debt)} at an annual interest rate of ${rate}%.
+I can afford a monthly payment of ${formatINR(pay)}.
+
+Please explain if the Avalanche Method or Snowball Method is better for my situation, and suggest simple habits to become debt-free faster.`;
+            }
+            openDrawer(prompt);
+        }
+
+        // ----------------------------------------------------
+        // TAB 7: NET WORTH TRACKER LOGIC
+        // ----------------------------------------------------
+        function calculateNetWorth() {
+            const assetCash = parseFloat(document.getElementById('assetCash').value) || 0;
+            const assetMF = parseFloat(document.getElementById('assetMF').value) || 0;
+            const assetGold = parseFloat(document.getElementById('assetGold').value) || 0;
+            const assetProperty = parseFloat(document.getElementById('assetProperty').value) || 0;
+            const assetOther = parseFloat(document.getElementById('assetOther').value) || 0;
+
+            const liabHome = parseFloat(document.getElementById('liabHome').value) || 0;
+            const liabPersonal = parseFloat(document.getElementById('liabPersonal').value) || 0;
+            const liabCC = parseFloat(document.getElementById('liabCC').value) || 0;
+            const liabOther = parseFloat(document.getElementById('liabOther').value) || 0;
+
+            const totalAssets = assetCash + assetMF + assetGold + assetProperty + assetOther;
+            const totalLiabilities = liabHome + liabPersonal + liabCC + liabOther;
+            const netWorth = totalAssets - totalLiabilities;
+
+            document.getElementById('nwTotalAssets').innerText = formatINR(totalAssets);
+            document.getElementById('nwTotalLiabilities').innerText = formatINR(totalLiabilities);
+            document.getElementById('nwNetWorth').innerText = formatINR(netWorth);
+
+            const nwCard = document.getElementById('nwNetWorthCard');
+            if (netWorth >= 0) {
+                nwCard.style.borderColor = 'var(--green)';
+                nwCard.querySelector('.metric-value').style.color = 'var(--green)';
+            } else {
+                nwCard.style.borderColor = 'var(--red)';
+                nwCard.querySelector('.metric-value').style.color = 'var(--red)';
+            }
+
+            // Ratio calculation
+            const sumAll = totalAssets + totalLiabilities;
+            const ratioAssetsBar = document.getElementById('ratioAssetsBar');
+            const ratioLiabilitiesBar = document.getElementById('ratioLiabilitiesBar');
+
+            if (sumAll === 0) {
+                ratioAssetsBar.style.width = '50%';
+                ratioLiabilitiesBar.style.width = '50%';
+                ratioAssetsBar.innerText = 'Assets (0%)';
+                ratioLiabilitiesBar.innerText = 'Liabilities (0%)';
+            } else {
+                const assetPct = Math.round((totalAssets / sumAll) * 100);
+                const liabPct = 100 - assetPct;
+                
+                ratioAssetsBar.style.width = assetPct + '%';
+                ratioLiabilitiesBar.style.width = liabPct + '%';
+                ratioAssetsBar.innerText = `Assets (${assetPct}%)`;
+                ratioLiabilitiesBar.innerText = `Liabilities (${liabPct}%)`;
+            }
+
+            // Recommendation engine
+            const adviceIcon = document.getElementById('nwAdviceIcon');
+            const adviceText = document.getElementById('netWorthAdviceText');
+            
+            // Fetch basic monthly expenses from Tab 1 to run the liquidity/emergency test
+            const totalExpenses = expenses.reduce((sum, item) => sum + item.amount, 0);
+
+            if (netWorth < 0) {
+                adviceIcon.className = 'ti ti-shield-alert';
+                adviceIcon.style.color = 'var(--red)';
+                adviceText.innerHTML = `Your liabilities exceed your assets (Negative Net Worth). <strong>Priority Action:</strong> Focus on paying off high-interest debts like credit cards and personal loans before spending or investing elsewhere.`;
+            } else if (assetCash < (3 * totalExpenses)) {
+                adviceIcon.className = 'ti ti-alert-circle';
+                adviceIcon.style.color = 'var(--amber)';
+                adviceText.innerHTML = `Your cash reserves (${formatINR(assetCash)}) are less than 3 months of basic living costs (${formatINR(totalExpenses * 3)}). <strong>Priority Action:</strong> Build your Emergency Fund in cash first before investing in mutual funds or buying physical assets.`;
+            } else {
+                adviceIcon.className = 'ti ti-shield-check';
+                adviceIcon.style.color = 'var(--green)';
+                adviceText.innerHTML = `Your net worth is positive and you have a solid emergency buffer. <strong>Priority Action:</strong> Keep building wealth by diversifying into equity mutual funds (SIP) or gold for long-term growth.`;
+            }
+
+            // Asset donut chart
+            updateNetWorthChart(assetCash, assetMF, assetGold, assetProperty, assetOther);
+        }
+
+        function updateNetWorthChart(cash, mf, gold, prop, other) {
+            const ctx = document.getElementById('netWorthChart').getContext('2d');
+            if (netWorthChartInstance) {
+                netWorthChartInstance.destroy();
+            }
+
+            const data = [cash, mf, gold, prop, other];
+            if (data.reduce((sum, v) => sum + v, 0) === 0) return;
+
+            const isDark = document.body.classList.contains('dark');
+
+            netWorthChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Cash & Bank', 'Mutual Funds', 'Gold', 'Property', 'Other Assets'],
+                    datasets: [{
+                        data: data,
+                        backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ec4899', '#6b7280'],
+                        borderWidth: isDark ? 2 : 1,
+                        borderColor: isDark ? '#1e1e1e' : '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                color: isDark ? '#e0e0e0' : '#212529',
+                                font: { size: 10 }
+                            }
+                        }
+                    },
+                    cutout: '55%'
+                }
+            });
+        }
+    </script>
+</body>
+</html>
