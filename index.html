@@ -3,123 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apex Wealth</title>
+    <title>Apex Wealth — Premium Personal Finance Toolkit</title>
+    <!-- Outfit Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Tabler Icons -->
     <link rel="stylesheet" href="https://unpkg.com/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <!-- Chart.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
     <style>
-        /* CSS Variables for Light / Dark Mode */
+        /* CSS Variables for Premium UI & Dark Mode */
         :root {
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --border-color: #e9ecef;
-            --text-color: #212529;
-            --text-secondary: #6c757d;
+            --bg-color: #f1f5f9;
+            --card-bg: rgba(255, 255, 255, 0.75);
+            --card-border: rgba(255, 255, 255, 0.5);
+            --border-color: #e2e8f0;
+            --text-color: #0f172a;
+            --text-secondary: #475569;
             --primary: #4f46e5;
             --primary-hover: #4338ca;
-            --green: #16a34a;
-            --green-bg: #f0fdf4;
-            --green-border: #bbf7d0;
-            --green-text: #166534;
-            --amber: #d97706;
-            --amber-bg: #fef3c7;
-            --amber-border: #fde68a;
-            --amber-text: #92400e;
-            --red: #dc2626;
-            --red-bg: #fef2f2;
-            --red-border: #fecaca;
+            --primary-rgb: 79, 70, 229;
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #3b82f6 100%);
+            --green: #10b981;
+            --green-bg: rgba(16, 185, 129, 0.08);
+            --green-border: rgba(16, 185, 129, 0.2);
+            --green-text: #065f46;
+            --amber: #f59e0b;
+            --amber-bg: rgba(245, 158, 11, 0.08);
+            --amber-border: rgba(245, 158, 11, 0.2);
+            --amber-text: #78350f;
+            --red: #ef4444;
+            --red-bg: rgba(239, 68, 68, 0.08);
+            --red-border: rgba(239, 68, 68, 0.2);
             --red-text: #991b1b;
-            --input-bg: #ffffff;
-            --slider-runway: #e9ecef;
+            --input-bg: rgba(255, 255, 255, 0.8);
+            --slider-runway: #e2e8f0;
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04);
+            --card-shadow-hover: 0 12px 40px rgba(99, 102, 241, 0.08);
         }
 
         body.dark {
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --border-color: #2d2d2d;
+            --bg-color: #090d16;
+            --card-bg: rgba(17, 24, 39, 0.7);
+            --card-border: rgba(255, 255, 255, 0.05);
+            --border-color: #1f2937;
             --text-color: #f3f4f6;
             --text-secondary: #9ca3af;
             --primary: #818cf8;
             --primary-hover: #6366f1;
-            --green: #4ade80;
-            --green-bg: #064e3b;
-            --green-border: #065f46;
+            --primary-rgb: 129, 140, 248;
+            --primary-gradient: linear-gradient(135deg, #818cf8 0%, #60a5fa 100%);
+            --green: #34d399;
+            --green-bg: rgba(52, 211, 153, 0.06);
+            --green-border: rgba(52, 211, 153, 0.15);
             --green-text: #a7f3d0;
             --amber: #fbbf24;
-            --amber-bg: #78350f;
-            --amber-border: #92400e;
+            --amber-bg: rgba(251, 191, 36, 0.06);
+            --amber-border: rgba(251, 191, 36, 0.15);
             --amber-text: #fde68a;
             --red: #f87171;
-            --red-bg: #7f1d1d;
-            --red-border: #991b1b;
+            --red-bg: rgba(248, 113, 113, 0.06);
+            --red-border: rgba(248, 113, 113, 0.15);
             --red-text: #fecaca;
-            --input-bg: #2d2d2d;
-            --slider-runway: #3d3d3d;
+            --input-bg: rgba(31, 41, 55, 0.5);
+            --slider-runway: #374151;
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            --card-shadow-hover: 0 12px 40px rgba(129, 140, 248, 0.15);
         }
 
-        /* Base resets and typography */
+        /* Base Resets */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            transition: background-color 0.2s ease, border-color 0.2s ease;
+            font-family: 'Outfit', sans-serif;
+            transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            line-height: 1.5;
-            padding-bottom: 80px;
+            line-height: 1.6;
+            padding-bottom: 90px;
+            overflow-x: hidden;
         }
 
-        /* Top Header */
+        /* Floating Premium Header */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 2rem;
-            background-color: var(--card-bg);
-            border-bottom: 1px solid var(--border-color);
+            padding: 1.25rem 2rem;
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--card-border);
+            box-shadow: var(--glass-shadow);
         }
 
         header h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.6rem;
         }
 
         .theme-toggle {
-            background: none;
-            border: 1px solid var(--border-color);
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
             color: var(--text-color);
-            padding: 0.5rem;
-            border-radius: 4px;
+            padding: 0.6rem;
+            border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 42px;
+            height: 42px;
         }
 
         .theme-toggle:hover {
-            background-color: var(--bg-color);
+            transform: rotate(15deg) scale(1.05);
+            border-color: var(--primary);
         }
 
-        /* Sticky Nav Bar */
+        /* Sticky Navigation Bar */
         nav.tabs-container {
             position: sticky;
             top: 0;
             z-index: 100;
-            background-color: var(--card-bg);
-            border-bottom: 1px solid var(--border-color);
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--card-border);
             overflow-x: auto;
             white-space: nowrap;
             display: flex;
             scrollbar-width: none;
+            box-shadow: var(--glass-shadow);
         }
 
         nav.tabs-container::-webkit-scrollbar {
@@ -130,31 +154,46 @@
             background: none;
             border: none;
             color: var(--text-secondary);
-            padding: 1rem 1.5rem;
+            padding: 1.2rem 1.75rem;
             font-weight: 600;
             font-size: 0.95rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            border-bottom: 2px solid transparent;
+            position: relative;
+        }
+
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: var(--primary-gradient);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 3px;
         }
 
         .tab-btn:hover {
             color: var(--text-color);
-            background-color: var(--bg-color);
         }
 
         .tab-btn.active {
             color: var(--primary);
-            border-bottom-color: var(--primary);
         }
 
-        /* Container & Grid layouts */
+        .tab-btn.active::after {
+            width: 70%;
+        }
+
+        /* Container & Animations */
         .container {
             max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
+            margin: 2.5rem auto;
+            padding: 0 1.25rem;
         }
 
         .tab-content {
@@ -163,48 +202,62 @@
 
         .tab-content.active {
             display: block;
-            animation: fadeIn 0.15s ease-in-out;
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        /* Clean Flat Cards */
+        /* Glassmorphic Premium Cards */
         .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.75rem;
+            margin-bottom: 1.75rem;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--card-shadow-hover);
         }
 
         .card h2 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            color: var(--text-color);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.6rem;
         }
 
         .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
+            gap: 1.75rem;
         }
 
         .grid-3 {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 1.5rem;
+            gap: 1.75rem;
         }
 
         .grid-1-2 {
             display: grid;
             grid-template-columns: 1fr 2fr;
-            gap: 1.5rem;
+            gap: 1.75rem;
         }
 
         @media (max-width: 768px) {
@@ -217,43 +270,64 @@
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            gap: 1.25rem;
+            margin-bottom: 1.75rem;
         }
 
         .metric-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 1.25rem;
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
             text-align: center;
+            box-shadow: var(--glass-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary-gradient);
         }
 
         .metric-label {
             font-size: 0.85rem;
             color: var(--text-secondary);
-            font-weight: 500;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 0.25rem;
+            letter-spacing: 0.75px;
+            margin-bottom: 0.4rem;
         }
 
         .metric-value {
-            font-size: 1.6rem;
-            font-weight: 700;
+            font-size: 1.8rem;
+            font-weight: 800;
             color: var(--text-color);
+            letter-spacing: -0.5px;
         }
 
-        /* Alert Boxes */
+        /* Styled Premium Alerts */
         .alert {
-            padding: 1rem;
-            border-radius: 6px;
+            padding: 1.25rem;
+            border-radius: 10px;
             border: 1px solid transparent;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.75rem;
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 1rem;
+            box-shadow: var(--glass-shadow);
+            animation: slideUp 0.3s ease;
+        }
+
+        .alert i {
+            font-size: 1.35rem;
         }
 
         .alert.red {
@@ -274,16 +348,16 @@
             color: var(--green-text);
         }
 
-        /* Input Controls styling */
+        /* Input Controls */
         .input-group {
-            margin-bottom: 1.25rem;
+            margin-bottom: 1.5rem;
         }
 
         .input-group label {
             display: block;
             font-size: 0.9rem;
             font-weight: 600;
-            margin-bottom: 0.35rem;
+            margin-bottom: 0.5rem;
             color: var(--text-color);
         }
 
@@ -295,20 +369,21 @@
 
         .input-icon {
             position: absolute;
-            left: 0.75rem;
+            left: 0.85rem;
             color: var(--text-secondary);
             pointer-events: none;
+            font-size: 1.1rem;
         }
 
         .input-with-icon input {
-            padding-left: 2rem !important;
+            padding-left: 2.25rem !important;
         }
 
         input[type="number"], select, input[type="text"] {
             width: 100%;
-            padding: 0.6rem 0.75rem;
+            padding: 0.75rem 1rem;
             border: 1px solid var(--border-color);
-            border-radius: 4px;
+            border-radius: 8px;
             font-size: 1rem;
             color: var(--text-color);
             background-color: var(--input-bg);
@@ -317,111 +392,123 @@
 
         input[type="number"]:focus, select:focus, input[type="text"]:focus {
             border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.15);
         }
 
-        /* Custom Range Slider Styling */
-        .slider-container {
-            margin-top: 0.5rem;
-        }
-
+        /* Ranges / Sliders */
         .slider-row {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 1.25rem;
         }
 
         .slider-row input[type="range"] {
             flex: 1;
             height: 6px;
             background: var(--slider-runway);
-            border-radius: 3px;
+            border-radius: 4px;
             outline: none;
             -webkit-appearance: none;
         }
 
         .slider-row input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             background-color: var(--primary);
             border-radius: 50%;
             cursor: pointer;
+            box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.2);
+            transition: all 0.15s ease;
+        }
+
+        .slider-row input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 0 6px rgba(var(--primary-rgb), 0.3);
         }
 
         .slider-row input[type="number"] {
-            width: 100px;
+            width: 110px;
         }
 
-        /* Dynamic Rows List styling */
-        .row-list {
-            margin-top: 0.5rem;
-        }
-
+        /* Row Lists */
         .row-item {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr auto;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
             align-items: center;
+            background: var(--input-bg);
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
         }
 
         @media (max-width: 480px) {
             .row-item {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: 1fr;
             }
             .row-item button {
-                grid-column: span 2;
+                width: 100%;
             }
         }
 
+        /* Buttons */
         .btn {
-            background-color: var(--primary);
+            background: var(--primary-gradient);
             color: #ffffff;
             border: none;
-            border-radius: 4px;
-            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 0.25rem;
+            gap: 0.5rem;
+            box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.2);
         }
 
         .btn:hover {
-            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(var(--primary-rgb), 0.3);
         }
 
         .btn-outline {
-            background: none;
+            background: var(--input-bg);
             border: 1px solid var(--border-color);
             color: var(--text-color);
+            box-shadow: none;
         }
 
         .btn-outline:hover {
-            background-color: var(--bg-color);
+            background: var(--border-color);
+            transform: translateY(-2px);
+            box-shadow: var(--glass-shadow);
         }
 
         .btn-danger {
-            background-color: #ef4444;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
             color: #ffffff;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
         }
 
         .btn-danger:hover {
-            background-color: #dc2626;
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
         }
 
         .btn-sm {
-            padding: 0.35rem 0.6rem;
+            padding: 0.4rem 0.8rem;
             font-size: 0.8rem;
+            border-radius: 6px;
         }
 
-        /* Custom HTML Legend */
+        /* HTML Legends */
         .html-legend {
-            margin-top: 1rem;
+            margin-top: 1.25rem;
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.6rem;
         }
 
         .legend-item {
@@ -429,15 +516,16 @@
             justify-content: space-between;
             align-items: center;
             font-size: 0.85rem;
-            padding: 0.35rem 0.5rem;
-            border-radius: 4px;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
             border-left: 4px solid transparent;
-            background-color: var(--bg-color);
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
         }
 
-        /* Rule check bars */
+        /* Progress Bars */
         .progress-bar-section {
-            margin-bottom: 1rem;
+            margin-bottom: 1.25rem;
         }
 
         .progress-bar-header {
@@ -445,21 +533,21 @@
             justify-content: space-between;
             font-size: 0.85rem;
             font-weight: 600;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.4rem;
         }
 
         .progress-bar-container {
             background-color: var(--slider-runway);
-            height: 10px;
-            border-radius: 5px;
+            height: 12px;
+            border-radius: 6px;
             overflow: hidden;
             position: relative;
         }
 
         .progress-bar-fill {
             height: 100%;
-            background-color: var(--primary);
-            border-radius: 5px;
+            background: var(--primary-gradient);
+            border-radius: 6px;
         }
 
         .progress-bar-target {
@@ -471,66 +559,83 @@
             opacity: 0.6;
         }
 
-        /* Savings Goals Specific styles */
+        /* Savings Goals */
         .goal-item {
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 1rem;
-            margin-bottom: 0.75rem;
-            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            background: var(--input-bg);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .goal-item:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
         }
 
         .goal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.6rem;
         }
 
         .goal-title {
-            font-weight: 600;
-            font-size: 1rem;
+            font-weight: 700;
+            font-size: 1.05rem;
         }
 
         .goal-details {
             font-size: 0.85rem;
             color: var(--text-secondary);
-            margin-top: 0.35rem;
+            margin-top: 0.5rem;
             display: flex;
             justify-content: space-between;
         }
 
-        /* Table styles */
+        /* Tables */
         table.growth-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.85rem;
-            margin-top: 1rem;
+            margin-top: 1.25rem;
+            overflow: hidden;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
         }
 
         table.growth-table th, table.growth-table td {
-            border: 1px solid var(--border-color);
-            padding: 0.5rem 0.75rem;
+            padding: 0.75rem 1rem;
             text-align: right;
         }
 
         table.growth-table th {
-            background-color: var(--bg-color);
+            background-color: var(--slider-runway);
             color: var(--text-color);
-            font-weight: 600;
+            font-weight: 700;
+        }
+
+        table.growth-table tr {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        table.growth-table tr:hover {
+            background-color: rgba(var(--primary-rgb), 0.03);
         }
 
         table.growth-table th:first-child, table.growth-table td:first-child {
             text-align: left;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         /* Strategy Cards */
         .strategy-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-top: 1rem;
+            gap: 1.25rem;
+            margin-top: 1.25rem;
         }
 
         @media (max-width: 480px) {
@@ -540,16 +645,21 @@
         }
 
         .strategy-card {
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 1rem;
-            background-color: var(--bg-color);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 1.25rem;
+            background: var(--input-bg);
+        }
+
+        .strategy-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
         }
 
         .strategy-card h3 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
             color: var(--primary);
         }
 
@@ -558,50 +668,67 @@
             color: var(--text-secondary);
         }
 
-        /* Financial Literacy Cards */
+        /* Lesson Cards Grid */
         .lessons-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 1rem;
+            gap: 1.25rem;
         }
 
         .lesson-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 1.25rem;
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            box-shadow: var(--glass-shadow);
         }
 
-        .lesson-icon {
-            font-size: 1.5rem;
+        .lesson-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-shadow-hover);
+            border-color: var(--primary);
+        }
+
+        .lesson-icon-box {
+            width: 46px;
+            height: 46px;
+            border-radius: 10px;
+            background: rgba(var(--primary-rgb), 0.1);
             color: var(--primary);
-            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            margin-bottom: 1rem;
         }
 
         .lesson-title {
-            font-weight: 600;
-            font-size: 1.05rem;
-            margin-bottom: 0.5rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.6rem;
+            color: var(--text-color);
         }
 
         .lesson-desc {
             font-size: 0.85rem;
             color: var(--text-secondary);
-            margin-bottom: 1rem;
+            margin-bottom: 1.25rem;
             flex: 1;
         }
 
-        /* Net Worth stacked bar */
+        /* Net Worth Ratio stacked bar */
         .networth-ratio-bar {
             display: flex;
-            height: 24px;
-            border-radius: 4px;
+            height: 28px;
+            border-radius: 6px;
             overflow: hidden;
-            margin: 1rem 0;
+            margin: 1.25rem 0;
             border: 1px solid var(--border-color);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         .ratio-assets {
@@ -611,7 +738,7 @@
             align-items: center;
             justify-content: center;
             font-size: 0.75rem;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .ratio-liabilities {
@@ -621,44 +748,59 @@
             align-items: center;
             justify-content: center;
             font-size: 0.75rem;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         /* Footer */
         footer {
             text-align: center;
-            padding: 2rem 1rem;
-            margin-top: 3rem;
+            padding: 2.5rem 1.25rem;
+            margin-top: 4rem;
             border-top: 1px solid var(--border-color);
             font-size: 0.8rem;
             color: var(--text-secondary);
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
         }
 
-        /* Floating AI Prompt Button */
+        /* Floating AI Button with glowing breathing pulse */
         .floating-ai-btn {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: var(--primary);
+            bottom: 25px;
+            right: 25px;
+            background: var(--primary-gradient);
             color: #ffffff;
             border: none;
             border-radius: 50px;
-            padding: 0.75rem 1.25rem;
-            font-weight: 600;
-            font-size: 0.9rem;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            padding: 0.9rem 1.5rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+            box-shadow: 0 6px 20px rgba(var(--primary-rgb), 0.4);
             cursor: pointer;
             z-index: 200;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.6rem;
+            animation: pulseGlow 2.5s infinite;
+        }
+
+        @keyframes pulseGlow {
+            0% {
+                box-shadow: 0 0 0 0 rgba(var(--primary-rgb), 0.6);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(var(--primary-rgb), 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(var(--primary-rgb), 0);
+            }
         }
 
         .floating-ai-btn:hover {
-            background-color: var(--primary-hover);
+            transform: scale(1.05) translateY(-2px);
         }
 
-        /* AI Assistant Slider Drawer */
+        /* AI assistant slider drawer */
         .drawer-overlay {
             position: fixed;
             top: 0;
@@ -669,7 +811,7 @@
             z-index: 1000;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.25s ease;
+            transition: opacity 0.3s ease;
         }
 
         .drawer-overlay.open {
@@ -680,22 +822,24 @@
         .drawer {
             position: fixed;
             top: 0;
-            right: -450px;
+            right: -460px;
             width: 100%;
-            max-width: 420px;
+            max-width: 440px;
             height: 100%;
-            background-color: var(--card-bg);
-            border-left: 1px solid var(--border-color);
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid var(--card-border);
             z-index: 1001;
-            padding: 1.5rem;
+            padding: 2rem;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: right 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: var(--glass-shadow);
         }
 
         .drawer.open {
-            right: 0;
+            transform: translateX(-460px);
         }
 
         .drawer-header {
@@ -703,77 +847,75 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.75rem;
-            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            margin-bottom: 1.25rem;
         }
 
         .drawer-header h3 {
-            font-size: 1.15rem;
-            font-weight: 600;
+            font-size: 1.2rem;
+            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            color: var(--primary);
         }
 
         .drawer-close {
             background: none;
             border: none;
             color: var(--text-secondary);
-            font-size: 1.25rem;
+            font-size: 1.4rem;
             cursor: pointer;
+        }
+
+        .drawer-close:hover {
+            color: var(--text-color);
         }
 
         .drawer-body {
             flex: 1;
             overflow-y: auto;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.75rem;
         }
 
         .prompt-preview-box {
-            background-color: var(--bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            padding: 1rem;
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 1.25rem;
             font-family: monospace;
             font-size: 0.85rem;
             white-space: pre-wrap;
-            margin-top: 1rem;
+            margin-top: 1.25rem;
             color: var(--text-color);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
         }
 
         .drawer-footer {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.6rem;
         }
 
         .copy-toast {
             position: fixed;
-            bottom: 80px;
-            right: 20px;
-            background-color: #333333;
-            color: #ffffff;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
+            bottom: 85px;
+            right: 25px;
+            background-color: var(--text-color);
+            color: var(--bg-color);
+            padding: 0.6rem 1.25rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.2s ease;
+            transition: opacity 0.3s ease;
             z-index: 1002;
+            box-shadow: var(--glass-shadow);
         }
 
         .copy-toast.show {
             opacity: 1;
-        }
-
-        /* Tooltip text styling */
-        .tip-text {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-top: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.35rem;
         }
     </style>
 </head>
@@ -822,11 +964,11 @@
                         </div>
                     </div>
 
-                    <h2 style="margin-top: 1.5rem;"><i class="ti ti-receipt"></i> Monthly Expenses</h2>
+                    <h2 style="margin-top: 2rem;"><i class="ti ti-receipt"></i> Monthly Expenses</h2>
                     <div id="expenseList" class="row-list">
                         <!-- Dynamic expense rows added here -->
                     </div>
-                    <button class="btn btn-outline btn-sm" style="margin-top: 0.5rem;" onclick="addExpenseRow()">
+                    <button class="btn btn-outline btn-sm" style="margin-top: 0.75rem; width: 100%; justify-content: center;" onclick="addExpenseRow()">
                         <i class="ti ti-plus"></i> Add Expense Category
                     </button>
                 </div>
@@ -868,7 +1010,7 @@
 
                         <div class="card">
                             <h2>50/30/20 Rule Check</h2>
-                            <p class="tip-text" style="margin-bottom: 1rem;"><i class="ti ti-info-circle"></i> Standard target rule: 50% for Needs, 30% for Wants, 20% for Savings.</p>
+                            <p class="tip-text" style="margin-bottom: 1.25rem;"><i class="ti ti-info-circle"></i> Standard target rule: 50% for Needs, 30% for Wants, 20% for Savings.</p>
                             
                             <!-- Needs Bar -->
                             <div class="progress-bar-section">
@@ -949,11 +1091,11 @@
                         </div>
 
                         <!-- Summary Alert -->
-                        <div id="goalsSummaryAlert" class="alert green" style="margin-top: 1rem;">
+                        <div id="goalsSummaryAlert" class="alert green" style="margin-top: 1.25rem;">
                             <!-- Calculated summary shows here -->
                         </div>
                         
-                        <div style="text-align: right;">
+                        <div style="text-align: right; margin-top: 1rem;">
                             <button class="btn btn-outline btn-sm" onclick="triggerAdvice('savings')">
                                 Get savings advice <i class="ti ti-arrow-up-right"></i>
                             </button>
@@ -998,9 +1140,9 @@
                 <!-- Outputs Section -->
                 <div>
                     <div class="metrics-grid">
-                        <div class="metric-card" style="border: 2px solid var(--primary);">
+                        <div class="metric-card" style="border-left-color: var(--primary);">
                             <div class="metric-label">Monthly EMI</div>
-                            <div class="metric-value" id="loanEmi" style="font-size: 2rem; color: var(--primary);">₹0</div>
+                            <div class="metric-value" id="loanEmi" style="color: var(--primary);">₹0</div>
                         </div>
                         <div class="metric-card">
                             <div class="metric-label">Total Payable</div>
@@ -1030,7 +1172,7 @@
                     <!-- Optimization Tip -->
                     <div class="card" id="loanTipBox">
                         <h3><i class="ti ti-bulb" style="color: var(--amber);"></i> Money Saver Recommendation</h3>
-                        <p id="loanTipText" style="font-size: 0.9rem; margin-top: 0.5rem; color: var(--text-secondary);"></p>
+                        <p id="loanTipText" style="font-size: 0.95rem; margin-top: 0.5rem; color: var(--text-secondary);"></p>
                     </div>
                 </div>
             </div>
@@ -1067,7 +1209,7 @@
                         </div>
                     </div>
 
-                    <div class="input-group" style="margin-top: 1.5rem;">
+                    <div class="input-group" style="margin-top: 2rem;">
                         <label for="lumpSum">One-time Lump Sum Investment (₹) — Optional</label>
                         <div class="input-with-icon">
                             <i class="ti ti-currency-rupee input-icon"></i>
@@ -1079,9 +1221,9 @@
                 <!-- Simulation results -->
                 <div>
                     <div class="metrics-grid">
-                        <div class="metric-card" style="border: 2px solid var(--green);">
+                        <div class="metric-card" style="border-left-color: var(--green);">
                             <div class="metric-label">Estimated Future Value</div>
-                            <div class="metric-value" id="sipCorpus" style="font-size: 2rem; color: var(--green);">₹0</div>
+                            <div class="metric-value" id="sipCorpus" style="color: var(--green);">₹0</div>
                         </div>
                         <div class="metric-card">
                             <div class="metric-label">Amount Invested</div>
@@ -1163,7 +1305,7 @@
                 <!-- Outputs -->
                 <div>
                     <div class="metrics-grid">
-                        <div class="metric-card" style="border: 2px solid var(--red);">
+                        <div class="metric-card" style="border-left-color: var(--red);">
                             <div class="metric-label">Time to Debt Freedom</div>
                             <div class="metric-value" id="debtMonths" style="color: var(--red);">0 months</div>
                         </div>
@@ -1191,7 +1333,7 @@
                     <!-- Strategy explainer cards -->
                     <div class="card">
                         <h2>Debt Payoff Strategies</h2>
-                        <p class="tip-text" style="margin-bottom: 1rem;"><i class="ti ti-info-circle"></i> Best techniques to settle multiple debts faster:</p>
+                        <p class="tip-text" style="margin-bottom: 1.25rem;"><i class="ti ti-info-circle"></i> Best techniques to settle multiple debts faster:</p>
                         <div class="strategy-container">
                             <div class="strategy-card">
                                 <h3>1. Avalanche Method</h3>
@@ -1202,7 +1344,7 @@
                                 <p>Pay off debts with the <strong>smallest balance first</strong>. Gives you quick mental wins to stay motivated.</p>
                             </div>
                         </div>
-                        <div style="text-align: right; margin-top: 1rem;">
+                        <div style="text-align: right; margin-top: 1.25rem;">
                             <button class="btn btn-outline btn-sm" onclick="triggerAdvice('debt')">
                                 Which is better for me? <i class="ti ti-arrow-up-right"></i>
                             </button>
@@ -1222,7 +1364,7 @@
                 <!-- Card 1 -->
                 <div class="lesson-card">
                     <div>
-                        <div class="lesson-icon"><i class="ti ti-chart-pie"></i></div>
+                        <div class="lesson-icon-box"><i class="ti ti-chart-pie"></i></div>
                         <div class="lesson-title">The 50/30/20 Rule</div>
                         <div class="lesson-desc">A simple formula to manage your money: Spend 50% of your earnings on Needs (rent, food, bills), 30% on Wants (entertainment, eating out), and save the remaining 20% for future goals.</div>
                     </div>
@@ -1233,7 +1375,7 @@
                 <!-- Card 2 -->
                 <div class="lesson-card">
                     <div>
-                        <div class="lesson-icon"><i class="ti ti-shield-check"></i></div>
+                        <div class="lesson-icon-box"><i class="ti ti-shield-check"></i></div>
                         <div class="lesson-title">Emergency Fund</div>
                         <div class="lesson-desc">Save enough money to cover 3 to 6 months of your family's basic needs. Keep this cash in a safe bank account. Use it only for real emergencies like medical bills or job loss.</div>
                     </div>
@@ -1244,9 +1386,9 @@
                 <!-- Card 3 -->
                 <div class="lesson-card">
                     <div>
-                        <div class="lesson-icon"><i class="ti ti-sparkles"></i></div>
+                        <div class="lesson-icon-box"><i class="ti ti-sparkles"></i></div>
                         <div class="lesson-title">Compound Interest</div>
-                        <div class="lesson-desc">When you invest, your money earns returns. In the next period, you earn interest on both your initial money and the returns already earned. Over time, your money grows exponentially!</div>
+                        <div class="lesson-desc">When your money earns returns, those returns earn returns in the next period too. Over time, your money grows exponentially!</div>
                     </div>
                     <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: center;" onclick="triggerLessonAdvice(3)">
                         Learn more <i class="ti ti-arrow-up-right"></i>
@@ -1255,9 +1397,9 @@
                 <!-- Card 4 -->
                 <div class="lesson-card">
                     <div>
-                        <div class="lesson-icon"><i class="ti ti-scale"></i></div>
+                        <div class="lesson-icon-box"><i class="ti ti-scale"></i></div>
                         <div class="lesson-title">Good Debt vs Bad Debt</div>
-                        <div class="lesson-desc">Good debt is money borrowed to build long-term value, like a home loan or education. Bad debt is borrowing for everyday costs or luxury items, like buying clothes on a credit card.</div>
+                        <div class="lesson-desc">Good debt is money borrowed to build long-term value, like a home loan. Bad debt is borrowing for everyday costs or luxury items, like buying clothes on a credit card.</div>
                     </div>
                     <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: center;" onclick="triggerLessonAdvice(4)">
                         Learn more <i class="ti ti-arrow-up-right"></i>
@@ -1266,9 +1408,9 @@
                 <!-- Card 5 -->
                 <div class="lesson-card">
                     <div>
-                        <div class="lesson-icon"><i class="ti ti-device-analogue"></i></div>
+                        <div class="lesson-icon-box"><i class="ti ti-device-analogue"></i></div>
                         <div class="lesson-title">SIP Mutual Funds</div>
-                        <div class="lesson-desc">A Systematic Investment Plan (SIP) lets you invest a fixed small amount (like ₹500 or ₹1,000) every month. This helps you build wealth over time without timing the stock market.</div>
+                        <div class="lesson-desc">A Systematic Investment Plan (SIP) lets you invest a fixed small amount (like ₹500) every month. This helps you build wealth over time without timing the stock market.</div>
                     </div>
                     <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: center;" onclick="triggerLessonAdvice(5)">
                         Learn more <i class="ti ti-arrow-up-right"></i>
@@ -1277,9 +1419,9 @@
                 <!-- Card 6 -->
                 <div class="lesson-card">
                     <div>
-                        <div class="lesson-icon"><i class="ti ti-heart-handshake"></i></div>
+                        <div class="lesson-icon-box"><i class="ti ti-heart-handshake"></i></div>
                         <div class="lesson-title">Insurance First</div>
-                        <div class="lesson-desc">Protect your family before investing. Get a Term Life Insurance to secure your family's future if you're not around, and Health Insurance so medical bills don't wipe out your savings.</div>
+                        <div class="lesson-desc">Protect your family before investing. Get a Term Life Insurance to secure your family's future, and Health Insurance so medical bills don't wipe out your savings.</div>
                     </div>
                     <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: center;" onclick="triggerLessonAdvice(6)">
                         Learn more <i class="ti ti-arrow-up-right"></i>
@@ -1288,7 +1430,7 @@
                 <!-- Card 7 -->
                 <div class="lesson-card">
                     <div>
-                        <div class="lesson-icon"><i class="ti ti-arrow-bounce"></i></div>
+                        <div class="lesson-icon-box"><i class="ti ti-arrow-bounce"></i></div>
                         <div class="lesson-title">Inflation</div>
                         <div class="lesson-desc">Inflation is the rate at which costs rise. If inflation is 6%, an item costing ₹10,000 will cost ₹10,600 next year. Your savings must grow faster than inflation to keep buying power.</div>
                     </div>
@@ -1299,9 +1441,9 @@
                 <!-- Card 8 -->
                 <div class="lesson-card">
                     <div>
-                        <div class="lesson-icon"><i class="ti ti-star"></i></div>
+                        <div class="lesson-icon-box"><i class="ti ti-star"></i></div>
                         <div class="lesson-title">Credit Score</div>
-                        <div class="lesson-desc">A score that rates how responsibly you pay back loans. Keeping a clean repayment record builds a high score, which allows you to borrow money easily at lower interest rates.</div>
+                        <div class="lesson-desc">A score that rates how reliably you pay back loans. Keeping a clean repayment record builds a high score, which allows you to borrow money easily at lower interest rates.</div>
                     </div>
                     <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: center;" onclick="triggerLessonAdvice(8)">
                         Learn more <i class="ti ti-arrow-up-right"></i>
@@ -1372,7 +1514,7 @@
                             <div class="metric-label">Total Liabilities</div>
                             <div class="metric-value" id="nwTotalLiabilities" style="color: var(--red);">₹0</div>
                         </div>
-                        <div class="metric-card" id="nwNetWorthCard" style="border: 2px solid var(--border-color);">
+                        <div class="metric-card" id="nwNetWorthCard">
                             <div class="metric-label">My Net Worth</div>
                             <div class="metric-value" id="nwNetWorth">₹0</div>
                         </div>
@@ -1399,7 +1541,7 @@
                     <!-- Action Advice Box -->
                     <div class="card" id="netWorthAdviceBox">
                         <h3><i class="ti ti-shield-alert" id="nwAdviceIcon"></i> Personalised Recommendation</h3>
-                        <p id="netWorthAdviceText" style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-secondary);"></p>
+                        <p id="netWorthAdviceText" style="margin-top: 0.5rem; font-size: 0.95rem; color: var(--text-secondary);"></p>
                     </div>
                 </div>
             </div>
@@ -1596,6 +1738,7 @@
             calculateBudget();
         }
 
+        // Sync updates
         function updateExpenseRow(id, field, value) {
             const exp = expenses.find(e => e.id === id);
             if (exp) {
@@ -1711,7 +1854,7 @@
                         data: data,
                         backgroundColor: colors.slice(0, data.length),
                         borderWidth: isDark ? 2 : 1,
-                        borderColor: isDark ? '#1e1e1e' : '#ffffff'
+                        borderColor: isDark ? '#090d16' : '#ffffff'
                     }]
                 },
                 options: {
@@ -1951,8 +2094,17 @@
             }
 
             const isDark = document.body.classList.contains('dark');
-            const gridColor = isDark ? '#2d2d2d' : '#e9ecef';
-            const textColor = isDark ? '#9ca3af' : '#6c757d';
+            const gridColor = isDark ? '#1f2937' : '#e2e8f0';
+            const textColor = isDark ? '#9ca3af' : '#475569';
+
+            // Create canvas area gradients for premium look
+            const prGradient = ctx.createLinearGradient(0, 0, 0, 220);
+            prGradient.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
+            prGradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+
+            const intGradient = ctx.createLinearGradient(0, 0, 0, 220);
+            intGradient.addColorStop(0, 'rgba(239, 68, 68, 0.25)');
+            intGradient.addColorStop(1, 'rgba(239, 68, 68, 0.0)');
 
             loanChartInstance = new Chart(ctx, {
                 type: 'line',
@@ -1963,17 +2115,19 @@
                             label: 'Cumulative Principal Paid',
                             data: principalPaidData,
                             borderColor: '#10b981',
-                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            backgroundColor: prGradient,
                             fill: true,
-                            tension: 0.1
+                            tension: 0.3,
+                            borderWidth: 2
                         },
                         {
                             label: 'Cumulative Interest Paid',
                             data: interestPaidData,
                             borderColor: '#ef4444',
-                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            backgroundColor: intGradient,
                             fill: true,
-                            tension: 0.1
+                            tension: 0.3,
+                            borderWidth: 2
                         }
                     ]
                 },
@@ -1982,18 +2136,19 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            labels: { color: isDark ? '#e0e0e0' : '#212529' }
+                            labels: { color: isDark ? '#f3f4f6' : '#0f172a', font: { family: 'Outfit', size: 11 } }
                         }
                     },
                     scales: {
                         x: {
                             grid: { color: gridColor },
-                            ticks: { color: textColor }
+                            ticks: { color: textColor, font: { family: 'Outfit' } }
                         },
                         y: {
                             grid: { color: gridColor },
                             ticks: {
                                 color: textColor,
+                                font: { family: 'Outfit' },
                                 callback: function(value) { return '₹' + value.toLocaleString('en-IN'); }
                             }
                         }
@@ -2006,10 +2161,6 @@
         // TAB 4: SIP GROWTH SIMULATOR LOGIC
         // ----------------------------------------------------
         function syncSipInputs(field, type) {
-            const slider = document.getElementById(`${field}AmountSlider` || `${field}ReturnSlider` || `${field}PeriodSlider`);
-            const input = document.getElementById(`${field}AmountInput` || `${field}ReturnInput` || `${field}PeriodInput`);
-            
-            // Since elements have different naming suffixes, let's map them explicitly
             let sliderEl, inputEl;
             if (field === 'sip') {
                 sliderEl = document.getElementById('sipAmountSlider');
@@ -2110,8 +2261,17 @@
             }
 
             const isDark = document.body.classList.contains('dark');
-            const gridColor = isDark ? '#2d2d2d' : '#e9ecef';
-            const textColor = isDark ? '#9ca3af' : '#6c757d';
+            const gridColor = isDark ? '#1f2937' : '#e2e8f0';
+            const textColor = isDark ? '#9ca3af' : '#475569';
+
+            // Area chart gradients
+            const corpusGradient = ctx.createLinearGradient(0, 0, 0, 220);
+            corpusGradient.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
+            corpusGradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+
+            const investGradient = ctx.createLinearGradient(0, 0, 0, 220);
+            investGradient.addColorStop(0, 'rgba(99, 102, 241, 0.15)');
+            investGradient.addColorStop(1, 'rgba(99, 102, 241, 0.0)');
 
             sipChartInstance = new Chart(ctx, {
                 type: 'line',
@@ -2122,17 +2282,19 @@
                             label: 'Total Corpus Value',
                             data: growthData,
                             borderColor: '#10b981',
-                            backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                            backgroundColor: corpusGradient,
                             fill: true,
-                            tension: 0.1
+                            tension: 0.3,
+                            borderWidth: 2
                         },
                         {
                             label: 'Amount Invested',
                             data: investedData,
                             borderColor: '#6366f1',
-                            backgroundColor: 'rgba(99, 102, 241, 0.05)',
+                            backgroundColor: investGradient,
                             fill: true,
-                            tension: 0.1
+                            tension: 0.3,
+                            borderWidth: 2
                         }
                     ]
                 },
@@ -2141,18 +2303,19 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            labels: { color: isDark ? '#e0e0e0' : '#212529' }
+                            labels: { color: isDark ? '#f3f4f6' : '#0f172a', font: { family: 'Outfit', size: 11 } }
                         }
                     },
                     scales: {
                         x: {
                             grid: { color: gridColor },
-                            ticks: { color: textColor }
+                            ticks: { color: textColor, font: { family: 'Outfit' } }
                         },
                         y: {
                             grid: { color: gridColor },
                             ticks: {
                                 color: textColor,
+                                font: { family: 'Outfit' },
                                 callback: function(value) { return '₹' + value.toLocaleString('en-IN'); }
                             }
                         }
@@ -2254,6 +2417,7 @@
             }
 
             const isDark = document.body.classList.contains('dark');
+            const textColor = isDark ? '#9ca3af' : '#475569';
 
             debtChartInstance = new Chart(ctx, {
                 type: 'bar',
@@ -2263,12 +2427,14 @@
                         {
                             label: 'Principal Owed',
                             data: [principal, principal],
-                            backgroundColor: '#6366f1'
+                            backgroundColor: '#6366f1',
+                            borderRadius: 4
                         },
                         {
                             label: 'Interest Cost',
                             data: [0, interest],
-                            backgroundColor: '#ef4444'
+                            backgroundColor: '#ef4444',
+                            borderRadius: 4
                         }
                     ]
                 },
@@ -2281,12 +2447,13 @@
                     scales: {
                         x: {
                             stacked: true,
-                            ticks: { color: isDark ? '#9ca3af' : '#6c757d' }
+                            ticks: { color: textColor, font: { family: 'Outfit' } }
                         },
                         y: {
                             stacked: true,
                             ticks: {
-                                color: isDark ? '#9ca3af' : '#6c757d',
+                                color: textColor,
+                                font: { family: 'Outfit' },
                                 callback: function(value) { return '₹' + value.toLocaleString('en-IN'); }
                             }
                         }
@@ -2439,7 +2606,7 @@ Please explain if the Avalanche Method or Snowball Method is better for my situa
                         data: data,
                         backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ec4899', '#6b7280'],
                         borderWidth: isDark ? 2 : 1,
-                        borderColor: isDark ? '#1e1e1e' : '#ffffff'
+                        borderColor: isDark ? '#090d16' : '#ffffff'
                     }]
                 },
                 options: {
@@ -2449,8 +2616,8 @@ Please explain if the Avalanche Method or Snowball Method is better for my situa
                         legend: {
                             position: 'right',
                             labels: {
-                                color: isDark ? '#e0e0e0' : '#212529',
-                                font: { size: 10 }
+                                color: isDark ? '#f3f4f6' : '#0f172a',
+                                font: { family: 'Outfit', size: 10 }
                             }
                         }
                     },
