@@ -1,0 +1,18 @@
+{
+  "name": "Apex Intel — Premium Personal Finance",
+  "short_name": "Apex Intel",
+  "description": "Strictly offline, privacy-first personal finance PWA toolkit & dashboard",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#05050d",
+  "theme_color": "#10b981",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    }
+  ]
+}
