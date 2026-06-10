@@ -369,7 +369,16 @@ const initialAppState = {
     healthCardsPrinted: false,
     bankNomineeAdded: false
   },
-  privacyActive: false
+  privacyActive: false,
+  savingsGoals: [
+    { id: 1, name: 'Emergency Fund (6mo)', target: 300000, saved: 80000 },
+    { id: 2, name: 'Vacation Fund', target: 60000, saved: 15000 }
+  ],
+  emiPrincipal: 500000,
+  emiRate: 10.5,
+  emiTenure: 60,
+  customDebts: null,
+  debtExtra: 5000
 };
 
 const formatINR = (num) => {
@@ -806,7 +815,9 @@ export default function App() {
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex flex-col w-64 bg-white border-r border-gray-100 h-screen sticky top-0 z-30 shrink-0">
         <div className="p-6 border-b border-gray-100 flex items-center gap-3">
-          <img src="/icon.svg" className="w-8 h-8" alt="Logo" />
+          <div className="w-9 h-9 rounded-xl bg-appPrimary flex items-center justify-center shadow-sm shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </div>
           <div>
             <h1 className="text-base font-extrabold text-gray-900 tracking-tight">{t('title')}</h1>
             <p className="text-[9px] text-gray-400 font-bold uppercase tracking-wider">Offline Finance</p>
@@ -1265,23 +1276,229 @@ export default function App() {
             )}
 
             {/* TAB 2: SAVINGS GOALS */}
-            {activeTab === 'savings' && (
-              <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm space-y-6">
-                <h2 className="text-lg font-extrabold text-gray-900 uppercase tracking-wider">🎯 {t('tab_savings')}</h2>
-                <p className="text-xs text-gray-400">Budget surplus of <span className="font-bold text-emerald-600 font-mono">{formatINR(budgetMetrics.surplus)}/mo</span> updates local financial trajectories. Setup targets inside the **Net Worth** asset tracker.</p>
-                <div className="bg-gray-50 p-5 rounded-2xl border border-gray-100 text-xs text-gray-500 leading-relaxed max-w-xl">
-                  <strong>Structural Goal Allocations:</strong> All savings targets are funded client-side using liquid asset valuations (cash + stocks).
+            {activeTab === 'savings' && (() => {
+              const monthlyFree = Math.max(0, budgetMetrics.surplus);
+              const totalGoalAmt = state.savingsGoals ? state.savingsGoals.reduce((s, g) => s + g.target, 0) : 0;
+              const addGoal = () => {
+                const name = document.getElementById('sg_name')?.value;
+                const target = Number(document.getElementById('sg_target')?.value);
+                const saved = Number(document.getElementById('sg_saved')?.value);
+                if (!name || !target) return;
+                setState(prev => ({ ...prev, savingsGoals: [...(prev.savingsGoals || []), { id: Date.now(), name, target, saved: saved || 0 }] }));
+                ['sg_name','sg_target','sg_saved'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+              };
+              return (
+                <div className="space-y-6">
+                  {/* Summary cards */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="bg-emerald-50/50 p-5 rounded-2xl border border-emerald-100">
+                      <div className="text-[10px] uppercase font-black tracking-wider text-emerald-600 mb-1">Monthly Surplus</div>
+                      <div className="text-2xl font-extrabold text-emerald-700"><MaskValue value={monthlyFree} /></div>
+                      <div className="text-[10px] text-emerald-500 mt-1">Available to allocate to goals</div>
+                    </div>
+                    <div className="bg-blue-50/50 p-5 rounded-2xl border border-blue-100">
+                      <div className="text-[10px] uppercase font-black tracking-wider text-blue-600 mb-1">Total Goals Target</div>
+                      <div className="text-2xl font-extrabold text-blue-700"><MaskValue value={totalGoalAmt} /></div>
+                      <div className="text-[10px] text-blue-500 mt-1">{(state.savingsGoals || []).length} active goals</div>
+                    </div>
+                    <div className="bg-violet-50/50 p-5 rounded-2xl border border-violet-100">
+                      <div className="text-[10px] uppercase font-black tracking-wider text-violet-600 mb-1">Total Saved So Far</div>
+                      <div className="text-2xl font-extrabold text-violet-700"><MaskValue value={(state.savingsGoals || []).reduce((s,g)=>s+g.saved,0)} /></div>
+                      <div className="text-[10px] text-violet-500 mt-1">{totalGoalAmt > 0 ? Math.round(((state.savingsGoals||[]).reduce((s,g)=>s+g.saved,0)/totalGoalAmt)*100) : 0}% of total target reached</div>
+                    </div>
+                  </div>
+
+                  {/* Goals List */}
+                  <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+                      <h3 className="font-extrabold text-sm text-gray-900 uppercase tracking-wider">🎯 Savings Goals Tracker</h3>
+                    </div>
+                    <div className="divide-y divide-gray-50">
+                      {(state.savingsGoals || []).length === 0 && (
+                        <div className="p-8 text-center text-xs text-gray-400">No goals yet. Add your first goal below ↓</div>
+                      )}
+                      {(state.savingsGoals || []).map(goal => {
+                        const pct = goal.target > 0 ? Math.min(100, (goal.saved / goal.target) * 100) : 0;
+                        const remaining = goal.target - goal.saved;
+                        const monthsLeft = monthlyFree > 0 ? Math.ceil(remaining / monthlyFree) : '∞';
+                        return (
+                          <div key={goal.id} className="p-5 space-y-3">
+                            <div className="flex items-start justify-between">
+                              <div>
+                                <div className="font-extrabold text-sm text-gray-900">{goal.name}</div>
+                                <div className="text-[10px] text-gray-400 mt-0.5">
+                                  {monthsLeft !== '∞' ? `~${monthsLeft} months to go at current surplus` : 'Set a surplus to estimate timeline'}
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-3">
+                                <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${pct >= 100 ? 'bg-emerald-50 text-emerald-700' : pct >= 50 ? 'bg-blue-50 text-blue-700' : 'bg-gray-100 text-gray-500'}`}>
+                                  {pct >= 100 ? '✓ Done' : `${Math.round(pct)}%`}
+                                </span>
+                                <button onClick={() => setState(prev => ({ ...prev, savingsGoals: (prev.savingsGoals||[]).filter(g => g.id !== goal.id) }))} className="text-red-400 hover:text-red-600">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3,6 5,6 21,6"/><path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2v2"/></svg>
+                                </button>
+                              </div>
+                            </div>
+                            <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                              <motion.div className="h-full bg-appPrimary rounded-full" initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.8, ease: 'easeOut' }} />
+                            </div>
+                            <div className="flex justify-between text-[10px] text-gray-400">
+                              <span>Saved: <span className="font-bold text-gray-700 font-mono"><MaskValue value={goal.saved} /></span></span>
+                              <span>Target: <span className="font-bold text-gray-700 font-mono"><MaskValue value={goal.target} /></span></span>
+                              <span>Left: <span className="font-bold text-red-500 font-mono"><MaskValue value={Math.max(0, remaining)} /></span></span>
+                            </div>
+                            {/* Quick add saved amount */}
+                            <div className="flex gap-2 pt-1">
+                              <input id={`topup_${goal.id}`} type="number" placeholder="Add to saved ₹" className="bg-gray-50 border border-gray-100 text-xs p-2 rounded-xl flex-1 focus:outline-none" />
+                              <button onClick={() => {
+                                const v = Number(document.getElementById(`topup_${goal.id}`)?.value);
+                                if (v > 0) {
+                                  setState(prev => ({ ...prev, savingsGoals: (prev.savingsGoals||[]).map(g => g.id === goal.id ? { ...g, saved: g.saved + v } : g) }));
+                                  const el = document.getElementById(`topup_${goal.id}`); if(el) el.value = '';
+                                }
+                              }} className="bg-appPrimary text-white text-xs px-3.5 rounded-xl font-bold">+ Add</button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Add new goal */}
+                    <div className="p-5 border-t border-gray-100 bg-gray-50/50">
+                      <div className="text-[10px] uppercase font-black tracking-wider text-gray-400 mb-3">Add New Goal</div>
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
+                        <input id="sg_name" type="text" placeholder="Goal name (e.g. Emergency Fund)" className="bg-white border border-gray-100 text-xs p-2.5 rounded-xl md:col-span-2 focus:outline-none focus:border-appPrimary" />
+                        <input id="sg_target" type="number" placeholder="Target ₹" className="bg-white border border-gray-100 text-xs p-2.5 rounded-xl focus:outline-none focus:border-appPrimary" />
+                        <input id="sg_saved" type="number" placeholder="Already saved ₹" className="bg-white border border-gray-100 text-xs p-2.5 rounded-xl focus:outline-none focus:border-appPrimary" />
+                      </div>
+                      <button onClick={addGoal} className="mt-2 bg-appPrimary hover:bg-appPrimaryHover text-white text-xs font-bold px-5 py-2.5 rounded-xl transition-all">+ Add Goal</button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            )}
+              );
+            })()}
 
             {/* TAB 3: EMI CALCULATOR */}
-            {activeTab === 'loan' && (
-              <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm space-y-6">
-                <h2 className="text-lg font-extrabold text-gray-900 uppercase tracking-wider">📊 {t('tab_loan')}</h2>
-                <p className="text-xs text-gray-400">Personal loan planners. Outstanding liabilities register under the Net Worth sheets, feeding directly into the Budget Fixed obligations.</p>
-              </div>
-            )}
+            {activeTab === 'loan' && (() => {
+              const principal = state.emiPrincipal || 500000;
+              const annualRate = state.emiRate || 10.5;
+              const tenureMonths = state.emiTenure || 60;
+              const r = annualRate / 12 / 100;
+              const emi = r > 0 ? Math.round(principal * r * Math.pow(1 + r, tenureMonths) / (Math.pow(1 + r, tenureMonths) - 1)) : Math.round(principal / tenureMonths);
+              const totalPayable = emi * tenureMonths;
+              const totalInterest = totalPayable - principal;
+              // Build amortization schedule (yearly summary)
+              const schedule = [];
+              let bal = principal;
+              for (let m = 1; m <= tenureMonths; m++) {
+                const intPart = r > 0 ? bal * r : 0;
+                const prinPart = emi - intPart;
+                bal = Math.max(0, bal - prinPart);
+                if (m % 12 === 0 || m === tenureMonths) {
+                  schedule.push({ year: Math.ceil(m / 12), month: m, balance: Math.round(bal), emi });
+                }
+              }
+              return (
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    {/* Input panel */}
+                    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-5">
+                      <h3 className="font-extrabold text-sm text-gray-900 uppercase tracking-wider border-b border-gray-100 pb-3">📊 Loan Parameters</h3>
+                      <div className="space-y-4">
+                        <div>
+                          <label className="text-[10px] text-gray-400 uppercase font-black tracking-wider mb-1.5 block">Loan Amount (₹)</label>
+                          <input type="number" value={principal} onChange={e => setState(prev => ({...prev, emiPrincipal: Number(e.target.value)}))} className="bg-gray-50 border border-gray-100 text-sm px-4 py-2.5 rounded-xl w-full focus:outline-none focus:border-appPrimary transition-all" />
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-gray-400 uppercase font-black tracking-wider mb-1.5 block">Annual Interest Rate (%)</label>
+                          <input type="number" step="0.1" value={annualRate} onChange={e => setState(prev => ({...prev, emiRate: Number(e.target.value)}))} className="bg-gray-50 border border-gray-100 text-sm px-4 py-2.5 rounded-xl w-full focus:outline-none focus:border-appPrimary transition-all" />
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-gray-400 uppercase font-black tracking-wider mb-1.5 block">Tenure (Months)</label>
+                          <input type="number" value={tenureMonths} onChange={e => setState(prev => ({...prev, emiTenure: Number(e.target.value)}))} className="bg-gray-50 border border-gray-100 text-sm px-4 py-2.5 rounded-xl w-full focus:outline-none focus:border-appPrimary transition-all" />
+                          <div className="text-[10px] text-gray-400 mt-1">{Math.floor(tenureMonths/12)}y {tenureMonths%12}m</div>
+                        </div>
+                      </div>
+
+                      {/* Quick presets */}
+                      <div className="pt-2 border-t border-gray-100">
+                        <div className="text-[10px] text-gray-400 uppercase font-black tracking-wider mb-2">Quick Presets</div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {[{l:'Home',p:3000000,r:8.5,t:240},{l:'Car',p:600000,r:9.5,t:60},{l:'Personal',p:200000,r:14,t:36}].map(pr => (
+                            <button key={pr.l} onClick={() => setState(prev=>({...prev,emiPrincipal:pr.p,emiRate:pr.r,emiTenure:pr.t}))} className="text-[10px] px-2.5 py-1.5 bg-gray-100 hover:bg-appPrimary hover:text-white rounded-lg font-bold transition-all">{pr.l}</button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Result panel */}
+                    <div className="lg:col-span-2 space-y-5">
+                      {/* 3 result cards */}
+                      <div className="grid grid-cols-3 gap-4">
+                        <div className="bg-appPrimary/5 p-5 rounded-2xl border border-appPrimary/20 text-center">
+                          <div className="text-[10px] text-appPrimary uppercase font-black tracking-wider mb-2">Monthly EMI</div>
+                          <div className="text-2xl font-extrabold text-appPrimary font-mono"><MaskValue value={emi} /></div>
+                        </div>
+                        <div className="bg-red-50/50 p-5 rounded-2xl border border-red-100 text-center">
+                          <div className="text-[10px] text-red-500 uppercase font-black tracking-wider mb-2">Total Interest</div>
+                          <div className="text-2xl font-extrabold text-red-600 font-mono"><MaskValue value={totalInterest} /></div>
+                        </div>
+                        <div className="bg-gray-50 p-5 rounded-2xl border border-gray-100 text-center">
+                          <div className="text-[10px] text-gray-400 uppercase font-black tracking-wider mb-2">Total Payable</div>
+                          <div className="text-2xl font-extrabold text-gray-800 font-mono"><MaskValue value={totalPayable} /></div>
+                        </div>
+                      </div>
+
+                      {/* Principal vs Interest bar */}
+                      <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+                        <div className="text-[10px] uppercase font-black tracking-wider text-gray-400 mb-3">Principal vs Interest Split</div>
+                        <div className="flex h-4 rounded-full overflow-hidden">
+                          <motion.div className="h-full bg-appPrimary" initial={{width:0}} animate={{width:`${Math.round(principal/totalPayable*100)}%`}} transition={{duration:0.8}} />
+                          <motion.div className="h-full bg-red-400" initial={{width:0}} animate={{width:`${Math.round(totalInterest/totalPayable*100)}%`}} transition={{duration:0.8,delay:0.1}} />
+                        </div>
+                        <div className="flex gap-4 mt-2">
+                          <span className="flex items-center gap-1.5 text-[10px] text-gray-500 font-bold"><span className="w-2 h-2 rounded-full bg-appPrimary inline-block"></span>Principal {Math.round(principal/totalPayable*100)}%</span>
+                          <span className="flex items-center gap-1.5 text-[10px] text-gray-500 font-bold"><span className="w-2 h-2 rounded-full bg-red-400 inline-block"></span>Interest {Math.round(totalInterest/totalPayable*100)}%</span>
+                        </div>
+                      </div>
+
+                      {/* Amortization schedule */}
+                      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                        <div className="px-5 py-3 border-b border-gray-100">
+                          <div className="font-extrabold text-xs text-gray-900 uppercase tracking-wider">Amortization Schedule (Year-End Balance)</div>
+                        </div>
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-xs">
+                            <thead className="bg-gray-50">
+                              <tr>
+                                <th className="text-left px-5 py-2.5 font-black text-gray-400 uppercase tracking-wider">Year</th>
+                                <th className="text-right px-5 py-2.5 font-black text-gray-400 uppercase tracking-wider">Month</th>
+                                <th className="text-right px-5 py-2.5 font-black text-gray-400 uppercase tracking-wider">Outstanding Balance</th>
+                                <th className="text-right px-5 py-2.5 font-black text-gray-400 uppercase tracking-wider">% Paid</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-50">
+                              {schedule.map((row, i) => (
+                                <tr key={i} className="hover:bg-gray-50/50">
+                                  <td className="px-5 py-2.5 font-bold text-gray-700">Y{row.year}</td>
+                                  <td className="px-5 py-2.5 text-right text-gray-500">M{row.month}</td>
+                                  <td className="px-5 py-2.5 text-right font-mono font-bold text-gray-800"><MaskValue value={row.balance} /></td>
+                                  <td className="px-5 py-2.5 text-right">
+                                    <span className={`px-2 py-0.5 rounded-full text-[9px] font-black ${ (1 - row.balance/principal) >= 0.9 ? 'bg-emerald-50 text-emerald-700' : (1 - row.balance/principal) >= 0.5 ? 'bg-blue-50 text-blue-700' : 'bg-gray-100 text-gray-500'}`}>
+                                      {Math.round((1 - row.balance / principal) * 100)}%
+                                    </span>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* TAB 4: GROWTH SIMULATOR (RECHARTS MONTE CARLO) */}
             {activeTab === 'growth' && (
@@ -1325,12 +1542,138 @@ export default function App() {
             )}
 
             {/* TAB 5: DEBT PAYOFF */}
-            {activeTab === 'debt' && (
-              <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm space-y-6">
-                <h2 className="text-lg font-extrabold text-gray-900 uppercase tracking-wider">📉 {t('tab_debt')}</h2>
-                <p className="text-xs text-gray-400">Strategic roadmap parameters. Configure outstanding liability details inside the Net Worth tracker sheet.</p>
-              </div>
-            )}
+            {activeTab === 'debt' && (() => {
+              const debts = state.customDebts || [
+                { id: 1, name: 'Credit Card', balance: 50000, rate: 36, minPayment: 2500 },
+                { id: 2, name: 'Personal Loan', balance: 150000, rate: 14, minPayment: 4000 },
+                { id: 3, name: 'Car Loan', balance: 320000, rate: 9.5, minPayment: 7500 }
+              ];
+              const extraMonthly = state.debtExtra || 5000;
+              const totalDebt = debts.reduce((s, d) => s + d.balance, 0);
+              const totalMinPayment = debts.reduce((s, d) => s + d.minPayment, 0);
+              // Avalanche: highest rate first
+              const avalanche = [...debts].sort((a, b) => b.rate - a.rate);
+              // Snowball: lowest balance first
+              const snowball = [...debts].sort((a, b) => a.balance - b.balance);
+              const calcMonths = (orderedDebts, extra) => {
+                let balances = orderedDebts.map(d => ({ ...d, bal: d.balance }));
+                let months = 0;
+                while (balances.some(d => d.bal > 0) && months < 600) {
+                  months++;
+                  let extraLeft = extra;
+                  balances = balances.map(d => {
+                    if (d.bal <= 0) return d;
+                    const interest = d.bal * (d.rate / 12 / 100);
+                    const payment = Math.min(d.bal + interest, d.minPayment);
+                    return { ...d, bal: Math.max(0, d.bal + interest - payment) };
+                  });
+                  // Apply extra to first unpaid debt
+                  for (let i = 0; i < balances.length; i++) {
+                    if (balances[i].bal > 0 && extraLeft > 0) {
+                      const pay = Math.min(balances[i].bal, extraLeft);
+                      balances[i] = { ...balances[i], bal: balances[i].bal - pay };
+                      extraLeft -= pay;
+                    }
+                  }
+                }
+                return months;
+              };
+              const avalancheMonths = calcMonths(avalanche, extraMonthly);
+              const snowballMonths = calcMonths(snowball, extraMonthly);
+              return (
+                <div className="space-y-6">
+                  {/* Summary */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="bg-red-50/50 p-5 rounded-2xl border border-red-100">
+                      <div className="text-[10px] text-red-500 uppercase font-black tracking-wider mb-1">Total Debt</div>
+                      <div className="text-xl font-extrabold text-red-600 font-mono"><MaskValue value={totalDebt} /></div>
+                    </div>
+                    <div className="bg-gray-50 p-5 rounded-2xl border border-gray-100">
+                      <div className="text-[10px] text-gray-400 uppercase font-black tracking-wider mb-1">Min Payments/mo</div>
+                      <div className="text-xl font-extrabold text-gray-800 font-mono"><MaskValue value={totalMinPayment} /></div>
+                    </div>
+                    <div className="bg-blue-50/50 p-5 rounded-2xl border border-blue-100">
+                      <div className="text-[10px] text-blue-500 uppercase font-black tracking-wider mb-1">Avalanche Payoff</div>
+                      <div className="text-xl font-extrabold text-blue-700">{avalancheMonths}mo <span className="text-xs font-bold">({(avalancheMonths/12).toFixed(1)}y)</span></div>
+                    </div>
+                    <div className="bg-violet-50/50 p-5 rounded-2xl border border-violet-100">
+                      <div className="text-[10px] text-violet-500 uppercase font-black tracking-wider mb-1">Snowball Payoff</div>
+                      <div className="text-xl font-extrabold text-violet-700">{snowballMonths}mo <span className="text-xs font-bold">({(snowballMonths/12).toFixed(1)}y)</span></div>
+                    </div>
+                  </div>
+
+                  {/* Strategy selector & extra payment */}
+                  <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+                    <div className="flex flex-wrap items-center gap-4">
+                      <div>
+                        <div className="text-[10px] uppercase font-black tracking-wider text-gray-400 mb-1.5">Extra Monthly Payment</div>
+                        <div className="flex items-center gap-2">
+                          <input type="number" value={extraMonthly} onChange={e => setState(prev=>({...prev,debtExtra:Number(e.target.value)}))} className="bg-gray-50 border border-gray-100 text-sm px-3 py-2 rounded-xl w-36 focus:outline-none focus:border-appPrimary" />
+                          <span className="text-xs text-gray-400">/mo above minimums</span>
+                        </div>
+                      </div>
+                      <div className="ml-auto flex gap-3 text-[10px]">
+                        <div className="bg-blue-50 text-blue-700 px-4 py-2 rounded-xl font-extrabold">🧊 Avalanche = Highest Rate First (saves most interest)</div>
+                        <div className="bg-violet-50 text-violet-700 px-4 py-2 rounded-xl font-extrabold">❄️ Snowball = Lowest Balance First (fastest wins)</div>
+                      </div>
+                    </div>
+                    {avalancheMonths < snowballMonths && (
+                      <div className="mt-3 text-[10px] text-emerald-700 bg-emerald-50 px-4 py-2 rounded-xl font-bold">💡 Avalanche saves you {snowballMonths - avalancheMonths} months vs Snowball at this extra payment rate.</div>
+                    )}
+                  </div>
+
+                  {/* Debt cards */}
+                  <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+                      <h3 className="font-extrabold text-sm text-gray-900 uppercase tracking-wider">📉 Your Debts</h3>
+                    </div>
+                    <div className="divide-y divide-gray-50">
+                      {debts.map(d => {
+                        const pct = Math.min(100, (d.balance / totalDebt) * 100);
+                        return (
+                          <div key={d.id} className="p-5 flex items-center gap-5">
+                            <div className="flex-1 space-y-1.5">
+                              <div className="flex items-center justify-between">
+                                <div className="font-extrabold text-sm text-gray-900">{d.name}</div>
+                                <span className="text-[10px] font-black bg-red-50 text-red-600 px-2 py-0.5 rounded-full">{d.rate}% p.a.</span>
+                              </div>
+                              <div className="w-full bg-gray-100 h-1.5 rounded-full">
+                                <div className="h-full bg-red-400 rounded-full" style={{ width: `${pct}%` }} />
+                              </div>
+                              <div className="flex justify-between text-[10px] text-gray-400">
+                                <span>Balance: <span className="font-bold text-gray-800 font-mono"><MaskValue value={d.balance} /></span></span>
+                                <span>Min: <span className="font-bold text-gray-800 font-mono"><MaskValue value={d.minPayment} /></span>/mo</span>
+                                <span>{Math.round(pct)}% of total debt</span>
+                              </div>
+                            </div>
+                            <button onClick={() => setState(prev => ({ ...prev, customDebts: (prev.customDebts||debts).filter(x => x.id !== d.id) }))} className="text-red-400 hover:text-red-600 p-1">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3,6 5,6 21,6"/><path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2v2"/></svg>
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    {/* Add debt */}
+                    <div className="p-5 border-t border-gray-100 bg-gray-50/50">
+                      <div className="text-[10px] uppercase font-black tracking-wider text-gray-400 mb-3">Add New Debt</div>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                        <input id="d_name" type="text" placeholder="Debt name" className="bg-white border border-gray-100 text-xs p-2.5 rounded-xl focus:outline-none focus:border-appPrimary" />
+                        <input id="d_bal" type="number" placeholder="Balance ₹" className="bg-white border border-gray-100 text-xs p-2.5 rounded-xl focus:outline-none focus:border-appPrimary" />
+                        <input id="d_rate" type="number" placeholder="Rate % p.a." className="bg-white border border-gray-100 text-xs p-2.5 rounded-xl focus:outline-none focus:border-appPrimary" />
+                        <input id="d_min" type="number" placeholder="Min payment ₹" className="bg-white border border-gray-100 text-xs p-2.5 rounded-xl focus:outline-none focus:border-appPrimary" />
+                      </div>
+                      <button onClick={() => {
+                        const n=document.getElementById('d_name'),b=document.getElementById('d_bal'),r=document.getElementById('d_rate'),m=document.getElementById('d_min');
+                        if(n?.value&&b?.value&&r?.value&&m?.value){
+                          setState(prev=>({...prev,customDebts:[...(prev.customDebts||debts),{id:Date.now(),name:n.value,balance:Number(b.value),rate:Number(r.value),minPayment:Number(m.value)}]}));
+                          [n,b,r,m].forEach(el=>{if(el)el.value='';});
+                        }
+                      }} className="mt-2 bg-appPrimary hover:bg-appPrimaryHover text-white text-xs font-bold px-5 py-2.5 rounded-xl transition-all">+ Add Debt</button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* TAB 6: NET WORTH TRACKER (HAIRCUTS & VALUATIONS) */}
             {activeTab === 'networth' && (
