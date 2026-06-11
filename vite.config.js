@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: process.env.GITHUB_ACTIONS === 'true' ? '/apex-wealth/' : '/',
+  base: process.env.BUILD_FOR_PAGES === 'true' ? '/apex-wealth/' : '/',
   plugins: [
     react(),
     tailwindcss(),
